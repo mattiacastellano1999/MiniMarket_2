@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="2dp"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:layout_weight="6">
+
+    <TableRow
+        android:id="@+id/trow">
+
+        <ImageView
+            android:id="@+id/element_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical|left"
+            android:scaleType="fitCenter"
+            android:padding="0dp"
+            android:src="@drawable/loading"
+            android:layout_marginStart="10dp"
+            tools:ignore="RtlHardcoded"
+            android:contentDescription="TODO"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/element_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:textSize="20sp"
+            android:text="wesd dfv z"
+            android:layout_marginStart="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            tools:ignore="RtlHardcoded"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/element_price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="0"
+            android:background="@android:color/transparent"
+            android:layout_marginStart="10dp"
+            android:contentDescription="Prezzo"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/element_quantity_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="0"
+            android:background="@android:color/transparent"
+            android:layout_marginStart="10dp"
+            android:contentDescription="Quantità"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/removeElement_imgBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/close"
+            android:padding="0dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
+            android:layout_marginStart="5dp"
+            android:contentDescription="Delete Product"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/editElement_imgBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/edit"
+            android:background="@android:color/transparent"
+            android:padding="0dp"
+            android:scaleType="centerInside"
+            android:layout_marginStart="5dp"
+            android:contentDescription="Edit Product"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/addElement_btn"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/edit"
+            android:padding="0dp"
+            android:text="Buy"
+            android:scaleType="centerInside"
+            android:layout_marginStart="5dp"
+            android:contentDescription="Add Product"
+            android:layout_weight="1"/>
+
+    </TableRow>
+
+</TableLayout>

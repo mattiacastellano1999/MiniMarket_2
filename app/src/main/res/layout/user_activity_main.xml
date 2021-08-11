@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageButton
+        android:id="@+id/cart_imgBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cart"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/welcome_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Welcome "
+        android:gravity="center"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:textSize="20dp"/>
+
+    <ImageButton
+        android:id="@+id/exit_imgBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logout"
+        android:layout_alignParentRight="true"/>
+
+    <FrameLayout
+        android:id="@+id/main_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/welcome_tv"
+        android:paddingTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
+
+    <FrameLayout
+        android:id="@+id/chat_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="479dp"
+        android:layout_above="@+id/location_btn"
+        android:layout_below="@+id/welcome_tv"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/location_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_centerInParent="true"
+        android:text="Find My Location"
+        android:textSize="25dp"/>
+
+    <Button
+        android:id="@+id/oldOrder_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/location_btn"
+        android:background="@android:color/transparent"
+        android:layout_centerInParent="true"
+        android:text="Old Orders"
+        android:textSize="25dp"/>
+
+    <Button
+        android:id="@+id/marketList_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/oldOrder_btn"
+        android:background="@android:color/transparent"
+        android:layout_centerInParent="true"
+        android:text="Markets"
+        android:textSize="25dp"/>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+</RelativeLayout>
