@@ -57,11 +57,13 @@ class GestorActivity: AppCompatActivity() {
         orderManageBtn.setOnClickListener {
             riderVisualBtn.visibility = View.GONE
             orderManageBtn.visibility = View.GONE
-            supportFragmentManager.beginTransaction().apply {
+            /*supportFragmentManager.beginTransaction().apply {
                 //inserisce in main_fragment il contenuto del userMapsFragment
                 replace(R.id.main_fragment, orderManagerFragment)
                 commit() //con il commit esegue le azioni descritte prima
-            }
+            }*/
+            val intentLogout = Intent(this, OrderManager::class.java)
+            startActivity(intentLogout)
         }
 
         riderVisualBtn.setOnClickListener {
