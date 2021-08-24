@@ -1,6 +1,7 @@
 package com.MCProject.minimarket_1.gestor
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,6 +23,7 @@ open class MarketProductListActivity : ProductListActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i("HEY", "Market Product List Activity")
         type = "market"
         user = auth.currentUser.email
     }
@@ -59,7 +61,7 @@ open class MarketProductListActivity : ProductListActivity() {
         addBtn.visibility = View.VISIBLE
         addBtn.setOnClickListener {
             popup.clearData()
-            popup.makePopup()
+            popup.makePopup(this)
         }
     }
 
@@ -156,8 +158,13 @@ open class MarketProductListActivity : ProductListActivity() {
                 popup.oldProd = prod.name
                 popup.deleteImageFromFS()
                     .addOnCompleteListener {
-                        if( it.isSuccessful )
-                            MarketProductAdapter().notifyDataSetChanged()
+                        if (it.isSuccessful) {
+                            runOnUiThread {
+                                Log.e("HEY", "Eliminazione Pouulate Form")
+                                val int = Intent(element_gestor_product.context, MarketProductListActivity::class.java)
+                                element_gestor_product.context.startActivity(int)
+                            }
+                        }
                     }
             }
             if(type == "market") {

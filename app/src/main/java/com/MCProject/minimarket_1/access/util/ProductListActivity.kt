@@ -100,8 +100,12 @@ open class ProductListActivity: ListActivity() {
             if ( resultCode == Activity.RESULT_OK && data!=null) {
                 //set image captured to image view
                 Log.i("HEY", "Immagine: " + data)
-                popup.start(data, requestCode)
+                popup.start(this, data, requestCode)
             }
+        }
+        if (requestCode == 121) {
+            val intent = Intent(this, MarketProductListActivity::class.java)
+            this@ProductListActivity.startActivity(intent)
         }
     }
 

@@ -230,8 +230,10 @@ class FirestoreRequest(
                         "Product Correctly Removed",
                         Toast.LENGTH_LONG
                     ).show()
-                    val intent = Intent(context, ProductListActivity::class.java)
-                    context.startActivity(intent)
+                    context.runOnUiThread {
+                        val intent = Intent(context, ProductListActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
                 .addOnFailureListener {
                     Log.i("HEY", "Failed")
@@ -254,6 +256,7 @@ class FirestoreRequest(
         }
         val entry: HashMap<String, Any?> = hashMapOf<String, Any?>(
             "nome" to prod.name,
+            "descrizione" to prod.description,
             "prezzo" to prod.price,
             "quantita" to prod.quantity
         )

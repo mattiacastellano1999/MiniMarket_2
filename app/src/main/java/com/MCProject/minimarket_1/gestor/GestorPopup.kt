@@ -91,18 +91,18 @@ class GestorPopup(
     }
 
     @SuppressLint("InflateParams")
-    fun makePopup() {
+    fun makePopup(context: Activity) {
         Log.i("HEY", "MakePopup")
         REQUEST = REQUEST_FOR_CREATING
-        listenerInit()
+        listenerInit(context)
     }
 
-    fun listenerInit() {
+    fun listenerInit(context: Activity) {
         dialog.show()
 
         popupImgIB.setOnClickListener {
             Log.i("HEY", "Image Btn Pressed")
-            choosePicture()
+            choosePicture(context)
         }
 
         popupConfirmBTN.setOnClickListener {
@@ -123,21 +123,28 @@ class GestorPopup(
                 )
                 Log.i("HEY", "__" + newprod)
                 prodList.add(newprod)
-                val fr = FirestoreRequest(db, FirebaseAuth.getInstance(), FirebaseStorage.getInstance(), collection, mail)
+                val fr = FirestoreRequest(
+                    db,
+                    FirebaseAuth.getInstance(),
+                    FirebaseStorage.getInstance(),
+                    collection,
+                    mail)
                 fr.uploadProduct(context, newprod)
                     .addOnCompleteListener {
                         uploadProductPic(newprod).addOnCompleteListener {
                             dialog.dismiss()
-                            val intent = Intent(context, ProductListActivity()::class.java)
-                            start(intent, REQUEST)
-                            /*val intent = Intent(context, ProductListActivity("market")::class.java)
-                    intent.putExtra("type", "market")
-                    context.startActivity(intent)*/
+                            runOnUiThread {
+                                val intent =
+                                    Intent(context, MarketProductListActivity()::class.java)
+                                start(context, intent, REQUEST)
+                            }
                         }
                     }
                 if(!oldProd.equals(newprod.name)) {
-                    val intent = Intent(context, ProductListActivity()::class.java)
-                    start(intent, REQUEST)
+                    runOnUiThread {
+                        val intent = Intent(context, MarketProductListActivity()::class.java)
+                        start(context, intent, REQUEST)
+                    }
                     fr.deleteFromDB(context, oldProd)
                 }
             } else {
@@ -160,30 +167,30 @@ class GestorPopup(
         }
     }
 
-    private fun choosePicture() {
+    private fun choosePicture(context: Activity) {
         //Show popup camera or local data
         dialog.dismiss()
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(this.context)
             .setTitle("Take a Picture")
             .setMessage("Choose if take your picture from device Memory or Camera")
             .setNegativeButton("Camera") {dialog: DialogInterface, _: Int ->
                 //open camera
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if(
-                        ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED  ||
-                        context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                        ContextCompat.checkSelfPermission(this.context, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED  ||
+                        this.context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
                     ){
                         ActivityCompat.requestPermissions(
-                            context,
+                            this.context,
                             arrayOf(android.Manifest.permission.CAMERA),
                             PERMISSION_CODE
                         )
                     } else {
-                        openCamera(context)
+                        openCamera(this.context)
                     }
                 } else {
                     //versione di OS < Marshmallow
-                    openCamera(context)
+                    openCamera(this.context)
                 }
                 dialog.dismiss()
             }
@@ -192,7 +199,7 @@ class GestorPopup(
                 val intent = Intent()
                 intent.type = "image/*"
                 intent.action = Intent.ACTION_GET_CONTENT
-                context.startActivityForResult(intent, IMAGE_LOCAL_CODE)
+                this.context.startActivityForResult(intent, IMAGE_LOCAL_CODE)
                 Log.i("HEY", "AC RES")
                 dialog.dismiss()
             }
@@ -206,14 +213,14 @@ class GestorPopup(
     }
 
 
-    fun start(data: Intent?, requestCode: Int) {
+    fun start(context: Activity, data: Intent?, requestCode: Int) {
         this.data = data
 
         if( requestCode == IMAGE_CAPTURE_CODE ) {
             val photo = data!!.extras!!["data"] as Bitmap
             imageUri = getImageUri(context.applicationContext, photo)
             popupImgIB.setImageURI(imageUri)
-            listenerInit()
+            listenerInit(context)
         }
         if(requestCode == IMAGE_LOCAL_CODE ) {
             if ( data!!.data != null ) {
@@ -221,7 +228,7 @@ class GestorPopup(
                 imageUri = data.data
                 popupImgIB.setImageURI(imageUri)
                 Log.i("HEY", "Image in thread: $imageUri")
-                listenerInit()
+                listenerInit(context)
             } else {
                 //error
             }
@@ -315,7 +322,7 @@ class GestorPopup(
 
         REQUEST = REQUEST_FOR_EDITING
 
-        return listenerInit()
+        return listenerInit(context)
     }
 
     fun clearData() {
