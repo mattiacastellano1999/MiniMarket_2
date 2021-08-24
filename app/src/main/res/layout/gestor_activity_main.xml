@@ -58,10 +58,10 @@
         android:id="@+id/locationRider_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/orderManage_btn"
+        android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
-        android:text="Visualize Riders"
-        android:textSize="25dp"/>
+        android:text="Visualize Riders Aviable"
+        android:textSize="25dp" />
 
 </RelativeLayout>
