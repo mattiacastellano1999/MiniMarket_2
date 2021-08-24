@@ -315,7 +315,7 @@ class GestorPopup(
         imageUri = prod.img
         popupNameED.setText(prod.name)
         popupDescriptionED.setText(prod.description)
-        Log.i("HEY", "Mid Edit Prod")
+        Log.i("HEY", "Mide Edit Prod")
         popupPriceED.setText(prod.price.toString())
         popupQuantityED.setText(prod.quantity.toString())
 
