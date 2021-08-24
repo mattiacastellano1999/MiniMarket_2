@@ -43,9 +43,10 @@ class GestorPopup(
     val db: FirebaseFirestore,
 ): Activity() {
 
-    var dialogBuilder: AlertDialog.Builder
-    var dialog: AlertDialog
-
+    companion object {
+        lateinit var dialogBuilder: AlertDialog.Builder
+        lateinit var dialog: AlertDialog
+    }
     var popupNameED :EditText
     var popupQuantityED: EditText
     var popupPriceED: EditText
@@ -133,11 +134,11 @@ class GestorPopup(
                     .addOnCompleteListener {
                         uploadProductPic(newprod).addOnCompleteListener {
                             dialog.dismiss()
-                            runOnUiThread {
+                            /*runOnUiThread {
                                 val intent =
                                     Intent(context, MarketProductListActivity()::class.java)
                                 start(context, intent, REQUEST)
-                            }
+                            }*/
                         }
                     }
                 if(!oldProd.equals(newprod.name)) {

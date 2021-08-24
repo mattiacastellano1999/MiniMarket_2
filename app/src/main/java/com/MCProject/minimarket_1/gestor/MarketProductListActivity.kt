@@ -10,6 +10,7 @@ import android.widget.*
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.R.drawable.my_back_arrow
 import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.gestor.GestorPopup.Companion.dialog
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
@@ -19,6 +20,8 @@ open class MarketProductListActivity : ProductListActivity() {
     /**
      * Activity Del Market
      */
+
+    lateinit var adapter: ArrayAdapter<Product>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,11 @@ open class MarketProductListActivity : ProductListActivity() {
         super.onStart()
         //Adding Data
         load.startLoading()
+        adapter = ArrayAdapter(
+            this@MarketProductListActivity,
+            R.layout.product,
+            R.id.prod_text,
+            productList)
         fr.addData(type, this, productList)
             .addOnCompleteListener{
                 var i = 0
@@ -62,9 +70,12 @@ open class MarketProductListActivity : ProductListActivity() {
         addBtn.setOnClickListener {
             popup.clearData()
             popup.makePopup(this)
+            dialog.setOnDismissListener {
+                Log.e("HEY", "VAL: exited")
+                listAdapter = MarketProductAdapter()
+            }
         }
     }
-
 
     internal inner class MarketProductAdapter :
         ArrayAdapter<Product>(
@@ -170,7 +181,14 @@ open class MarketProductListActivity : ProductListActivity() {
             if(type == "market") {
                 getEdit().setOnClickListener {
                     oldProd = prod.name
-                    popup.editProduct(prod)
+                    runOnUiThread {
+                        popup.editProduct(prod)
+                        dialog.setOnDismissListener {
+                            adapter.notifyDataSetChanged()
+                            val int = Intent(element_gestor_product.context, MarketProductListActivity::class.java)
+                            element_gestor_product.context.startActivity(int)
+                        }
+                    }
                 }
             } else {
                 getDelete().visibility = View.GONE

@@ -230,10 +230,6 @@ class FirestoreRequest(
                         "Product Correctly Removed",
                         Toast.LENGTH_LONG
                     ).show()
-                    context.runOnUiThread {
-                        val intent = Intent(context, ProductListActivity::class.java)
-                        context.startActivity(intent)
-                    }
                 }
                 .addOnFailureListener {
                     Log.i("HEY", "Failed")
