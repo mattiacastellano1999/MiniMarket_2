@@ -9,10 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.access.util.FirestoreRequest
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlin.concurrent.thread
 
 
@@ -22,23 +25,37 @@ class MainActivity : AppCompatActivity() {
 
     val REQUESTSTORAGEACCESS = 1001
     val REQUESTLOCATIONACCESS = 1010
-    lateinit var firebaseAuth: FirebaseAuth
-    lateinit var auth: String
-    var user: FirebaseUser? = null
+
+    companion object{
+        lateinit var authString: String
+        lateinit var auth: FirebaseAuth
+        var user: FirebaseUser? = null
+        lateinit var db: FirebaseFirestore
+        lateinit var imgDb: FirebaseStorage
+        lateinit var fr: FirestoreRequest
+        lateinit var collection: String
+        lateinit var mail: String
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        authString = ""
+        db = FirebaseFirestore.getInstance()
+        imgDb = FirebaseStorage.getInstance()
+        auth = FirebaseAuth.getInstance()
+        collection = auth.currentUser.displayName
+        mail = auth.currentUser.email
+        fr = FirestoreRequest(db, auth, imgDb, collection, mail)
+
         /**
          * Check if user is correctly logged
          */
-        firebaseAuth = FirebaseAuth.getInstance()
-
         val intentLogout = Intent(this, Login::class.java)
-        if(firebaseAuth.currentUser == null) {
+        if(auth.currentUser == null) {
             startActivity(intentLogout)
         } else {
-            user = firebaseAuth.currentUser
+            user = auth.currentUser
         }
 
     }
@@ -71,16 +88,16 @@ class MainActivity : AppCompatActivity() {
         } else {
 
             if (user != null) {
-                auth = user!!.displayName
-                if (auth.equals("utenti")) {
+                authString = user!!.displayName
+                if (authString.equals("utenti")) {
                     val intent = Intent(this, UserActivity::class.java)
                     startActivity(intent)
                 }
-                if (auth.equals("rider")) {
+                if (authString.equals("riders")) {
                     val intent = Intent(this, RiderActivity::class.java)
                     startActivity(intent)
                 }
-                if (auth.equals("gestori")) {
+                if (authString.equals("gestori")) {
                     val intent = Intent(this, GestorActivity::class.java)
                     startActivity(intent)
                 }

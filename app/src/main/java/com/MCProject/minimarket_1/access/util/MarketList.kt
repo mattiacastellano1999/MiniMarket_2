@@ -139,8 +139,4 @@ class MarketList {
             }
         }
     }
-
-
-
-
 }

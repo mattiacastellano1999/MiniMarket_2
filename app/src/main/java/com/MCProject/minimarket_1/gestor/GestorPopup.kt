@@ -120,7 +120,8 @@ class GestorPopup(
                     popupNameED.text.toString(),
                     popupDescriptionED.text.toString(),
                     popupPriceED.text.toString().toDouble(),
-                    popupQuantityED.text.toString().toInt()
+                    popupQuantityED.text.toString().toInt(),
+                    mail
                 )
                 Log.i("HEY", "__" + newprod)
                 prodList.add(newprod)

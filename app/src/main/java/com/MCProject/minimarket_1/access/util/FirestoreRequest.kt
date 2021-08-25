@@ -12,6 +12,7 @@ import com.MCProject.minimarket_1.access.JoinUs
 import com.MCProject.minimarket_1.access.Loading
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -100,6 +101,9 @@ class FirestoreRequest(
     }
 
 
+    /**
+     * Esegue la GET di tutti i prodotti di un determinato utente contenuti in Firestore
+     */
     fun addData(
         from: String,
         context: Activity,
@@ -111,7 +115,6 @@ class FirestoreRequest(
         load.startLoading()
         productList.clear()
 
-        //read data firestore
         if(from.equals("cart")) {
             pathToMyProduct =  "/profili/$collection/$from/$mail/prodotti"
         } else {
@@ -132,7 +135,8 @@ class FirestoreRequest(
                                     doc.data["nome"].toString(),
                                     doc.data["descrizione"].toString(),
                                     doc.data["prezzo"].toString().toDouble(),
-                                    doc.data["quantita"].toString().toInt()
+                                    doc.data["quantita"].toString().toInt(),
+                                    doc.data["proprietario"].toString()
                                 )
                             )
                             i++
@@ -254,7 +258,8 @@ class FirestoreRequest(
             "nome" to prod.name,
             "descrizione" to prod.description,
             "prezzo" to prod.price,
-            "quantita" to prod.quantity
+            "quantita" to prod.quantity,
+            "proprietario" to prod.owner
         )
 
         val pd = ProgressDialog(context)
@@ -295,7 +300,8 @@ class FirestoreRequest(
         var entry1: HashMap<String, Any?> = hashMapOf<String, Any?>(
             "nome" to prod.name,
             "prezzo" to prod.price,
-            "quantita" to 1
+            "quantita" to 1,
+            "proprietario" to prod.owner
         )
 
         //aggiungo il prodotto in cart
@@ -368,6 +374,66 @@ class FirestoreRequest(
                     ).show()
                 }
         }
+        return ret
+    }
+
+    fun getAllOrder(market: FirebaseUser, orderList: ArrayList<Order>, context: Activity): Task<QuerySnapshot> {
+        val load = Loading(context)
+        load.startLoading()
+
+        val ret = db.collection("/profili/gestori/market/${market.email}/miei_ordini/")
+            .get()
+            .addOnCompleteListener {
+                if ( it.isSuccessful) {
+                    var i = 0
+                    if( !it.result.isEmpty) {
+                        for (doc in it.result) {
+                            Log.i("HEY", "data adding_12:$doc")
+                            /*var myProd: ProductListActivity.Product
+                            doc.data["prodotti"].toString().forEach { i ->
+                                myProd = ProductListActivity.Product(
+                                    i.toInt(),
+                                    Uri.parse(i.toString()),
+                                    i.toString(),
+                                    i.toString(),
+                                    i.toDouble(),
+                                    i.toInt()
+                                )
+                            }*/
+                            /*orderList.add(
+                                Order(
+                                    doc.data["market"].toString(),
+                                    doc.data["user"].toString(),
+                                    doc.data["rider"].toString(),
+                                    myProd
+                                )
+                            )*/
+                            i++
+                            Log.i("HEY", "data adding_11:" + doc.data.toString())
+                        }
+                    }
+
+                } else {
+                    Log.e("HEY", "Error Firetore Marker Reading_0")
+                    Toast.makeText(
+                        context,
+                        "Database Reding Error_0",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                load.stopLoadingDialog()
+                return@addOnCompleteListener
+            }
+            .addOnFailureListener {
+                Log.e("HEY", "Error Firetore Marker Reading")
+                Toast.makeText(
+                    context,
+                    "Database Reding Error",
+                    Toast.LENGTH_LONG
+                ).show()
+                load.stopLoadingDialog()
+                return@addOnFailureListener
+            }
         return ret
     }
 

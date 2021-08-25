@@ -32,7 +32,9 @@ open class ProductListActivity: ListActivity() {
         var name: String,
         var description: String,
         var price: Double,
-        var quantity: Int)
+        var quantity: Int,
+        var owner: String
+        )
     var productList = ArrayList<Product>()
 
     lateinit var db: FirebaseFirestore
