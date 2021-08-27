@@ -5,10 +5,11 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
+import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.access.JoinUs
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.user.CartProductListActivity
@@ -440,6 +441,7 @@ class FirestoreRequest(
         return ret
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun uploadOrder(
         productList: ArrayList<ProductListActivity.Product>,
@@ -475,6 +477,7 @@ class FirestoreRequest(
                     }
                     .addOnCompleteListener {
                         if(i >= productList.size){
+                            sendNotification(context, client, prod.owner)
                             val intent = Intent(context, CartProductListActivity::class.java)
                             context.startActivity(intent)
                         }
@@ -514,6 +517,13 @@ class FirestoreRequest(
                 ).show()
             }
         Log.i("HEY", "End Delete")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun sendNotification(context: Activity, sender: String?, receiver: String) {
+        val notify = Notification(context)
+        notify.createNotificationChannel("0", "Prova", "Prova 1")
+
     }
 }
 

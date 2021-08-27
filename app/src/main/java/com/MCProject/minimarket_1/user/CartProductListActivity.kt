@@ -1,12 +1,11 @@
 package com.MCProject.minimarket_1.user
 
-import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.Loading
-import com.MCProject.minimarket_1.access.util.ProductListActivity
 import com.MCProject.minimarket_1.gestor.MarketProductListActivity
 
 class CartProductListActivity: MarketProductListActivity() {
@@ -17,6 +16,7 @@ class CartProductListActivity: MarketProductListActivity() {
         type = "cart"
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
 
@@ -26,8 +26,6 @@ class CartProductListActivity: MarketProductListActivity() {
         checkoutBtn.text = ""
         checkoutBtn.background = resources.getDrawable(R.drawable.my_exit)
         checkoutBtn.setOnClickListener {
-            /*val intent = Intent(this, Checkout::class.java)
-            this@ProductListActivity.startActivity(intent)*/
             //Perform the checkout
             doOrderCheckout()
         }
@@ -36,9 +34,9 @@ class CartProductListActivity: MarketProductListActivity() {
     /**
      * Perform the order checkout
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     private fun doOrderCheckout() {
         fr.uploadOrder(productList, this, MainActivity.user!!.email, null)
-
     }
 }

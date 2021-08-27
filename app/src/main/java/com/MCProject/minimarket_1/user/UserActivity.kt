@@ -9,8 +9,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.access.util.FirebaseMessaging
 import com.MCProject.minimarket_1.access.util.MyLocation
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.auth.FirebaseAuth
@@ -42,6 +44,11 @@ class UserActivity: AppCompatActivity() {
         marketListBTN = findViewById(R.id.marketList_btn)
 
         welcomeTV.text = "Welcome ${firebaseAuth.currentUser.email}"
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         buttonListener()
 
         val loc = MyLocation(this.applicationContext, this)
@@ -49,6 +56,12 @@ class UserActivity: AppCompatActivity() {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(loc)
+
+
+        //Check some notification
+        Log.i("HEY", "Check Notify")
+        val fm = FirebaseMessaging(MainActivity.mail)
+        fm.addRealtimeUpdate()
     }
 
     private fun buttonListener() {
@@ -57,7 +70,7 @@ class UserActivity: AppCompatActivity() {
             locationBTN.visibility = View.GONE
             oldOrderBTN.visibility = View.GONE
             marketListBTN.visibility = View.GONE
-             //FindMyLocationButton
+            //FindMyLocationButton
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.main_fragment, userTrackMapsFragment)
                 commit()
@@ -66,7 +79,7 @@ class UserActivity: AppCompatActivity() {
 
         logoutIMGBTN.setOnClickListener {
             firebaseAuth.signOut()
-            if(firebaseAuth.currentUser == null) {
+            if (firebaseAuth.currentUser == null) {
                 val intentLogout = Intent(this, Login::class.java)
                 startActivity(intentLogout)
             }
@@ -84,38 +97,7 @@ class UserActivity: AppCompatActivity() {
             val i = Intent(this, MarketAviableActivity::class.java)
             startActivity(i)
         }
-
-        //when the rider leave the market
-        /*leave.setOnClickListener {
-            locationBTN.visibility = View.GONE
-            //FindMyLocationButton
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.chat_fragment, chatFragment)
-                commit()
-            }
-        }*/
-
     }
-
-    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == 101){
-            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(
-                    this,
-                    "Unable to show location - permission required" ,
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                val frag = supportFragmentManager.findFragmentById(R.id.main_fragment)
-                supportFragmentManager.beginTransaction()
-                    .detach(frag!!)
-                    .attach(frag)
-                    .commit()
-            }
-        }
-    }*/
 
     /**
      * for API level 5 and greater
@@ -139,81 +121,4 @@ class UserActivity: AppCompatActivity() {
         } else
             false
     }
-
-    /*@RequiresApi(Build.VERSION_CODES.M)
-    override fun onMapReady(googleMap: GoogleMap?) {
-        gMap = googleMap
-
-        Log.i("HEY", "UDP")
-        myCheckPermission(gMap)
-        Log.i("HEY", "Post UDP")
-
-        //Aggiunta marker
-        val myLocation = LatLng(myLat, myLon)
-        if (googleMap != null) {
-            googleMap.addMarker(MarkerOptions().position(myLocation).title("Your Position"))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation))
-        }
-    }
-
-    /**
-     * controlla se l'utente ha dato i permessi necessari all'applicazione
-     */
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun myCheckPermission(googleMap: GoogleMap?) {
-        if(googleMap != null) {
-            Log.i("HEY", "Mid1 UDP")
-            val permission = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            )
-
-            if (permission == PackageManager.PERMISSION_GRANTED) {
-                Log.i("HEY", "Mid2 UDP")
-                googleMap.isMyLocationEnabled = true
-                //per ottenere latitudine e longitudine dal gps
-                val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            Log.i("HEY", "Mid3 UDP")
-                            Toast.makeText(
-                                this,
-                                "Lat: " + location.latitude + " and Lon: " + location.longitude,
-                                Toast.LENGTH_LONG
-                            ).show()
-                            // do something, save it perhaps?
-                            myLat = location.latitude
-                            myLon = location.longitude
-                        }
-                    }
-            } else {
-                Log.i("HEY", "MidNot2 UDP")
-                myrequestPermission(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    LOCATION_REQUEST_CODE
-                )
-
-            }
-        }
-        else {
-            Log.i("HEY", "gMap == null")
-            Toast.makeText(this, "Please, Enable GPS", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun myrequestPermission(
-        accessFineLocation: String,
-        locationRequestCode: Int,
-    ) {
-        /**
-         * il problema è che se faccio dei cambiamenti a questa linea di codice non funziona poi più nulla
-         *
-         * Soluzione --> spostare l'override di onRequestPermissionResult nella Activity che invoca il fragment
-         */
-        requestPermissions(arrayOf(accessFineLocation), locationRequestCode)
-
-    }*/
 }

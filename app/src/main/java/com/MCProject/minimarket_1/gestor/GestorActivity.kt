@@ -8,8 +8,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.GestorOrderManagerFragment
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.access.util.FirebaseMessaging
 import com.MCProject.minimarket_1.access.util.FirestoreRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -83,6 +85,11 @@ class GestorActivity: AppCompatActivity() {
         }
         val fr = FirestoreRequest(FirebaseFirestore.getInstance(), auth, FirebaseStorage.getInstance(), auth.currentUser.displayName, auth.currentUser.email)
         fr.getAllCategoryProfile(this, "riders")
+
+        //Check some notification
+        Log.i("HEY", "Check Notify")
+        val fm = FirebaseMessaging(MainActivity.mail)
+        fm.addRealtimeUpdate()
     }
 
     override fun onBackPressed() {

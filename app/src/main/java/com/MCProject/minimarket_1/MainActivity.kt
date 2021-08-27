@@ -1,6 +1,8 @@
 package com.MCProject.minimarket_1
 
 import android.Manifest
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -16,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlin.concurrent.thread
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
@@ -57,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             user = auth.currentUser
         }
-
     }
 
     override fun onStart() {
