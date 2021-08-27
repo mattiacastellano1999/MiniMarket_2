@@ -1,7 +1,9 @@
 package com.MCProject.minimarket_1.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.access.util.ProductListActivity
@@ -34,8 +36,9 @@ class CartProductListActivity: MarketProductListActivity() {
     /**
      * Perform the order checkout
      */
+    @Synchronized
     private fun doOrderCheckout() {
-        val load = Loading(this)
-        load.startLoading()
+        fr.uploadOrder(productList, this, MainActivity.user!!.email, null)
+
     }
 }

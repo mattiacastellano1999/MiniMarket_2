@@ -8,8 +8,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import com.MCProject.minimarket_1.access.JoinUs
 import com.MCProject.minimarket_1.access.Loading
+import com.MCProject.minimarket_1.user.CartProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -348,7 +350,8 @@ class FirestoreRequest(
         var entry2: HashMap<String, Any?> = hashMapOf<String, Any?>(
             "nome" to prod.name,
             "prezzo" to prod.price,
-            "quantita" to prod.quantity - 1
+            "quantita" to prod.quantity - 1,
+            "proprietario" to prod.owner
         )
 
         val ret = added.addOnSuccessListener {
@@ -389,8 +392,8 @@ class FirestoreRequest(
                     if( !it.result.isEmpty) {
                         for (doc in it.result) {
                             Log.i("HEY", "data adding_12:$doc")
-                            /*var myProd: ProductListActivity.Product
-                            doc.data["prodotti"].toString().forEach { i ->
+                            var myProd: ProductListActivity.Product
+                            Log.i("HEY","Prodotti:: "+doc.data["prodotti"].toString())/*.forEach { i ->
                                 myProd = ProductListActivity.Product(
                                     i.toInt(),
                                     Uri.parse(i.toString()),
@@ -437,5 +440,80 @@ class FirestoreRequest(
         return ret
     }
 
+    @Synchronized
+    fun uploadOrder(
+        productList: ArrayList<ProductListActivity.Product>,
+        context: Activity,
+        client: String?,
+        rider: String?
+    ) {
+        val load = Loading(context)
+        load.startLoading()
+        var i = 1
+        productList.forEach { prod ->
+            var entry2: HashMap<String, Any?> = hashMapOf<String, Any?>(
+                "nome" to prod.name,
+                "prezzo" to prod.price,
+                "quantita" to prod.quantity,
+                "proprietario" to prod.owner,
+                "cliente" to client,
+                "rider" to rider
+            )
+            Log.i("HEY", "CIclo:::")
+            db.collection("/profili/gestori/ordini/${prod.owner}/miei_ordini")
+                    .document(prod.name)
+                    .set(entry2)
+                    .addOnSuccessListener {
+                        Log.i("HEY", "Added")
+                        Toast.makeText(
+                            context,
+                            "The Product: ${prod.name} has been Ordered",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        removeProductFromCart(prod, context)
+                    }
+                    .addOnCompleteListener {
+                        if(i >= productList.size){
+                            val intent = Intent(context, CartProductListActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                        i ++
+                    }
+                    .addOnFailureListener {
+                        Log.i("HEY", "Failed")
+                        Toast.makeText(
+                            context,
+                            "Error during Product Order",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+        }
+        Log.i("HEY", "FINE CIclo:::")
+    }
+
+    private fun removeProductFromCart(prod: ProductListActivity.Product, context: Activity) {
+        pathToMyProduct =  "/profili/utenti/cart/$mail/prodotti"
+        db.collection(pathToMyProduct)
+            .document(prod.name)
+            .delete()
+            .addOnSuccessListener {
+                Log.i("HEY", "Removed")
+                Toast.makeText(
+                    context,
+                    "Product Correctly Removed",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            .addOnFailureListener {
+                Log.i("HEY", "Failed")
+                Toast.makeText(
+                    context,
+                    "Error during Document deleting",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        Log.i("HEY", "End Delete")
+    }
 }
 
