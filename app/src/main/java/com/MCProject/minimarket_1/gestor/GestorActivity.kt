@@ -1,5 +1,7 @@
 package com.MCProject.minimarket_1.gestor
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -89,7 +91,7 @@ class GestorActivity: AppCompatActivity() {
         //Check some notification
         Log.i("HEY", "Check Notify")
         val fm = FirebaseMessaging(MainActivity.mail)
-        fm.addRealtimeUpdate()
+        fm.addRealtimeUpdate(this)
     }
 
     override fun onBackPressed() {

@@ -1,8 +1,10 @@
 package com.MCProject.minimarket_1.access.util
 
 import android.app.Activity
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.MainActivity
 import com.google.firebase.firestore.DocumentReference
 
@@ -56,25 +58,28 @@ class FirebaseMessaging constructor(val path: String) {
     *   quando rileva delle modifiche su Firebase
     *   le scrive sul textDisplay
     */
-    fun addRealtimeUpdate() {
+    fun addRealtimeUpdate(context: Activity) {
         firestoreChatListener.addSnapshotListener { documentSnapshot, e ->
             when {
                 e != null -> {
                     Log.e("ERRORS", "" + e.message)
                 }
                 documentSnapshot != null -> {
-                    readFromFirebase()
+                    readFromFirebase(context)
                 }
             }
         }
     }
 
-    private fun readFromFirebase() {
+    private fun readFromFirebase(context: Activity) {
         //l.clear()
         firestoreChatListener
             .get()
             .addOnSuccessListener {
-                Log.i("HEY", "" + it.get("Nome").toString())
+                Log.i("HEY", "Mesaggio Da:" + it.get("Nome").toString())
+                val notify = Notification(context)
+                notify.createNotificationChannel("0", "Channel1", "Prova Channel1")
+                notify.showNotification("0", it.get("Nome").toString(), it.get("Testo").toString())
             }
     }
 

@@ -8,11 +8,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.annotation.RequiresApi
-import kotlin.random.Random
+import android.util.Log
+import android.widget.Toast
+import com.MCProject.minimarket_1.MainActivity
 
-@RequiresApi(Build.VERSION_CODES.O)
 class Notification constructor(val context: Activity) {
+
     var notificationManager: NotificationManager
 
     init {
@@ -25,28 +26,45 @@ class Notification constructor(val context: Activity) {
      */
     fun createNotificationChannel(id: String, name: String, description: String) {
         val importance = NotificationManager.IMPORTANCE_LOW
-        val channel = NotificationChannel(id, name, importance)
-        channel.description = description
-        this.notificationManager.createNotificationChannel(channel)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(id, name, importance)
+            channel.description = description
+            notificationManager.createNotificationChannel(channel)
+        } else {
+            Toast.makeText(context, "Unable to Receive Message: VERSION.SDK_INT < O", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     /*
      * Creazione nuova notifica
      */
     fun showNotification(channelID: String, title: String, text: String){
-        val intent = Intent(context, context::class.java ).apply{
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        if(!title.equals("null")) {
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notification = Notification.Builder(context, channelID)
+                    .setContentTitle("$title: ")
+                    .setContentText(text)
+                    .setSmallIcon(android.R.drawable.star_big_on)
+                    .setShowWhen(false)
+                    .setChannelId(channelID)
+                    .setContentIntent(pendingIntent)/*cosa fare quando si preme sulla notifica*/
+                    .setAutoCancel(true)
+                    .build()
+                Log.i("HEY", "showNotification: " + text)
+                notificationManager.notify(1, notification)
+                MainActivity.fr.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
+
+            } else {
+                Toast.makeText(context,
+                    "Unable to Receive Message: VERSION.SDK_INT < O",
+                    Toast.LENGTH_SHORT).show()
+            }
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        val notification = Notification.Builder(context, channelID)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setSmallIcon(android.R.drawable.stat_notify_more)
-            .setShowWhen(false)
-            .setChannelId(channelID)
-            .setContentIntent(pendingIntent)/*cosa fare quando si preme sulla notifica*/
-            .setAutoCancel(true)
-            .build()
-        notificationManager.notify(1,notification)
     }
 }

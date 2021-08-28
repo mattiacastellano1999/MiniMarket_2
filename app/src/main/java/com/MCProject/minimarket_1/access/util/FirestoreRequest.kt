@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.access.JoinUs
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.user.CartProductListActivity
@@ -220,15 +221,19 @@ class FirestoreRequest(
             }
     }
 
-    fun deleteFromDB(context: Activity, prodName: String?) {
-        if(collection.equals("utenti")) {
-            pathToMyProduct =  "/profili/$collection/cart/$mail/prodotti"
+    fun deleteFromDB(context: Activity, elementToDelete: String?, path: String?) {
+        if( path == null) {
+            if (collection.equals("utenti")) {
+                pathToMyProduct = "/profili/$collection/cart/$mail/prodotti"
+            } else {
+                pathToMyProduct = "/profili/$collection/market/$mail/miei_prodotti"
+            }
         } else {
-            pathToMyProduct =  "/profili/$collection/market/$mail/miei_prodotti"
+            pathToMyProduct = path
         }
-        if(prodName != null) {
+        if(elementToDelete != null) {
             db.collection(pathToMyProduct)
-                .document(prodName)
+                .document(elementToDelete)
                 .delete()
                 .addOnSuccessListener {
                     Log.i("HEY", "Removed")
@@ -248,6 +253,10 @@ class FirestoreRequest(
                 }
             Log.i("HEY", "End Delete")
         }
+    }
+
+    fun deleteFromDB(context: Activity, elementToDelete: String?) {
+        deleteFromDB(context, elementToDelete, null)
     }
 
     fun uploadProduct(context: Activity, prod: ProductListActivity.Product): Task<Void> {
@@ -477,9 +486,7 @@ class FirestoreRequest(
                     }
                     .addOnCompleteListener {
                         if(i >= productList.size){
-                            sendNotification(context, client, prod.owner)
-                            val intent = Intent(context, CartProductListActivity::class.java)
-                            context.startActivity(intent)
+                            sendNotification(context, client, prod.owner, productList)
                         }
                         i ++
                     }
@@ -520,10 +527,20 @@ class FirestoreRequest(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendNotification(context: Activity, sender: String?, receiver: String) {
-        val notify = Notification(context)
-        notify.createNotificationChannel("0", "Prova", "Prova 1")
+    fun sendNotification(
+        context: Activity,
+        sender: String?,
+        receiver: String,
+        productList: ArrayList<ProductListActivity.Product>
+    ) {
+        Log.i("HEY", "Invio: "+ productList.joinToString())
+        val fm = FirebaseMessaging(MainActivity.mail)
+        fm.sendMesage(context, sender!!, receiver, productList.joinToString())
 
+
+        //reload activity
+        val intent = Intent(context, CartProductListActivity::class.java)
+        context.startActivity(intent)
     }
 }
 

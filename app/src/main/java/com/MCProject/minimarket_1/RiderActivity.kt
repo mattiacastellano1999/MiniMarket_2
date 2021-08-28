@@ -1,6 +1,8 @@
 package com.MCProject.minimarket_1
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Switch
@@ -22,13 +24,12 @@ class RiderActivity: AppCompatActivity() {
         //Check some notification
         Log.i("HEY", "Check Notify")
         val fm = FirebaseMessaging(MainActivity.mail)
-        fm.addRealtimeUpdate()
+        fm.addRealtimeUpdate(this)
 
         val switch = findViewById<Switch>(R.id.switch1)
 
         switch.setOnClickListener {
-            val fm = FirebaseMessaging(MainActivity.mail)
-            fm.sendMesage(this, MainActivity.mail, "pippo1@mail.com", "Ciao Pippo1 !")
+
         }
     }
 

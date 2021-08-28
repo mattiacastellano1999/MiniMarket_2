@@ -1,6 +1,8 @@
 package com.MCProject.minimarket_1.user
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -61,7 +63,8 @@ class UserActivity: AppCompatActivity() {
         //Check some notification
         Log.i("HEY", "Check Notify")
         val fm = FirebaseMessaging(MainActivity.mail)
-        fm.addRealtimeUpdate()
+        fm.addRealtimeUpdate(this)
+
     }
 
     private fun buttonListener() {
