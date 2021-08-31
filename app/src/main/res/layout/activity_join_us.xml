@@ -30,7 +30,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="JoinUs"
+            android:text="@string/joinus"
             android:textColor="@android:color/darker_gray"
             android:textSize="60dp"
             app:layout_constraintBottom_toTopOf="@+id/mailJ"

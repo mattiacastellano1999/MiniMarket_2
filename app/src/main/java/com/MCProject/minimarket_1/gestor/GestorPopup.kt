@@ -22,8 +22,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.util.FirestoreRequest
+import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_Marketplace
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -125,7 +126,7 @@ class GestorPopup(
                 )
                 Log.i("HEY", "__" + newprod)
                 prodList.add(newprod)
-                val fr = FirestoreRequest(
+                val fr = FirestoreRequest_Marketplace(
                     db,
                     FirebaseAuth.getInstance(),
                     FirebaseStorage.getInstance(),

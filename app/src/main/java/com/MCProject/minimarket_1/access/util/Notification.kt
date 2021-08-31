@@ -1,5 +1,7 @@
 package com.MCProject.minimarket_1.access.util
 
+import android.R
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Notification
 import android.app.NotificationChannel
@@ -10,6 +12,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import com.MCProject.minimarket_0.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.MainActivity
 
 class Notification constructor(val context: Activity) {
@@ -37,20 +40,24 @@ class Notification constructor(val context: Activity) {
     }
 
     /*
-     * Creazione nuova notifica
+     * Creazione nuova notifica per i gestori
+     * Quando cliccata mostra un form di selezione dei rider
      */
-    fun showNotification(channelID: String, title: String, text: String){
+    @SuppressLint("WrongConstant")
+    fun showGestorNotification(channelID: String, title: String, text: String){
         if(!title.equals("null")) {
-            val intent = Intent(context, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val intent = Intent(context, OrderManagerActivity::class.java).apply {
+                flags = com.MCProject.minimarket_1.R.string.SHOWRIDERPOPUP
             }
 
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            val pendingIntent: PendingIntent =
+                    PendingIntent
+                            .getActivity(context, 0, intent, 0)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val notification = Notification.Builder(context, channelID)
                     .setContentTitle("$title: ")
                     .setContentText(text)
-                    .setSmallIcon(android.R.drawable.star_big_on)
+                    .setSmallIcon(R.drawable.star_big_on)
                     .setShowWhen(false)
                     .setChannelId(channelID)
                     .setContentIntent(pendingIntent)/*cosa fare quando si preme sulla notifica*/
@@ -58,7 +65,7 @@ class Notification constructor(val context: Activity) {
                     .build()
                 Log.i("HEY", "showNotification: " + text)
                 notificationManager.notify(1, notification)
-                MainActivity.fr.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
+                MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
 
             } else {
                 Toast.makeText(context,

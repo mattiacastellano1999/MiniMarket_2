@@ -79,7 +79,7 @@ class FirebaseMessaging constructor(val path: String) {
                 Log.i("HEY", "Mesaggio Da:" + it.get("Nome").toString())
                 val notify = Notification(context)
                 notify.createNotificationChannel("0", "Channel1", "Prova Channel1")
-                notify.showNotification("0", it.get("Nome").toString(), it.get("Testo").toString())
+                notify.showGestorNotification("0", it.get("Nome").toString(), it.get("Testo").toString())
             }
     }
 

@@ -10,7 +10,8 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.*
-import com.MCProject.minimarket_1.access.util.FirestoreRequest
+import com.MCProject.minimarket_1.firestore.FirestoreRequest
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -200,7 +201,7 @@ class JoinUs : AppCompatActivity() {
         user!!.updateProfile(profileUpdates)
         Log.e("HEY","postPrfileUpdates: "+ user.displayName)
 
-        val fr = FirestoreRequest(db, auth, null, collection, null)
+        val fr = FirestoreRequest_User(db, auth, null, collection, null)
             fr.newUser(this, entry, collection)
             .addOnSuccessListener {
                 updateUI(user)

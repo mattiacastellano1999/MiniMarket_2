@@ -1,7 +1,5 @@
 package com.MCProject.minimarket_1.gestor
 
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +9,14 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.GestorOrderManagerFragment
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.collection
+import com.MCProject.minimarket_1.MainActivity.Companion.db
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.access.util.FirebaseMessaging
-import com.MCProject.minimarket_1.access.util.FirestoreRequest
+import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -28,6 +30,7 @@ class GestorActivity: AppCompatActivity() {
     lateinit var riderVisualBtn: Button
     lateinit var orderManageBtn: Button
     val auth = FirebaseAuth.getInstance()
+    lateinit var popup : GestorPopup
 
     val gestorRidersFragment = GestorVisualize_ridersFragment()
     val orderManagerFragment = GestorOrderManagerFragment()
@@ -45,10 +48,37 @@ class GestorActivity: AppCompatActivity() {
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
         riderVisualBtn = findViewById(R.id.locationRider_btn)
         orderManageBtn = findViewById(R.id.orderManage_btn)
+        popup = GestorPopup(this, ArrayList<ProductListActivity.Product>(), collection, mail, db)
+
+        if(intent.flags == R.string.SHOWRIDERPOPUP){
+            Log.i("HEY", "Intent Started!!")
+            /*popup.clearData()
+            popup.makePopup(this)
+            GestorPopup.dialog.setOnDismissListener {
+                Log.e("HEY", "VAL: exited")
+            }*/
+        }
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if(intent.flags == R.string.SHOWRIDERPOPUP){
+            Log.i("HEY", "Intent Started!!")
+            /*popup.clearData()
+            popup.makePopup(this)
+            GestorPopup.dialog.setOnDismissListener {
+                Log.e("HEY", "VAL: exited")
+            }*/
+        }
+
     }
 
     override fun onStart() {
         super.onStart()
+
+        orderManageBtn.visibility = View.VISIBLE
+        riderVisualBtn.visibility = View.VISIBLE
 
         logoutImgBtn.setOnClickListener {
             auth.signOut()
@@ -66,7 +96,7 @@ class GestorActivity: AppCompatActivity() {
                 replace(R.id.main_fragment, orderManagerFragment)
                 commit() //con il commit esegue le azioni descritte prima
             }*/
-            val intentLogout = Intent(this, OrderManager::class.java)
+            val intentLogout = Intent(this, UnusedOrderManager::class.java)
             startActivity(intentLogout)
         }
 
@@ -85,7 +115,7 @@ class GestorActivity: AppCompatActivity() {
             val intent = Intent(this, MarketProductListActivity::class.java)
             startActivity(intent)
         }
-        val fr = FirestoreRequest(FirebaseFirestore.getInstance(), auth, FirebaseStorage.getInstance(), auth.currentUser.displayName, auth.currentUser.email)
+        val fr = FirestoreRequest_User(FirebaseFirestore.getInstance(), auth, FirebaseStorage.getInstance(), auth.currentUser.displayName, auth.currentUser.email)
         fr.getAllCategoryProfile(this, "riders")
 
         //Check some notification

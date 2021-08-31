@@ -10,7 +10,7 @@ import android.widget.*
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.RiderActivity
 import com.MCProject.minimarket_1.access.Loading
-import com.MCProject.minimarket_1.access.util.FirestoreRequest
+import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.access.util.MarketList
 import com.MCProject.minimarket_1.access.util.MyLocation
 import com.MCProject.minimarket_1.gestor.GestorActivity

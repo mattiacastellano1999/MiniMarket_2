@@ -37,6 +37,6 @@ class CartProductListActivity: MarketProductListActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     private fun doOrderCheckout() {
-        fr.uploadOrder(productList, this, MainActivity.user!!.email, null)
+        frO.uploadOrder(productList, this, MainActivity.user!!.email, null)
     }
 }

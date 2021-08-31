@@ -18,7 +18,8 @@ import com.MCProject.minimarket_1.gestor.GestorPopup.Companion.dialog
 )
 open class MarketProductListActivity : ProductListActivity() {
     /**
-     * Activity Del Market
+     * Activity che permette di gestire i Prodotti al Gestore
+     * E di visualizzare il carrello agli Utenti
      */
 
     lateinit var adapter: ArrayAdapter<Product>
@@ -41,12 +42,21 @@ open class MarketProductListActivity : ProductListActivity() {
             R.layout.product,
             R.id.prod_text,
             productList)
-        fr.addData(type, this, productList)
+
+        var path = ""
+        if(type.equals("cart")) {
+            path =  "/profili/$collection/$type/$mail/prodotti"
+        } else {
+            Log.i("HEY", "Email: :$mail")
+            path =  "/profili/$collection/$type/${productList[0].owner}/miei_prodotti"
+        }
+
+        frM.addData(path, this, productList)
             .addOnCompleteListener{
                 var i = 0
                 Log.i("HEY", "Adding All Data")
                 for (doc in it.result) {
-                    fr.addDataImg(this,
+                    frM.addDataImg(this,
                             doc.data["nome"].toString(),
                             i,
                             productList

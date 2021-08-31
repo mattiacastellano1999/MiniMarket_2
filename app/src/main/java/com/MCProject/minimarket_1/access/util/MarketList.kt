@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.MCProject.minimarket_1.access.util
 
 import android.app.Activity
@@ -9,6 +7,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import android.widget.Toast
+import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.user.MarketAviableActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot

@@ -50,6 +50,9 @@ class UserActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        locationBTN.visibility = View.VISIBLE
+        oldOrderBTN.visibility = View.VISIBLE
+        marketListBTN.visibility = View.VISIBLE
 
         buttonListener()
 

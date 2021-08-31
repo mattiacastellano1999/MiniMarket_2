@@ -14,6 +14,10 @@ import android.widget.Toast
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.RiderActivity
 import com.MCProject.minimarket_1.access.Loading
+import com.MCProject.minimarket_1.firestore.FirestoreRequest
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_Marketplace
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_Order
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.gestor.GestorPopup
 import com.MCProject.minimarket_1.gestor.MarketProductListActivity
@@ -51,6 +55,8 @@ open class ProductListActivity: ListActivity() {
 
     lateinit var popup : GestorPopup
     lateinit var oldProd: String
+    lateinit var frO: FirestoreRequest_Order
+    lateinit var frM: FirestoreRequest_Marketplace
     lateinit var fr: FirestoreRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +76,8 @@ open class ProductListActivity: ListActivity() {
         mail = auth.currentUser.email
 
         popup = GestorPopup(this, productList, collection, mail, db)
+        frO = FirestoreRequest_Order(db, auth, imgDb, collection, mail)
+        frM = FirestoreRequest_Marketplace(db, auth, imgDb, collection, mail)
         fr = FirestoreRequest(db, auth, imgDb, collection, mail)
     }
 

@@ -10,7 +10,6 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import android.Manifest
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -20,13 +19,7 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.Loading
-import com.MCProject.minimarket_1.access.util.FirestoreRequest
-import com.MCProject.minimarket_1.access.util.MarketList
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
 
 

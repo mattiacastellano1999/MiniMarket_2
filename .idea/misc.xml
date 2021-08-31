@@ -4,12 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/buttonshape.xml" value="0.3682051282051282" />
+        <entry key="app/src/main/res/layout/activity_join_us.xml" value="0.2463768115942029" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.21195652173913043" />
         <entry key="app/src/main/res/layout/activity_market_list.xml" value="0.2658514492753623" />
         <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.49100968188105115" />
         <entry key="app/src/main/res/layout/fragment_order_list.xml" value="0.23052536231884058" />
         <entry key="app/src/main/res/layout/gestor_activity_main.xml" value="0.23278985507246377" />
         <entry key="app/src/main/res/layout/gestor_activity_order.xml" value="0.23278985507246377" />
+        <entry key="app/src/main/res/layout/gestor_order_activity.xml" value="0.5" />
         <entry key="app/src/main/res/layout/loading_dialog.xml" value="0.32653985507246375" />
+        <entry key="app/src/main/res/layout/order.xml" value="0.21603260869565216" />
         <entry key="app/src/main/res/layout/product.xml" value="0.17401215805471124" />
         <entry key="app/src/main/res/layout/rider_activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/user_activity_main.xml" value="0.1" />

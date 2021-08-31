@@ -6,8 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.util.FirestoreRequest
+import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.access.util.ProductListActivity
+
+/**
+ * Crea una lista di prodotti che possono essere comprati dagli utenti
+ */
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class UserProductListActivity: ProductListActivity() {
@@ -32,7 +36,7 @@ class UserProductListActivity: ProductListActivity() {
         addBtn.visibility = View.GONE
         checkoutBtn.visibility = View.VISIBLE
         load.startLoading()
-        fr.addData("market", this, productList)
+        frM.addData("/profili/gestori/market/$gestorEmail/miei_prodotti", this, productList)
             .addOnCompleteListener{
                 var i = 0
                 for (doc in it.result) {
@@ -157,7 +161,7 @@ class UserProductListActivity: ProductListActivity() {
             getAdd().visibility = View.VISIBLE
             getAdd().setOnClickListener {
                 Log.i("HEY", "Dentro il Cick")
-                fr.addDataIntoCart(
+                frM.addDataIntoCart(
                     this@UserProductListActivity,
                     user!!,
                     gestorEmail,
