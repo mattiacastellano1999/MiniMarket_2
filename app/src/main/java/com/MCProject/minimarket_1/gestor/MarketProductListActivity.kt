@@ -48,7 +48,7 @@ open class MarketProductListActivity : ProductListActivity() {
             path =  "/profili/$collection/$type/$mail/prodotti"
         } else {
             Log.i("HEY", "Email: :$mail")
-            path =  "/profili/$collection/$type/${productList[0].owner}/miei_prodotti"
+            path =  "/profili/$collection/$type/$mail/miei_prodotti"
         }
 
         frM.addData(path, this, productList)

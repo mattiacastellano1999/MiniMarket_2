@@ -43,16 +43,17 @@ class Notification constructor(val context: Activity) {
      * Creazione nuova notifica per i gestori
      * Quando cliccata mostra un form di selezione dei rider
      */
-    @SuppressLint("WrongConstant")
-    fun showGestorNotification(channelID: String, title: String, text: String){
+    @SuppressLint("WrongConstant", "UnspecifiedImmutableFlag")
+    fun showGestorNotification(channelID: String, title: String, text: String) {
         if(!title.equals("null")) {
             val intent = Intent(context, OrderManagerActivity::class.java).apply {
-                flags = com.MCProject.minimarket_1.R.string.SHOWRIDERPOPUP
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                this.putExtra("testo", title)
             }
 
             val pendingIntent: PendingIntent =
                     PendingIntent
-                            .getActivity(context, 0, intent, 0)
+                            .getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val notification = Notification.Builder(context, channelID)
                     .setContentTitle("$title: ")

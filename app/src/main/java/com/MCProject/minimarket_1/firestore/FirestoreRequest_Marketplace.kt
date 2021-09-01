@@ -167,4 +167,10 @@ class FirestoreRequest_Marketplace(
         return super.addData(path, context, productList)
     }
 
+    fun getAllRiderAviable(context: Activity, riderAviable: ArrayList<String>): Task<QuerySnapshot> {
+        pathToMyProduct = "profili/riders/dati"
+
+        return getAllElement(context, riderAviable)
+    }
+
 }

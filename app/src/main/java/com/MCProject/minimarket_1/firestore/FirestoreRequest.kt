@@ -225,5 +225,50 @@ open class FirestoreRequest(
         context.startActivity(intent)
     }
 
+    fun getAllElement(context: Activity, elements: ArrayList<String>): Task<QuerySnapshot> {
+        Log.i("HEY", "Start Getting Riders")
+        val load = Loading(context)
+        load.startLoading()
+        elements.clear()
+
+        val ret = db.collection(pathToMyProduct)
+                .get()
+                .addOnCompleteListener {
+                    if ( it.isSuccessful) {
+                        if( !it.result.isEmpty) {
+                            for (doc in it.result) {
+                                Log.i("HEY", "data adding_12:${doc.data}")
+                                elements.add(
+                                        doc.data["email"].toString()
+                                )
+                            }
+                        } else {
+                            Log.e("HEY", "Error with Path")
+                            load.stopLoadingDialog()
+                        }
+                    } else {
+                        Log.e("HEY", "Error Firetore Marker Reading_0")
+                        Toast.makeText(
+                                context,
+                                "Database Reding Error_0",
+                                Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    load.stopLoadingDialog()
+                    return@addOnCompleteListener
+                }
+                .addOnFailureListener {
+                    Log.e("HEY", "Error Firetore Marker Reading")
+                    Toast.makeText(
+                            context,
+                            "Database Reding Error",
+                            Toast.LENGTH_LONG
+                    ).show()
+                    load.stopLoadingDialog()
+                    return@addOnFailureListener
+                }
+        return ret
+    }
+
 }
 
