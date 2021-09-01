@@ -32,7 +32,8 @@ class FirebaseMessaging constructor(val path: String) {
             .document("message_for_"+receiver)
 
         val newMessage = mapOf<String, String>(
-            NAME_FIELD to sender,
+             "gestore" to receiver,
+            "cliente" to sender,
             TEXT_FIELD to message
         )
 
@@ -62,7 +63,7 @@ class FirebaseMessaging constructor(val path: String) {
         firestoreChatListener.addSnapshotListener { documentSnapshot, e ->
             when {
                 e != null -> {
-                    Log.e("ERRORS", "" + e.message)
+                    Log.e("HEY", "Errors: " + e.message)
                 }
                 documentSnapshot != null -> {
                     readFromFirebase(context)
@@ -79,7 +80,7 @@ class FirebaseMessaging constructor(val path: String) {
                 Log.i("HEY", "Mesaggio Da:" + it.get("Nome").toString())
                 val notify = Notification(context)
                 notify.createNotificationChannel("0", "Channel1", "Prova Channel1")
-                notify.showGestorNotification("0", it.get("Nome").toString(), it.get("Testo").toString())
+                notify.showGestorNotification("0", it.get("gestore").toString(), it.get("cliente").toString(), it.get("Testo").toString())
             }
     }
 

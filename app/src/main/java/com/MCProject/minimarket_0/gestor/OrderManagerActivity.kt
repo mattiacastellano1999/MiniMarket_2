@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageButton
 import com.MCProject.minimarket_1.MainActivity.Companion.auth
+import com.MCProject.minimarket_1.MainActivity.Companion.frM
 import com.MCProject.minimarket_1.RiderActivity
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.gestor.GestorActivity
@@ -20,6 +22,8 @@ import kotlin.math.log
 class OrderManagerActivity : AppCompatActivity() {
     lateinit var logoutImgBtn: ImageButton
     lateinit var homeImgBtn: ImageButton
+    lateinit var cancleBtn: Button
+    lateinit var confirmBtn: Button
 
     lateinit var cliente : String
     lateinit var riderAviable: ArrayList<String>
@@ -35,6 +39,8 @@ class OrderManagerActivity : AppCompatActivity() {
         spinner = findViewById(R.id.rider_ed)
         homeImgBtn = findViewById(R.id.home_imgBtn)
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
+        cancleBtn = findViewById(R.id.cancle_btn)
+        confirmBtn = findViewById(R.id.confirm_btn)
     }
 
     override fun onStart() {
@@ -98,5 +104,32 @@ class OrderManagerActivity : AppCompatActivity() {
                 }
             }
         }
+
+        confirmBtn.setOnClickListener {
+            sendDeliveryRequestToRider()
+        }
+
+        cancleBtn.setOnClickListener {
+            val username = auth.currentUser.displayName
+            when {
+                username.equals("utenti") -> {
+                    val intent = Intent(this, UserActivity::class.java)
+                    this@OrderManagerActivity.startActivity(intent)
+                }
+                username.equals("gestori") -> {
+                    val intent = Intent(this, GestorActivity::class.java)
+                    this@OrderManagerActivity.startActivity(intent)
+                }
+                username.equals("riders") -> {
+                    val intent = Intent(this, RiderActivity::class.java)
+                    this@OrderManagerActivity.startActivity(intent)
+                }
+            }
+        }
+    }
+
+    private fun sendDeliveryRequestToRider() {
+        val rider = spinner.selectedItem.toString()
+        //frO.
     }
 }

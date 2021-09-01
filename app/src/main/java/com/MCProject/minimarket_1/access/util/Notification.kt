@@ -14,6 +14,7 @@ import android.util.Log
 import android.widget.Toast
 import com.MCProject.minimarket_0.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 
 class Notification constructor(val context: Activity) {
 
@@ -44,11 +45,12 @@ class Notification constructor(val context: Activity) {
      * Quando cliccata mostra un form di selezione dei rider
      */
     @SuppressLint("WrongConstant", "UnspecifiedImmutableFlag")
-    fun showGestorNotification(channelID: String, title: String, text: String) {
-        if(!title.equals("null")) {
+    fun showGestorNotification(channelID: String, gestore: String, cliente: String, messaggio: String) {
+        Log.i("HEY", "HERE showNotification: " + cliente + "__0" + messaggio)
+        if(cliente != "null" && gestore == mail) {
             val intent = Intent(context, OrderManagerActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                this.putExtra("testo", title)
+                this.putExtra("testo", cliente)
             }
 
             val pendingIntent: PendingIntent =
@@ -56,15 +58,15 @@ class Notification constructor(val context: Activity) {
                             .getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val notification = Notification.Builder(context, channelID)
-                    .setContentTitle("$title: ")
-                    .setContentText(text)
+                    .setContentTitle("$cliente: ")
+                    .setContentText(messaggio)
                     .setSmallIcon(R.drawable.star_big_on)
                     .setShowWhen(false)
                     .setChannelId(channelID)
                     .setContentIntent(pendingIntent)/*cosa fare quando si preme sulla notifica*/
                     .setAutoCancel(true)
                     .build()
-                Log.i("HEY", "showNotification: " + text)
+                Log.i("HEY", "showNotification: " + messaggio)
                 notificationManager.notify(1, notification)
                 MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
 

@@ -36,8 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rider Selected: "
-        android:layout_below="@id/home_imgBtn"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="30dp"/>
 
     <Spinner
@@ -48,6 +47,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:autofillHints="name" />
+
+    <Button
+        android:id="@+id/cancle_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Cancle"/>
+
+    <Button
+        android:id="@+id/confirm_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Confirm"/>
+
 
 
 </RelativeLayout>
