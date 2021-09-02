@@ -6,5 +6,6 @@
     <string name="search_hint">Check Your Address</string>
     <string name="joinus">JoinUs</string>
     <string name="SHOWRIDERPOPUP">1010</string>
+    <string name="rider_status_NA">not assigned</string>
 </resources>
 

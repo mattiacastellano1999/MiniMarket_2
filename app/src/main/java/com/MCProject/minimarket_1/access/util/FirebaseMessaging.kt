@@ -1,12 +1,11 @@
 package com.MCProject.minimarket_1.access.util
 
 import android.app.Activity
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.MainActivity
 import com.google.firebase.firestore.DocumentReference
+import java.util.*
 
 class FirebaseMessaging constructor(val path: String) {
 
@@ -59,28 +58,29 @@ class FirebaseMessaging constructor(val path: String) {
     *   quando rileva delle modifiche su Firebase
     *   le scrive sul textDisplay
     */
-    fun addRealtimeUpdate(context: Activity) {
+    fun addRealtimeUpdate(context: Activity, s: String) {
         firestoreChatListener.addSnapshotListener { documentSnapshot, e ->
             when {
                 e != null -> {
                     Log.e("HEY", "Errors: " + e.message)
                 }
                 documentSnapshot != null -> {
-                    readFromFirebase(context)
+                    readFromFirebase(context, s)
                 }
             }
         }
     }
 
-    private fun readFromFirebase(context: Activity) {
+    private fun readFromFirebase(context: Activity, type: String) {
         //l.clear()
         firestoreChatListener
             .get()
             .addOnSuccessListener {
-                Log.i("HEY", "Mesaggio Da:" + it.get("Nome").toString())
+                Log.i("HEY", "Mesaggio Da:" + it.data)
                 val notify = Notification(context)
-                notify.createNotificationChannel("0", "Channel1", "Prova Channel1")
-                notify.showGestorNotification("0", it.get("gestore").toString(), it.get("cliente").toString(), it.get("Testo").toString())
+                val channellid = Random().nextInt(100)
+                notify.createNotificationChannel(channellid.toString(), "Channel_$type$channellid", "Prova Channel1")
+                notify.showGestorNotification(channellid.toString(), it.get("gestore").toString(), it.get("cliente").toString(), it.get("Testo").toString())
             }
     }
 

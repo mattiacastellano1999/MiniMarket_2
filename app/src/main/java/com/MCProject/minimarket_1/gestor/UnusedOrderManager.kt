@@ -28,7 +28,6 @@ class UnusedOrderManager: ListActivity(), AdapterView.OnItemClickListener{
 
     var orderList = ArrayList<Order>()
     lateinit var homeBtn: ImageButton
-    var productList: ArrayList<ProductListActivity.Product> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +41,9 @@ class UnusedOrderManager: ListActivity(), AdapterView.OnItemClickListener{
         super.onStart()
 
         orderList.clear()
-        productList.clear()
         homeListener()
 
-        frO.getAllOrder(mail, orderList, productList, this)
+        frO.getAllOrder(mail, orderList, this)
                 .addOnCompleteListener {
                     Log.i("HEY", "OrderList: ${orderList.size}")
                     val itemsAdapter: MyOrdersAdapter =

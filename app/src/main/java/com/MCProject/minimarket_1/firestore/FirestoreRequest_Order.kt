@@ -5,12 +5,12 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.access.util.Order
 import com.MCProject.minimarket_1.access.util.ProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -30,22 +30,11 @@ class FirestoreRequest_Order (
     fun getAllOrder(
             market: String,
             orderList: ArrayList<Order>,
-            productList: ArrayList<ProductListActivity.Product>,
             context: Activity
     ): Task<QuerySnapshot> {
-        pathToMyProduct = "profili/gestori/ordini/${market}/miei_ordini/"
-        val ret = addData("", context, productList)
+        pathToMyProduct = "/profili/gestori/ordini/$market/miei_ordini"
+        val ret = addOrderData(pathToMyProduct, context, orderList)
                 .addOnCompleteListener { va ->
-                    for (doc in va.result) {
-                        orderList.add(
-                                Order(
-                                        doc.data["proprietario"].toString(),
-                                        doc.data["cliente"].toString(),
-                                        doc.data["rider"].toString(),
-                                        productList
-                                )
-                        )
-                    }
                     Log.i("HEY", "data adding_15:${orderList.size}")
                 }
         return ret
@@ -62,23 +51,50 @@ class FirestoreRequest_Order (
         val load = Loading(context)
         load.startLoading()
 
-        var orderName = "Order N_" + Random(100).nextInt(100).toString()
+        findCorrectOrderName(productList[0].owner, load, productList, context, client, rider)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun findCorrectOrderName(
+            e_mail: String, load: Loading,
+            productList: ArrayList<ProductListActivity.Product>,
+            context: Activity, client: String?,
+            rider: String?
+    ): DocumentReference {
+        var orderName = "Order N_" + Random().nextInt(100)
         var doc: DocumentReference =
-                db.collection("/profili/gestori/ordini/$mail/miei_ordini")
+                db.collection("/profili/gestori/ordini/$e_mail/miei_ordini")
                         .document(orderName)
+        Log.i("HEY" , "Name: "+ orderName)
+        doc
+                .get()
+                .addOnSuccessListener {
+                    if(it.exists()) {
+                        Log.i("HEY", "Success: " + it.data)
+                        findCorrectOrderName(e_mail, load, productList, context, client, rider)
+                    } else {
+                        doUploadData(productList, context, client, rider, orderName, load, doc)
+                    }
+                }
+        return doc
+    }
 
-        while(doc.get().isSuccessful) {
-            orderName = "Order N_" + Random(100).nextInt(100).toString()
-            doc = db.collection("/profili/gestori/ordini/$mail/miei_ordini")
-                    .document(orderName)
-        }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun doUploadData(
+            productList: ArrayList<ProductListActivity.Product>,
+            context: Activity,
+            client: String?,
+            rider: String?,
+            orderName: String,
+            load: Loading,
+            doc: DocumentReference
+    ) {
         var entry2: HashMap<String, Any?> = hashMapOf()
         entry2["nome"] = orderName
         entry2["cliente"] = client
         entry2["rider"] = rider
         entry2["proprietario"] = mail
-
+        entry2["riderStatus"] = context.getString(R.string.rider_status_NA)
         var priceTot = 0.0
         var owner = ""
 
@@ -115,15 +131,13 @@ class FirestoreRequest_Order (
                             Toast.LENGTH_LONG
                     ).show()
                 }
-        Log.i("HEY", "FINE CIclo:::")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /*@RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     fun uploadDeliveryRequest(
             context: Activity,
-            gestor: String,
-            rider: String
+            orders: ArrayList<Order>
     ) {
         val order = gestor
         val load = Loading(context)
@@ -148,6 +162,6 @@ class FirestoreRequest_Order (
                     ).show()
                 }
 
-    }
+    }*/
 
 }

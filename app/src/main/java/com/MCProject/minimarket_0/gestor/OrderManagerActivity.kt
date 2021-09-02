@@ -3,20 +3,18 @@ package com.MCProject.minimarket_0.gestor
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ImageButton
 import com.MCProject.minimarket_1.MainActivity.Companion.auth
 import com.MCProject.minimarket_1.MainActivity.Companion.frM
+import com.MCProject.minimarket_1.MainActivity.Companion.frO
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.RiderActivity
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.access.util.Order
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
-import kotlin.math.log
 
 
 class OrderManagerActivity : AppCompatActivity() {
@@ -27,7 +25,9 @@ class OrderManagerActivity : AppCompatActivity() {
 
     lateinit var cliente : String
     lateinit var riderAviable: ArrayList<String>
+    lateinit var orderList: ArrayList<Order>
     lateinit var spinner: Spinner
+    var engaged = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +35,7 @@ class OrderManagerActivity : AppCompatActivity() {
         Log.i("HEY", "Order Manager Activity")
         setContentView(R.layout.gestor_order_activity)
         cliente = intent.extras!!["testo"].toString()
+        Log.i("HEY", "Extra: "+ cliente)
 
         spinner = findViewById(R.id.rider_ed)
         homeImgBtn = findViewById(R.id.home_imgBtn)
@@ -47,14 +48,14 @@ class OrderManagerActivity : AppCompatActivity() {
         super.onStart()
 
         buttonListener()
+        orderList = ArrayList<Order>()
 
         if(cliente.isNotEmpty()){
             Log.i("HEY", "Not Empty")
             //significa che e' stata chiamata in seguito ad aver premuto su un determinato ordine
             //in cliente ho la mail del cliente che ha effettuato l'ordine
             riderAviable = ArrayList()
-            MainActivity.frM
-                    .getAllRiderAviable(this, riderAviable)
+            frM.getAllRiderAviable(this, riderAviable)
                     .addOnCompleteListener {
                         if(it.isSuccessful){
                             Log.i("HEY", "RIders Aviable:" + riderAviable)
@@ -130,6 +131,17 @@ class OrderManagerActivity : AppCompatActivity() {
 
     private fun sendDeliveryRequestToRider() {
         val rider = spinner.selectedItem.toString()
-        //frO.
+
+        frO.getAllOrder(mail, orderList, this)
+                .addOnCompleteListener{
+                    if(orderList.size < 1) {
+                        Log.e("HEY", "Error: Order List Empty")
+                        Toast.makeText(this, "Error: Order List Empty", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.d("HEY", "Order List Rider: "+ orderList[0].rider)
+                        //frO.uploadDeliveryRequest(this, orderList)
+                    }
+                }
+
     }
 }

@@ -50,7 +50,8 @@ class Notification constructor(val context: Activity) {
         if(cliente != "null" && gestore == mail) {
             val intent = Intent(context, OrderManagerActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                this.putExtra("testo", cliente)
+                this.putExtra("cliente", cliente)
+                this.putExtra("gestore", gestore)
             }
 
             val pendingIntent: PendingIntent =

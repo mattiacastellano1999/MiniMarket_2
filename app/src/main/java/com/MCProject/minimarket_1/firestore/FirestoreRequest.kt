@@ -1,7 +1,6 @@
 package com.MCProject.minimarket_1.firestore
 
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,6 +12,7 @@ import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.access.util.FirebaseMessaging
+import com.MCProject.minimarket_1.access.util.Order
 import com.MCProject.minimarket_1.access.util.ProductListActivity
 import com.MCProject.minimarket_1.user.CartProductListActivity
 import com.google.android.gms.tasks.Task
@@ -32,6 +32,78 @@ open class FirestoreRequest(
 ) {
 
     lateinit var pathToMyProduct: String
+
+    /**
+     * esgue la GET degli ordini memorizzati su FB
+     */
+    fun addOrderData(
+            from: String,
+            context: Activity,
+            orderList: ArrayList<Order>
+    ): Task<QuerySnapshot> {
+        val load = Loading(context)
+        load.startLoading()
+        orderList.clear()
+
+        Log.i("HEY", "Path: "+from)
+        val ret = db.collection(from)
+                .get()
+                .addOnCompleteListener {@Synchronized
+                    if ( it.isSuccessful) {
+                        var i = 0
+
+                        Log.i("HEY", "Result: " + it.result)
+                        if( !it.result.isEmpty) {
+                            for (doc in it.result) {
+                                Log.i("HEY", "Doc: "+doc.data)
+                                var myOrder = Order(
+                                        doc.data["nome"].toString(),
+                                        doc.data["prezzo"].toString().toDouble(),
+                                        doc.data["proprietario"].toString(),
+                                        doc.data["cliente"].toString(),
+                                        doc.data["rider"].toString(),
+                                        doc.data["riderStatus"].toString(),
+                                        HashMap<String, String>()
+                                )
+
+                                while (doc.data["prod_name_"+i].toString() == "null") {
+                                    Log.i("HEY", "While Doc: "+doc.data["prod_name_"+i])
+                                    myOrder.products.set(
+                                            doc.data["prod_name_" + i].toString(),
+                                            doc.data["prod_qty_" + i].toString()
+                                    )
+                                    i++
+                                }
+                                i=0
+                                orderList.add(myOrder)
+                            }
+                        } else {
+                            Log.e("HEY", "Error with Path")
+                            load.stopLoadingDialog()
+                        }
+                    } else {
+                        Log.e("HEY", "Error Firetore Marker Reading_0")
+                        Toast.makeText(
+                                context,
+                                "Database Reding Error_0",
+                                Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    load.stopLoadingDialog()
+                    return@addOnCompleteListener
+                }
+                .addOnFailureListener {
+                    Log.e("HEY", "Error Firetore Marker Reading")
+                    Toast.makeText(
+                            context,
+                            "Database Reding Error",
+                            Toast.LENGTH_LONG
+                    ).show()
+                    load.stopLoadingDialog()
+                    return@addOnFailureListener
+                }
+        return ret
+    }
 
     /**
      * Esegue la GET di tutti i prodotti di un determinato utente contenuti in Firestore
