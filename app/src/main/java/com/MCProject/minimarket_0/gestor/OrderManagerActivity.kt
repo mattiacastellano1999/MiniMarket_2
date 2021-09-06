@@ -18,28 +18,32 @@ import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
 
 
-class OrderManagerActivity : AppCompatActivity() {
+class OrderManagerActivity(var order: Order?) : AppCompatActivity() {
+
+    constructor(): this(null)
+
     lateinit var logoutImgBtn: ImageButton
     lateinit var homeImgBtn: ImageButton
     lateinit var cancleBtn: Button
     lateinit var confirmBtn: Button
     lateinit var titleTV: TextView
+    lateinit var statusTV: TextView
 
     lateinit var cliente : String
     lateinit var orderN : String
     lateinit var riderAviable: ArrayList<String>
-    lateinit var orderList: ArrayList<Order>
+    //lateinit var orderList: ArrayList<Order>
     lateinit var spinner: Spinner
-    var engaged = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Log.i("HEY", "Order Manager Activity")
         setContentView(R.layout.gestor_order_activity)
+
         cliente = intent.extras!!["testo"].toString()
         orderN = intent.extras!!["nome_ordine"].toString()
-        Log.i("HEY", "Extra: "+ cliente)
+        Log.i("HEY", "Extra: " + cliente)
 
         spinner = findViewById(R.id.rider_ed)
         homeImgBtn = findViewById(R.id.home_imgBtn)
@@ -47,6 +51,7 @@ class OrderManagerActivity : AppCompatActivity() {
         cancleBtn = findViewById(R.id.cancle_btn)
         confirmBtn = findViewById(R.id.confirm_btn)
         titleTV = findViewById(R.id.title_tv)
+        statusTV = findViewById(R.id.status_tv)
     }
 
     @SuppressLint("SetTextI18n")
@@ -54,8 +59,16 @@ class OrderManagerActivity : AppCompatActivity() {
         super.onStart()
 
         buttonListener()
-        orderList = ArrayList<Order>()
+        //orderList = ArrayList<Order>()
         titleTV.text = "Rider Assignment \nFor Order: $orderN"
+        if(order != null) {
+            //vuol dire che la activity è stata chiamata da UnusedOrderManager
+            statusTV.text = "Rider Status: " + order!!.riderStatus
+        } else {
+            //la activity è stata chiamata da Notification
+            statusTV.text = "Rider Status: not assigned"
+            order = Order(orderN, 0.0, "", "", "", "", HashMap())
+        }
 
         if(cliente.isNotEmpty()){
             Log.i("HEY", "Not Empty")
@@ -138,31 +151,39 @@ class OrderManagerActivity : AppCompatActivity() {
 
     private fun sendDeliveryRequestToRider() {
         val rider = spinner.selectedItem.toString()
-
-        frO.getAllOrder(mail, orderList, this)
-                .addOnCompleteListener{
-                    if(orderList.size < 1) {
-                        Log.e("HEY", "Error: Order List Empty")
-                        Toast.makeText(this, "Error: Order List Empty", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Log.d("HEY", "Order List Rider: "+ orderList[0].rider)
-                        //frO.uploadDeliveryRequest(this, orderList)
+        if(order!!.prezzo_tot == 0.0) {
+            val orderList = ArrayList<Order>()
+            frO.getAllOrder(mail, orderList, this)
+                    .addOnCompleteListener {
+                        if (orderList.size < 1) {
+                            Log.e("HEY", "Error: Order List Empty")
+                            Toast.makeText(this, "Error: Order List Empty", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Log.d("HEY", "Order List Rider: " + orderList[0].rider)
+                            orderList.forEach { order ->
+                                if (order.nome_ordine == orderN) {
+                                    if (order.riderStatus == "not assigned") {
+                                        //rider non ancora assegnato -> mando richiesta al rider
+                                        frO.updateOrder(this, order, "request sended", rider)
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-
-        orderList.forEach { order ->
-            if(order.nome_ordine == orderN){
-                if(order.riderStatus == "not assigned"){
-                    //rider non ancora assegnato -> mando richiesta al rider
-                    frO.updateOrder(this, order, "request sended", rider)
-                }
-                if(order.riderStatus == "request sended"){
-                    //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere
-                } else {
-                    //richiesta mandata e accettata dal rider. Il pacco è in consegna
-                }
+        } else {
+            if (order!!.riderStatus == "not assigned") {
+                //rider non ancora assegnato -> mando richiesta al rider
+                frO.updateOrder(this, order!!, "request sended", rider)
+            }
+            if(order!!.riderStatus == "request sended"){
+                //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere
+                Toast.makeText(this, "Delivery Request already sent!\n" +
+                        "Just Wait the Rider reply", Toast.LENGTH_SHORT).show()
+            } else {
+                //richiesta mandata e accettata dal rider. Il pacco è in consegna
+                Toast.makeText(this, "Delivery Request Accepted!\n" +
+                        "Just Wait the Rider Delivery", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 }

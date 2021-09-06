@@ -22,6 +22,16 @@
         android:text="Rider Assignment \n For Order: "
         android:textSize="20dp" />
 
+    <TextView
+        android:id="@+id/status_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rider_tv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:text="Rider Status: "
+        android:textSize="20dp" />
+
     <ImageButton
         android:id="@+id/exit_imgBtn"
         android:layout_width="40dp"

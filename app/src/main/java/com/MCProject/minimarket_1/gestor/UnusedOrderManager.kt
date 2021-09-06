@@ -62,7 +62,7 @@ class UnusedOrderManager: ListActivity(){
                         val gestore = orderList[position].proprietario
                         val orderN = orderList[position].nome_ordine
 
-                        val intent = Intent(this, OrderManagerActivity::class.java)
+                        val intent = Intent(this, OrderManagerActivity(orderList[position])::class.java)
                         intent.putExtra("cliente", cliente)
                         intent.putExtra("gestore", gestore)
                         intent.putExtra("nome_ordine", orderN)
