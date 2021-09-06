@@ -1,5 +1,6 @@
 package com.MCProject.minimarket_0.gestor
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -22,8 +23,10 @@ class OrderManagerActivity : AppCompatActivity() {
     lateinit var homeImgBtn: ImageButton
     lateinit var cancleBtn: Button
     lateinit var confirmBtn: Button
+    lateinit var titleTV: TextView
 
     lateinit var cliente : String
+    lateinit var orderN : String
     lateinit var riderAviable: ArrayList<String>
     lateinit var orderList: ArrayList<Order>
     lateinit var spinner: Spinner
@@ -35,6 +38,7 @@ class OrderManagerActivity : AppCompatActivity() {
         Log.i("HEY", "Order Manager Activity")
         setContentView(R.layout.gestor_order_activity)
         cliente = intent.extras!!["testo"].toString()
+        orderN = intent.extras!!["nome_ordine"].toString()
         Log.i("HEY", "Extra: "+ cliente)
 
         spinner = findViewById(R.id.rider_ed)
@@ -42,13 +46,16 @@ class OrderManagerActivity : AppCompatActivity() {
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
         cancleBtn = findViewById(R.id.cancle_btn)
         confirmBtn = findViewById(R.id.confirm_btn)
+        titleTV = findViewById(R.id.title_tv)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
 
         buttonListener()
         orderList = ArrayList<Order>()
+        titleTV.text = "Rider Assignment \nFor Order: $orderN"
 
         if(cliente.isNotEmpty()){
             Log.i("HEY", "Not Empty")
@@ -142,6 +149,20 @@ class OrderManagerActivity : AppCompatActivity() {
                         //frO.uploadDeliveryRequest(this, orderList)
                     }
                 }
+
+        orderList.forEach { order ->
+            if(order.nome_ordine == orderN){
+                if(order.riderStatus == "not assigned"){
+                    //rider non ancora assegnato -> mando richiesta al rider
+                    frO.updateOrder(this, order, "request sended", rider)
+                }
+                if(order.riderStatus == "request sended"){
+                    //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere
+                } else {
+                    //richiesta mandata e accettata dal rider. Il pacco è in consegna
+                }
+            }
+        }
 
     }
 }

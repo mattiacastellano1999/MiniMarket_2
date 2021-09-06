@@ -34,7 +34,7 @@ open class FirestoreRequest(
     lateinit var pathToMyProduct: String
 
     /**
-     * esgue la GET degli ordini memorizzati su FB
+     * esgue la GET di tutti gli ordini memorizzati su FB
      */
     fun addOrderData(
             from: String,
@@ -286,11 +286,12 @@ open class FirestoreRequest(
         context: Activity,
         sender: String?,
         receiver: String,
-        message: String
+        message: String,
+        orderN: String
     ) {
         Log.i("HEY", "Invio: "+ message)
         val fm = FirebaseMessaging(MainActivity.mail)
-        fm.sendMesage(context, sender!!, receiver, message)
+        fm.sendMesage(context, sender!!, receiver, message, orderN)
 
         //reload activity
         val intent = Intent(context, CartProductListActivity::class.java)

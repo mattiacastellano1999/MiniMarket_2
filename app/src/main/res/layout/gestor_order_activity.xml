@@ -18,9 +18,9 @@
         android:id="@+id/title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rider Assignment"
         android:layout_centerHorizontal="true"
-        android:textSize="20dp"/>
+        android:text="Rider Assignment \n For Order: "
+        android:textSize="20dp" />
 
     <ImageButton
         android:id="@+id/exit_imgBtn"

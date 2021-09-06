@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.MCProject.minimarket_0.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.access.util.Order
@@ -119,7 +120,8 @@ class FirestoreRequest_Order (
                             context,
                             client,
                             owner,
-                            "Has Been Added: ${productList.size.toString()} Product to the new Order!"
+                            "Has Been Added: ${productList.size.toString()} Product to the new Order!",
+                            orderName
                     )
                 }
                 .addOnFailureListener {
@@ -133,24 +135,26 @@ class FirestoreRequest_Order (
                 }
     }
 
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    @Synchronized
-    fun uploadDeliveryRequest(
-            context: Activity,
-            orders: ArrayList<Order>
-    ) {
-        val order = gestor
+    fun updateOrder(context: Activity, order: Order, riderStatus: String, rider: String) {
+        val gestor = order.proprietario
         val load = Loading(context)
+        order.rider = rider
+        order.riderStatus = riderStatus
+        Log.i("HEY", "Order Sending to RIder: $order")
         load.startLoading()
         db.collection("/profili/riders/ordini/${rider}/ordini_da_accettare")
                 .document(gestor + "_" + Random(100).nextInt(100).toString())
                 .set(order)
                 .addOnSuccessListener {
-                    deleteFromDB(context, order, "profili/gestori/ordini/$gestor/miei_ordini/")
+                    deleteFromDB(context, order.nome_ordine, "profili/gestori/ordini/$gestor/miei_ordini/")
                 }
                 .addOnCompleteListener {
                     if(it.isSuccessful)
-                        sendNotification(context, gestor, rider, "The Gestor: $gestor require your services!" )
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            sendNotification(context, gestor, rider, "The Gestor: $gestor require your services!", order.nome_ordine)
+                        } else {
+                            Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()
+                        }
                 }
                 .addOnFailureListener {
                     Log.i("HEY", "Failed")
@@ -161,7 +165,6 @@ class FirestoreRequest_Order (
                             Toast.LENGTH_LONG
                     ).show()
                 }
-
-    }*/
+    }
 
 }

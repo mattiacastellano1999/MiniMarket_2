@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.util.Log
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
@@ -26,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage
 class MainActivity : AppCompatActivity() {
 
     val REQUESTSTORAGEACCESS = 1001
+    val REQUESTINTERNETCONNECTION = 1002
     val REQUESTLOCATIONACCESS = 1010
 
     companion object{
@@ -67,6 +71,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        if(!isNetworkConnected()){
+            Toast.makeText(this, "Please Enable internet connection.", Toast.LENGTH_LONG).show()
+        }
+
         /**
          * Check external storage
          */
@@ -78,8 +87,8 @@ class MainActivity : AppCompatActivity() {
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(this@MainActivity,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUESTSTORAGEACCESS)
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUESTSTORAGEACCESS)
         } else if (
             ContextCompat.checkSelfPermission(
                 this@MainActivity,
@@ -120,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(
                     this,
-                    "Unable to show Product Images - permission required",
+                    "Unable to access file - permission required",
                     Toast.LENGTH_LONG
                 ).show()
                     .run {
@@ -145,5 +154,11 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true
     }
 }

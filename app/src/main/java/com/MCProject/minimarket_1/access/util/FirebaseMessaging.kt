@@ -24,14 +24,15 @@ class FirebaseMessaging constructor(val path: String) {
         TEXT_FIELD = "Testo"
     }
 
-    fun sendMesage(context: Activity, sender: String, receiver: String, message: String) {
+    fun sendMesage(context: Activity, sender: String, receiver: String, message: String, orderN: String) {
 
         firestoreChatSender = MainActivity.db
             .collection("chat")
             .document("message_for_"+receiver)
 
         val newMessage = mapOf<String, String>(
-             "gestore" to receiver,
+            "gestore" to receiver,
+            "numero_ordine" to orderN,
             "cliente" to sender,
             TEXT_FIELD to message
         )
@@ -80,7 +81,7 @@ class FirebaseMessaging constructor(val path: String) {
                 val notify = Notification(context)
                 val channellid = Random().nextInt(100)
                 notify.createNotificationChannel(channellid.toString(), "Channel_$type$channellid", "Prova Channel1")
-                notify.showGestorNotification(channellid.toString(), it.get("gestore").toString(), it.get("cliente").toString(), it.get("Testo").toString())
+                notify.showGestorNotification(channellid.toString(), it.get("numero_ordine").toString(), it.get("gestore").toString(), it.get("cliente").toString(), it.get("Testo").toString())
             }
     }
 

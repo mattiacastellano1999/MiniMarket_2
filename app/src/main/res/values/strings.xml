@@ -7,5 +7,6 @@
     <string name="joinus">JoinUs</string>
     <string name="SHOWRIDERPOPUP">1010</string>
     <string name="rider_status_NA">not assigned</string>
+    <string name="AndroidVersionOld">Error: android version too old</string>
 </resources>
 

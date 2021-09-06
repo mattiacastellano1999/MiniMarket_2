@@ -45,13 +45,14 @@ class Notification constructor(val context: Activity) {
      * Quando cliccata mostra un form di selezione dei rider
      */
     @SuppressLint("WrongConstant", "UnspecifiedImmutableFlag")
-    fun showGestorNotification(channelID: String, gestore: String, cliente: String, messaggio: String) {
+    fun showGestorNotification(channelID: String, orderN : String, gestore: String, cliente: String, messaggio: String) {
         Log.i("HEY", "HERE showNotification: " + cliente + "__0" + messaggio)
         if(cliente != "null" && gestore == mail) {
             val intent = Intent(context, OrderManagerActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 this.putExtra("cliente", cliente)
                 this.putExtra("gestore", gestore)
+                this.putExtra("nome_ordine", orderN)
             }
 
             val pendingIntent: PendingIntent =
