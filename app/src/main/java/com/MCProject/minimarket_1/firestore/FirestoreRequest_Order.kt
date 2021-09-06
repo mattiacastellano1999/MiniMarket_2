@@ -5,7 +5,6 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.MCProject.minimarket_0.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.access.util.Order
@@ -42,7 +41,6 @@ class FirestoreRequest_Order (
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    @Synchronized
     fun uploadOrder(
             productList: ArrayList<ProductListActivity.Product>,
             context: Activity,
@@ -57,7 +55,8 @@ class FirestoreRequest_Order (
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun findCorrectOrderName(
-            e_mail: String, load: Loading,
+            e_mail: String,
+            load: Loading,
             productList: ArrayList<ProductListActivity.Product>,
             context: Activity, client: String?,
             rider: String?
@@ -81,6 +80,7 @@ class FirestoreRequest_Order (
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    @Synchronized
     private fun doUploadData(
             productList: ArrayList<ProductListActivity.Product>,
             context: Activity,
@@ -94,7 +94,7 @@ class FirestoreRequest_Order (
         entry2["nome"] = orderName
         entry2["cliente"] = client
         entry2["rider"] = rider
-        entry2["proprietario"] = mail
+        entry2["proprietario"] = productList[0].owner
         entry2["riderStatus"] = context.getString(R.string.rider_status_NA)
         var priceTot = 0.0
         var owner = ""
@@ -116,7 +116,7 @@ class FirestoreRequest_Order (
                 }
                 .addOnCompleteListener {
                     load.stopLoadingDialog()
-                    sendNotification(
+                    sendNotificationToGestor(
                             context,
                             client,
                             owner,
@@ -138,20 +138,32 @@ class FirestoreRequest_Order (
     fun updateOrder(context: Activity, order: Order, riderStatus: String, rider: String) {
         val gestor = order.proprietario
         val load = Loading(context)
-        order.rider = rider
-        order.riderStatus = riderStatus
-        Log.i("HEY", "Order Sending to RIder: $order")
+
+        var entry: HashMap<String, Any?> = hashMapOf()
+        entry["nome"] = order.nome_ordine
+        entry["cliente"] = order.cliente
+        entry["rider"] = rider
+        entry["proprietario"] = order.proprietario
+        entry["prezzo"] = order.prezzo_tot
+        entry["riderStatus"] = riderStatus
+
+        var i=0
+
+        order.products.forEach { (key, value) ->
+            entry["prod_name_"+i] = key
+            entry["prod_qty_"+i] = value
+            i++
+        }
+
+        Log.i("HEY", "Order Sending to RIder: ${order.nome_ordine}")
         load.startLoading()
-        db.collection("/profili/riders/ordini/${rider}/ordini_da_accettare")
-                .document(gestor + "_" + Random(100).nextInt(100).toString())
-                .set(order)
-                .addOnSuccessListener {
-                    deleteFromDB(context, order.nome_ordine, "profili/gestori/ordini/$gestor/miei_ordini/")
-                }
+        db.collection("/profili/gestori/ordini/${order.proprietario}/miei_ordini/")
+                .document(order.nome_ordine)
+                .set(entry)
                 .addOnCompleteListener {
                     if(it.isSuccessful)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            sendNotification(context, gestor, rider, "The Gestor: $gestor require your services!", order.nome_ordine)
+                            sendNotificationToRider(context, gestor, rider, "The Gestor: $gestor require your services!", order.nome_ordine)
                         } else {
                             Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()
                         }

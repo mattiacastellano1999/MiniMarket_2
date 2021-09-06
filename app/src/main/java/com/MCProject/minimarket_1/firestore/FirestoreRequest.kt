@@ -14,6 +14,7 @@ import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.access.util.FirebaseMessaging
 import com.MCProject.minimarket_1.access.util.Order
 import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.gestor.UnusedOrderManager
 import com.MCProject.minimarket_1.user.CartProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -65,8 +66,8 @@ open class FirestoreRequest(
                                         doc.data["riderStatus"].toString(),
                                         HashMap<String, String>()
                                 )
-
-                                while (doc.data["prod_name_"+i].toString() == "null") {
+                                while(doc.data.containsKey("prod_name_$i")) {
+                                //while (doc.data["prod_name_$i"].toString() == "null") {
                                     Log.i("HEY", "While Doc: "+doc.data["prod_name_"+i])
                                     myOrder.products.set(
                                             doc.data["prod_name_" + i].toString(),
@@ -282,7 +283,7 @@ open class FirestoreRequest(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendNotification(
+    fun sendNotificationToGestor(
         context: Activity,
         sender: String?,
         receiver: String,
@@ -295,6 +296,23 @@ open class FirestoreRequest(
 
         //reload activity
         val intent = Intent(context, CartProductListActivity::class.java)
+        context.startActivity(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun sendNotificationToRider(
+            context: Activity,
+            sender: String?,
+            receiver: String,
+            message: String,
+            orderN: String
+    ) {
+        Log.i("HEY", "Invio: "+ message)
+        val fm = FirebaseMessaging(MainActivity.mail)
+        fm.sendMesage(context, sender!!, receiver, message, orderN)
+
+        //reload activity
+        val intent = Intent(context, UnusedOrderManager::class.java)
         context.startActivity(intent)
     }
 

@@ -55,17 +55,18 @@ class UnusedOrderManager: ListActivity(){
                             )
                     listView.adapter = itemsAdapter
                     listView.setOnItemClickListener { parent, view, position, id ->
+                        val order = orderList[position] 
+                        Log.i("HEY", "Clicked "+order)
 
-                        Log.i("HEY", "Clicked "+view.toString()+ " "+id.toString())
+                        val cliente = order.cliente
+                        val gestore = order.proprietario
+                        val orderN = order.nome_ordine
 
-                        val cliente = orderList[position].cliente
-                        val gestore = orderList[position].proprietario
-                        val orderN = orderList[position].nome_ordine
-
-                        val intent = Intent(this, OrderManagerActivity(orderList[position])::class.java)
+                        val intent = Intent(this, OrderManagerActivity::class.java)
                         intent.putExtra("cliente", cliente)
                         intent.putExtra("gestore", gestore)
                         intent.putExtra("nome_ordine", orderN)
+                        intent.putExtra("rStatus", order.riderStatus)
                         this@UnusedOrderManager.startActivity(intent)
                     }
                 }

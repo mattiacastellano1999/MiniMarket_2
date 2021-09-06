@@ -53,6 +53,7 @@ class Notification constructor(val context: Activity) {
                 this.putExtra("cliente", cliente)
                 this.putExtra("gestore", gestore)
                 this.putExtra("nome_ordine", orderN)
+                this.putExtra("rStatus", "not assigned")
             }
 
             val pendingIntent: PendingIntent =
