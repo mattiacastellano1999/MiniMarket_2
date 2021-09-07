@@ -7,6 +7,9 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.MCProject.minimarket_1.MainActivity.Companion.auth
+import com.MCProject.minimarket_1.MainActivity.Companion.collection
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.R.drawable.my_back_arrow
 import com.MCProject.minimarket_1.access.util.ProductListActivity

@@ -5,14 +5,17 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.auth
+import com.MCProject.minimarket_1.MainActivity.Companion.db
 import com.MCProject.minimarket_1.R
+import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.access.util.ProductListActivity
 
 /**
  * Crea una lista di prodotti che possono essere comprati dagli utenti
  */
-
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class UserProductListActivity: ProductListActivity() {
 
@@ -160,24 +163,36 @@ class UserProductListActivity: ProductListActivity() {
             getImg().setImageURI(prod.img)
             getPrice().text = prod.price.toString()
             getQuantity().text = prod.quantity.toString()
-            getAdd().visibility = View.VISIBLE
-            getAdd().setOnClickListener {
-                Log.i("HEY", "Dentro il Cick")
-                frM.addDataIntoCart(
-                    this@UserProductListActivity,
-                    user!!,
-                    gestorEmail,
-                    prod
-                ).addOnCompleteListener {
-                    prod.quantity -= 1
-                    if(prod.quantity <= 0) {
-                        productList.remove(prod)
-                    }
-                    listAdapter = UserProductAdapter()
-                }
-            }
+            getAdd().visibility = View.INVISIBLE
             getRow().setOnClickListener {
-                //val pop = GestorPopup()
+                val pop = UserPopup(this@UserProductListActivity, prod)
+                pop.listenerInit()
+                pop.popupConfirmBTN.setOnClickListener {
+                    val load = Loading(this@UserProductListActivity)
+                    load.startLoading()
+                    if (pop.popupQuantityNP.value <= prod.quantity) {
+                        MainActivity.frM.addDataIntoCart(
+                            this@UserProductListActivity,
+                            MainActivity.mail,
+                            gestorEmail,
+                            prod,
+                            pop.popupQuantityNP.value
+                        ).addOnCompleteListener {
+                            load.stopLoadingDialog()
+                            if (it.isSuccessful) {
+                                UserPopup.dialog.dismiss()
+                                prod.quantity = prod.quantity - pop.popupQuantityNP.value
+                                listAdapter = UserProductAdapter()
+                            } else {
+                                Toast.makeText(
+                                    this@UserProductListActivity,
+                                    "error during product adding cart",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
             }
             Log.i("HEY", "form populated")
         }

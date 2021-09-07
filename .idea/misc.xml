@@ -8,6 +8,8 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.21195652173913043" />
         <entry key="app/src/main/res/layout/activity_market_list.xml" value="0.2658514492753623" />
         <entry key="app/src/main/res/layout/activity_product_list.xml" value="0.49100968188105115" />
+        <entry key="app/src/main/res/layout/form_add_product.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/form_user_product.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_order_list.xml" value="0.23052536231884058" />
         <entry key="app/src/main/res/layout/gestor_activity_main.xml" value="0.23278985507246377" />
         <entry key="app/src/main/res/layout/gestor_activity_order.xml" value="0.23278985507246377" />

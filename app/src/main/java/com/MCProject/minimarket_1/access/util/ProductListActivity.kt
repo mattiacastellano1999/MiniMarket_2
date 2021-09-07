@@ -11,6 +11,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.MCProject.minimarket_1.MainActivity.Companion.auth
+import com.MCProject.minimarket_1.MainActivity.Companion.collection
+import com.MCProject.minimarket_1.MainActivity.Companion.db
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.RiderActivity
 import com.MCProject.minimarket_1.access.Loading
@@ -41,11 +45,7 @@ open class ProductListActivity: ListActivity() {
         )
     var productList = ArrayList<Product>()
 
-    lateinit var db: FirebaseFirestore
-    lateinit var auth: FirebaseAuth
     lateinit var imgDb: FirebaseStorage
-    lateinit var collection: String
-    lateinit var mail: String
     val load = Loading(this)
     lateinit var addBtn: ImageButton
     lateinit var titleTv: TextView
@@ -64,18 +64,14 @@ open class ProductListActivity: ListActivity() {
         setContentView(R.layout.activity_product_list)
         Log.i("HEY", "Product List Activity")
 
-        db = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
         imgDb = FirebaseStorage.getInstance()
         addBtn = findViewById(R.id.add_product_btn)
         checkoutBtn = findViewById(R.id.checkout_btn)
         homeBtn = findViewById(R.id.home_btn)
         titleTv = findViewById(R.id.prod_text)
 
-        collection = auth.currentUser.displayName
-        mail = auth.currentUser.email
 
-        popup = GestorPopup(this, productList, collection, mail, db)
+        popup = GestorPopup(this, productList)
         frO = FirestoreRequest_Order(db, auth, imgDb, collection, mail)
         frM = FirestoreRequest_Marketplace(db, auth, imgDb, collection, mail)
         fr = FirestoreRequest(db, auth, imgDb, collection, mail)

@@ -64,10 +64,11 @@ class FirestoreRequest_Marketplace(
     }
 
     fun addDataIntoCart(
-            context: Activity,
-            userEmail: String,
-            gestorEmail: String,
-            prod: ProductListActivity.Product
+        context: Activity,
+        userEmail: String,
+        gestorEmail: String,
+        prod: ProductListActivity.Product,
+        value: Int
     ): Task<DocumentSnapshot> {
         val load = Loading(context)
         load.startLoading()
@@ -75,7 +76,7 @@ class FirestoreRequest_Marketplace(
         var entry1: HashMap<String, Any?> = hashMapOf<String, Any?>(
                 "nome" to prod.name,
                 "prezzo" to prod.price,
-                "quantita" to 1,
+                "quantita" to value,
                 "descrizione" to prod.description,
                 "proprietario" to prod.owner
         )
@@ -126,7 +127,7 @@ class FirestoreRequest_Marketplace(
                 "prezzo" to prod.price,
                 "descrizione" to prod.description,
                 "proprietario" to prod.owner,
-                "quantita" to prod.quantity - 1,
+                "quantita" to prod.quantity - value,
         )
 
         val ret = added.addOnSuccessListener {

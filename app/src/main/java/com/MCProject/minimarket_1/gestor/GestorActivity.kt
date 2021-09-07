@@ -48,7 +48,7 @@ class GestorActivity: AppCompatActivity() {
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
         riderVisualBtn = findViewById(R.id.locationRider_btn)
         orderManageBtn = findViewById(R.id.orderManage_btn)
-        popup = GestorPopup(this, ArrayList<ProductListActivity.Product>(), collection, mail, db)
+        popup = GestorPopup(this, ArrayList<ProductListActivity.Product>())
 
         if(intent.flags == R.string.SHOWRIDERPOPUP){
             Log.i("HEY", "Intent Started!!")

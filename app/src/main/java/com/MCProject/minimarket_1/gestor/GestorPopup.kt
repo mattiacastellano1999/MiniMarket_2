@@ -21,8 +21,10 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.MCProject.minimarket_1.MainActivity.Companion.collection
+import com.MCProject.minimarket_1.MainActivity.Companion.db
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.access.util.ProductListActivity
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Marketplace
 import com.google.android.gms.tasks.Task
@@ -34,14 +36,14 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
 
-
+/**
+ * classe dedicata lla creazione e gestione del popup che permette
+ * ai gestori gestire i propri prodotti
+ */
 @Suppress("DEPRECATION")
 class GestorPopup(
     val context: Activity,
     val prodList: ArrayList<ProductListActivity.Product>,
-    val collection: String,
-    val mail: String,
-    val db: FirebaseFirestore,
 ): Activity() {
 
     companion object {
