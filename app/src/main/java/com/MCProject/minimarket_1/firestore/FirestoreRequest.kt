@@ -308,6 +308,7 @@ open class FirestoreRequest(
             orderN: String
     ) {
         Log.i("HEY", "Invio: "+ message)
+
         val fm = FirebaseMessaging(MainActivity.mail)
         fm.sendMesage(context, sender!!, receiver, message, orderN)
 

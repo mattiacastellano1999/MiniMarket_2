@@ -95,6 +95,8 @@ class UserProductListActivity: ProductListActivity() {
 
             wrapper.removeTooMany()
             Log.i("HEY", "populating form_0")
+
+
             wrapper.populateFrom(getItem(position)!!)
 
             return convertView
@@ -168,6 +170,9 @@ class UserProductListActivity: ProductListActivity() {
                     prod
                 ).addOnCompleteListener {
                     prod.quantity -= 1
+                    if(prod.quantity <= 0) {
+                        productList.remove(prod)
+                    }
                     listAdapter = UserProductAdapter()
                 }
             }
