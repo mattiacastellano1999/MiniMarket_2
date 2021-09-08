@@ -55,5 +55,9 @@ class UserPopup (
         popupNameTV.text = prod.name
         popupDescriptionED.text = prod.description
         popupImgIB.setImageURI(prod.img)
+
+        popupCancelBTN.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 }
