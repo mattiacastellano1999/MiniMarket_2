@@ -25,11 +25,10 @@ import com.MCProject.minimarket_1.MainActivity.Companion.collection
 import com.MCProject.minimarket_1.MainActivity.Companion.db
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Marketplace
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask

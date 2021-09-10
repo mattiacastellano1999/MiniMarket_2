@@ -1,4 +1,4 @@
-package com.MCProject.minimarket_1.access.util
+package com.MCProject.minimarket_1.util
 
 class Order(
         var nome_ordine: String,

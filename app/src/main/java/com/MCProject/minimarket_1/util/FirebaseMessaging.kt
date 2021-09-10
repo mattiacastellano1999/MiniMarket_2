@@ -1,4 +1,4 @@
-package com.MCProject.minimarket_1.access.util
+package com.MCProject.minimarket_1.util
 
 import android.app.Activity
 import android.util.Log

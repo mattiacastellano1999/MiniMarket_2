@@ -5,7 +5,7 @@ import android.app.ProgressDialog
 import android.util.Log
 import android.widget.Toast
 import com.MCProject.minimarket_1.access.Loading
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.ProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot

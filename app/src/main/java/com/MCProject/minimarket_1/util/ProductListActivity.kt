@@ -1,4 +1,4 @@
-package com.MCProject.minimarket_1.access.util
+package com.MCProject.minimarket_1.util
 
 import android.app.Activity
 import android.app.ListActivity
@@ -16,18 +16,15 @@ import com.MCProject.minimarket_1.MainActivity.Companion.collection
 import com.MCProject.minimarket_1.MainActivity.Companion.db
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.RiderActivity
+import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Marketplace
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Order
-import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.gestor.GestorPopup
 import com.MCProject.minimarket_1.gestor.MarketProductListActivity
 import com.MCProject.minimarket_1.user.UserActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
 open class ProductListActivity: ListActivity() {

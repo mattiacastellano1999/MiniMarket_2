@@ -5,7 +5,7 @@ import android.app.AlertDialog
 import android.view.View
 import android.widget.*
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.ProductListActivity
 
 /**
  * classe dedicata lla creazione e gestione del popup che permette

@@ -12,7 +12,7 @@ import com.MCProject.minimarket_1.MainActivity.Companion.collection
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.R.drawable.my_back_arrow
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.gestor.GestorPopup.Companion.dialog
 
 

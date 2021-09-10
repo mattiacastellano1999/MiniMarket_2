@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
-import com.MCProject.minimarket_1.access.util.Order
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.Order
+import com.MCProject.minimarket_1.util.ProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
@@ -28,9 +28,9 @@ class FirestoreRequest_Order (
 ): FirestoreRequest(db, auth, imgDb, collection, mail) {
 
     fun getAllOrder(
-            market: String,
-            orderList: ArrayList<Order>,
-            context: Activity
+        market: String,
+        orderList: ArrayList<Order>,
+        context: Activity
     ): Task<QuerySnapshot> {
         pathToMyProduct = "/profili/gestori/ordini/$market/miei_ordini"
         val ret = addOrderData(pathToMyProduct, context, orderList)
@@ -42,10 +42,10 @@ class FirestoreRequest_Order (
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun uploadOrder(
-            productList: ArrayList<ProductListActivity.Product>,
-            context: Activity,
-            client: String?,
-            rider: String?
+        productList: ArrayList<ProductListActivity.Product>,
+        context: Activity,
+        client: String?,
+        rider: String?
     ) {
         val load = Loading(context)
         load.startLoading()
@@ -55,11 +55,11 @@ class FirestoreRequest_Order (
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun findCorrectOrderName(
-            e_mail: String,
-            load: Loading,
-            productList: ArrayList<ProductListActivity.Product>,
-            context: Activity, client: String?,
-            rider: String?
+        e_mail: String,
+        load: Loading,
+        productList: ArrayList<ProductListActivity.Product>,
+        context: Activity, client: String?,
+        rider: String?
     ): DocumentReference {
         var orderName = "Order N_" + Random().nextInt(100)
         var doc: DocumentReference =
@@ -82,13 +82,13 @@ class FirestoreRequest_Order (
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     private fun doUploadData(
-            productList: ArrayList<ProductListActivity.Product>,
-            context: Activity,
-            client: String?,
-            rider: String?,
-            orderName: String,
-            load: Loading,
-            doc: DocumentReference
+        productList: ArrayList<ProductListActivity.Product>,
+        context: Activity,
+        client: String?,
+        rider: String?,
+        orderName: String,
+        load: Loading,
+        doc: DocumentReference
     ) {
         var entry2: HashMap<String, Any?> = hashMapOf()
         entry2["nome"] = orderName

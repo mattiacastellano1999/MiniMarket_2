@@ -1,4 +1,4 @@
-package com.MCProject.minimarket_1.access.util
+package com.MCProject.minimarket_1.util
 
 import android.R
 import android.annotation.SuppressLint
@@ -12,7 +12,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import com.MCProject.minimarket_0.gestor.OrderManagerActivity
+import com.MCProject.minimarket_1.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 

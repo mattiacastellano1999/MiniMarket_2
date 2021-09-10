@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
-import com.MCProject.minimarket_1.access.util.FirebaseMessaging
-import com.MCProject.minimarket_1.access.util.MyLocation
+import com.MCProject.minimarket_1.util.FirebaseMessaging
+import com.MCProject.minimarket_1.util.MyLocation
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.firebase.auth.FirebaseAuth
 

@@ -1,4 +1,4 @@
-package com.MCProject.minimarket_1.access.util
+package com.MCProject.minimarket_1.util
 
 import android.Manifest
 import android.app.Activity
@@ -12,15 +12,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import com.MCProject.minimarket_1.R
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
 import java.io.IOException
 
 class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallback {

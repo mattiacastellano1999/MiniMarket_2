@@ -177,7 +177,8 @@ class JoinUs : AppCompatActivity() {
             entry = hashMapOf<String, Any?>(
                     "nome rider" to nomeR.text.toString(),
                     "cognome rider" to cognomeR.text.toString(),
-                    "email" to mailED.text.toString()
+                    "email" to mailED.text.toString(),
+                    "status" to "0"
             )
         }
 

@@ -6,27 +6,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.TextView
 import com.MCProject.minimarket_1.MainActivity.Companion.auth
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
-import com.MCProject.minimarket_1.RiderActivity
-import com.MCProject.minimarket_1.access.util.Order
-import com.MCProject.minimarket_1.user.MarketAviableActivity
+import com.MCProject.minimarket_1.rider.RiderActivity
+import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.user.UserActivity
-import com.MCProject.minimarket_1.user.UserProductListActivity
 import android.widget.ArrayAdapter
-import com.MCProject.minimarket_1.access.util.ProductListActivity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.MCProject.minimarket_0.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.R
 
 
-class UnusedOrderManager: ListActivity(){
+class OrderList: ListActivity(){
 
     var orderList = ArrayList<Order>()
     lateinit var homeBtn: ImageButton
@@ -67,7 +62,7 @@ class UnusedOrderManager: ListActivity(){
                         intent.putExtra("gestore", gestore)
                         intent.putExtra("nome_ordine", orderN)
                         intent.putExtra("rStatus", order.riderStatus)
-                        this@UnusedOrderManager.startActivity(intent)
+                        this@OrderList.startActivity(intent)
                     }
                 }
     }
@@ -101,15 +96,15 @@ class UnusedOrderManager: ListActivity(){
             when {
                 username.equals("utenti") -> {
                     val intent = Intent(this, UserActivity::class.java)
-                    this@UnusedOrderManager.startActivity(intent)
+                    this@OrderList.startActivity(intent)
                 }
                 username.equals("gestori") -> {
                     val intent = Intent(this, GestorActivity::class.java)
-                    this@UnusedOrderManager.startActivity(intent)
+                    this@OrderList.startActivity(intent)
                 }
                 username.equals("riders") -> {
                     val intent = Intent(this, RiderActivity::class.java)
-                    this@UnusedOrderManager.startActivity(intent)
+                    this@OrderList.startActivity(intent)
                 }
             }
         }

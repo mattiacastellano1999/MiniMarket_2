@@ -7,15 +7,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import com.MCProject.minimarket_1.GestorOrderManagerFragment
 import com.MCProject.minimarket_1.MainActivity
-import com.MCProject.minimarket_1.MainActivity.Companion.collection
-import com.MCProject.minimarket_1.MainActivity.Companion.db
-import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
-import com.MCProject.minimarket_1.access.util.FirebaseMessaging
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.FirebaseMessaging
+import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,11 +29,6 @@ class GestorActivity: AppCompatActivity() {
     lateinit var popup : GestorPopup
 
     val gestorRidersFragment = GestorVisualize_ridersFragment()
-    val orderManagerFragment = GestorOrderManagerFragment()
-
-
-    private val PERMISSION_CODE = 100;
-    private val IMAGE_CAPTURE_CODE = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,28 +40,6 @@ class GestorActivity: AppCompatActivity() {
         riderVisualBtn = findViewById(R.id.locationRider_btn)
         orderManageBtn = findViewById(R.id.orderManage_btn)
         popup = GestorPopup(this, ArrayList<ProductListActivity.Product>())
-
-        if(intent.flags == R.string.SHOWRIDERPOPUP){
-            Log.i("HEY", "Intent Started!!")
-            /*popup.clearData()
-            popup.makePopup(this)
-            GestorPopup.dialog.setOnDismissListener {
-                Log.e("HEY", "VAL: exited")
-            }*/
-        }
-
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        if(intent.flags == R.string.SHOWRIDERPOPUP){
-            Log.i("HEY", "Intent Started!!")
-            /*popup.clearData()
-            popup.makePopup(this)
-            GestorPopup.dialog.setOnDismissListener {
-                Log.e("HEY", "VAL: exited")
-            }*/
-        }
 
     }
 
@@ -91,12 +60,7 @@ class GestorActivity: AppCompatActivity() {
         orderManageBtn.setOnClickListener {
             riderVisualBtn.visibility = View.GONE
             orderManageBtn.visibility = View.GONE
-            /*supportFragmentManager.beginTransaction().apply {
-                //inserisce in main_fragment il contenuto del userMapsFragment
-                replace(R.id.main_fragment, orderManagerFragment)
-                commit() //con il commit esegue le azioni descritte prima
-            }*/
-            val intentLogout = Intent(this, UnusedOrderManager::class.java)
+            val intentLogout = Intent(this, OrderList::class.java)
             startActivity(intentLogout)
         }
 

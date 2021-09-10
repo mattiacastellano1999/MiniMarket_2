@@ -11,7 +11,7 @@ import com.MCProject.minimarket_1.MainActivity.Companion.db
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.firestore.FirestoreRequest
-import com.MCProject.minimarket_1.access.util.ProductListActivity
+import com.MCProject.minimarket_1.util.ProductListActivity
 
 /**
  * Crea una lista di prodotti che possono essere comprati dagli utenti

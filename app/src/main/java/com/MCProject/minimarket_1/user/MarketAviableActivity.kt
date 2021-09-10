@@ -8,11 +8,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.RiderActivity
+import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.firestore.FirestoreRequest
-import com.MCProject.minimarket_1.access.util.MarketList
-import com.MCProject.minimarket_1.access.util.MyLocation
+import com.MCProject.minimarket_1.util.MarketList
+import com.MCProject.minimarket_1.util.MyLocation
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

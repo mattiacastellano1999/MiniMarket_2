@@ -1,4 +1,4 @@
-package com.MCProject.minimarket_0.gestor
+package com.MCProject.minimarket_1.gestor
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,10 +11,9 @@ import com.MCProject.minimarket_1.MainActivity.Companion.auth
 import com.MCProject.minimarket_1.MainActivity.Companion.frM
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
-import com.MCProject.minimarket_1.RiderActivity
+import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.access.Login
-import com.MCProject.minimarket_1.access.util.Order
-import com.MCProject.minimarket_1.gestor.GestorActivity
+import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.user.UserActivity
 
 

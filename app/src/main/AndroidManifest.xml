@@ -43,11 +43,11 @@
         <activity android:name="com.MCProject.minimarket_1.user.CartProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.UserProductListActivity"/>
         <activity android:name="com.MCProject.minimarket_1.gestor.MarketProductListActivity" />
-        <activity android:name="com.MCProject.minimarket_1.gestor.UnusedOrderManager" />
-        <activity android:name="com.MCProject.minimarket_0.gestor.OrderManagerActivity" />
-        <activity android:name="com.MCProject.minimarket_1.access.util.ProductListActivity" />
+        <activity android:name="com.MCProject.minimarket_1.gestor.OrderList" />
+        <activity android:name=".gestor.OrderManagerActivity" />
+        <activity android:name="com.MCProject.minimarket_1.util.ProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.GestorActivity" />
-        <activity android:name="com.MCProject.minimarket_1.RiderActivity" />
+        <activity android:name="com.MCProject.minimarket_1.rider.RiderActivity" />
         <activity android:name="com.MCProject.minimarket_1.access.JoinUs" />
         <activity android:name="com.MCProject.minimarket_1.access.Login">
             <intent-filter>

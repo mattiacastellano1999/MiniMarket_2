@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.MCProject.minimarket_1.access.Login
-import com.MCProject.minimarket_1.firestore.FirestoreRequest
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Marketplace
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Order
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
@@ -21,7 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.util.Log
+import com.MCProject.minimarket_1.firestore.FirestoreRequest_Rider
+import com.MCProject.minimarket_1.rider.RiderActivity
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var imgDb: FirebaseStorage
         lateinit var frO: FirestoreRequest_Order
         lateinit var frU: FirestoreRequest_User
+        lateinit var frR: FirestoreRequest_Rider
         lateinit var frM: FirestoreRequest_Marketplace
         lateinit var collection: String
         lateinit var mail: String
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         frO = FirestoreRequest_Order(db, auth, imgDb, collection, mail)
         frU = FirestoreRequest_User(db, auth, imgDb, collection, mail)
         frM = FirestoreRequest_Marketplace(db, auth, imgDb, collection, mail)
+        frR = FirestoreRequest_Rider(db, auth, imgDb, collection, mail)
 
         /**
          * Check if user is correctly logged
