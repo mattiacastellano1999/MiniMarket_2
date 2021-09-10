@@ -60,11 +60,11 @@
         app:layout_constraintTop_toBottomOf="@+id/switch1" />
 
     <Button
-        android:id="@+id/historyDelivery_btn"
+        android:id="@+id/delivery_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="History Delivery"
+        android:text="Delivery Manager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map_btn" />
@@ -78,7 +78,7 @@
         android:text="Chat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/historyDelivery_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/delivery_btn" />
 
     <FrameLayout
         android:id="@+id/main_fragment"

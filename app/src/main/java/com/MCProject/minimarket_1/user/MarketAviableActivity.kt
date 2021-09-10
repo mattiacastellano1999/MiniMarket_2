@@ -89,6 +89,7 @@ class MarketAviableActivity: ListActivity(), AdapterView.OnItemClickListener  {
                 searchButton.setOnClickListener {
                     val geo = loc.geocoding(searchViewED.text.toString())
                     if(geo.equals(1)){
+                        MyLocation.address = searchViewED.text.toString()
                         val i = Intent(this, MarketAviableActivity::class.java)
                         startActivity(i)
                     }

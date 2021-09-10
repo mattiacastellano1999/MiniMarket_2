@@ -41,7 +41,7 @@ class MarketList {
                 }
                 .addOnFailureListener {
                     pd.dismiss()
-                    Log.i("HEY", "Failed")
+                    Log.e("HEY", "Failed")
                     Toast.makeText(
                         context,
                         "Error during Document data upload",
@@ -52,18 +52,12 @@ class MarketList {
             //ordino i market dal più vicino al più lontano
             val out = nameObtained.addOnCompleteListener {
                 //riempio markets
-                Log.i("HEY", "before geocoding 1: ${tempList.size}")
                 tempList.entries.forEach { entry ->
                     geocoding(entry, context)
                     entry.value
                 }
 
-                tempList.entries.forEach { entry ->
-                    Log.i("HEY", ""+entry)
-                }
-
                 val comp = Comparator<ArrayList<String>> { o, o2 ->
-                    Log.e("HEY", ""+o)
 
                     val result1 = FloatArray(3)
                     Location.distanceBetween(
@@ -84,14 +78,11 @@ class MarketList {
                     )
                     val distance2 = result2[0]
 
-                    Log.e("HEY", "Distance1 = $distance1, Distance2 = $distance2")
                     compareValues(distance1, distance2)
                 }
                 val my = tempList.values.toSortedSet(comp)
-                Log.i("HEY",my.toString())
 
                 val outArr = mutableSetOf<ArrayList<String>>()
-                Log.i("HEY", "FromMeDistance: " + lat +"__"+ lon)
                 my.forEach {
                     val result1 = FloatArray(3)
                     Location.distanceBetween(

@@ -37,6 +37,15 @@ class CartProductListActivity: MarketProductListActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
     private fun doOrderCheckout() {
-        frO.uploadOrder(productList, this, MainActivity.user!!.email, null)
+        MainActivity.frM.getGestor(this, "/profili/gestori/dati", productList[0].owner)
+            .addOnCompleteListener { doc ->
+                frO.uploadOrder(
+                    productList,
+                    this,
+                    MainActivity.user!!.email,
+                    null,
+                    doc.result["via"].toString() +", "+ doc.result["citta"].toString()
+                )
+            }
     }
 }

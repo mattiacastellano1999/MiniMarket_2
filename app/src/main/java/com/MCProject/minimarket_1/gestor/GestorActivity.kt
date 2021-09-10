@@ -79,7 +79,11 @@ class GestorActivity: AppCompatActivity() {
             val intent = Intent(this, MarketProductListActivity::class.java)
             startActivity(intent)
         }
-        val fr = FirestoreRequest_User(FirebaseFirestore.getInstance(), auth, FirebaseStorage.getInstance(), auth.currentUser.displayName, auth.currentUser.email)
+        val fr = FirestoreRequest_User(
+            FirebaseFirestore.getInstance(),
+            auth, FirebaseStorage.getInstance(),
+            auth.currentUser.displayName,
+            auth.currentUser.email)
         fr.getAllCategoryProfile(this, "riders")
 
         //Check some notification

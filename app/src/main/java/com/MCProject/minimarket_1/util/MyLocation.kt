@@ -25,6 +25,7 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
     companion object {
         var myLat = 0.0
         var myLon = 0.0
+        var address = ""
         var gMap: GoogleMap? = null
         val LOCATION_REQUEST_CODE = 101
     }
@@ -116,7 +117,8 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
         }
 
         if (geocodeMatches != null) {
-            return geocodeMatches[0].getAddressLine(0)
+            address = geocodeMatches[0].getAddressLine(0)
+            return address
         }
         return null
     }

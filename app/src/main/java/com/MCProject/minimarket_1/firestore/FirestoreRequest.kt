@@ -62,6 +62,8 @@ open class FirestoreRequest(
                                         doc.data["prezzo"].toString().toDouble(),
                                         doc.data["proprietario"].toString(),
                                         doc.data["cliente"].toString(),
+                                        doc.data["addr cliente"].toString(),
+                                        doc.data["addr gestore"].toString(),
                                         doc.data["rider"].toString(),
                                         doc.data["riderStatus"].toString(),
                                         HashMap<String, String>()
@@ -291,7 +293,7 @@ open class FirestoreRequest(
     ) {
         Log.i("HEY", "Invio: "+ message)
         val fm = FirebaseMessaging(MainActivity.mail)
-        fm.sendMesage(context, sender!!, receiver, message, orderN)
+        fm.sendMessageToGestor(context, sender!!, receiver, message, orderN)
 
         //reload activity
         val intent = Intent(context, CartProductListActivity::class.java)
@@ -309,7 +311,7 @@ open class FirestoreRequest(
         Log.i("HEY", "Invio: "+ message)
 
         val fm = FirebaseMessaging(MainActivity.mail)
-        fm.sendMesage(context, sender!!, receiver, message, orderN)
+        fm.sendMessageToRider(context, sender!!, receiver, message, orderN)
 
         //reload activity
         val intent = Intent(context, OrderList::class.java)
@@ -329,9 +331,11 @@ open class FirestoreRequest(
                         if( !it.result.isEmpty) {
                             for (doc in it.result) {
                                 Log.i("HEY", "data adding_12:${doc.data}")
-                                elements.add(
+                                if (doc.data["status"].toString() == "1") {
+                                    elements.add(
                                         doc.data["email"].toString()
-                                )
+                                    )
+                                }
                             }
                         } else {
                             Log.e("HEY", "Error with Path")

@@ -17,7 +17,7 @@ import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.user.UserActivity
 
 
-class OrderManagerActivity : AppCompatActivity() {
+open class OrderManagerActivity : AppCompatActivity() {
 
     lateinit var logoutImgBtn: ImageButton
     lateinit var homeImgBtn: ImageButton
@@ -30,7 +30,6 @@ class OrderManagerActivity : AppCompatActivity() {
     lateinit var orderN : String
     lateinit var riderAviable: ArrayList<String>
     lateinit var riderStatus: String
-    //lateinit var orderList: ArrayList<Order>
     lateinit var spinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {

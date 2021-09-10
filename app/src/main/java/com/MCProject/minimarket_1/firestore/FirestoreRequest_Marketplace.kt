@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.util.Log
 import android.widget.Toast
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.google.android.gms.tasks.Task
@@ -172,6 +173,22 @@ class FirestoreRequest_Marketplace(
         pathToMyProduct = "profili/riders/dati"
 
         return getAllElement(context, riderAviable)
+    }
+
+    fun getGestor(context: Activity, path: String, doc: String): Task<DocumentSnapshot> {
+        val load = Loading(context)
+        load.startLoading()
+
+        val ret = db.collection(path).document(doc)
+            .get()
+            .addOnCompleteListener {
+                load.stopLoadingDialog()
+                return@addOnCompleteListener
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            }
+        return ret
     }
 
 }

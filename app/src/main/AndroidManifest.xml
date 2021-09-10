@@ -38,17 +38,19 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name="com.MCProject.minimarket_1.MainActivity" />
+        <activity android:name="com.MCProject.minimarket_1.access.JoinUs" />
+        <activity android:name="com.MCProject.minimarket_1.util.ProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.UserActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.MarketAviableActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.CartProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.UserProductListActivity"/>
+        <activity android:name="com.MCProject.minimarket_1.gestor.GestorActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.MarketProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.OrderList" />
-        <activity android:name=".gestor.OrderManagerActivity" />
-        <activity android:name="com.MCProject.minimarket_1.util.ProductListActivity" />
-        <activity android:name="com.MCProject.minimarket_1.gestor.GestorActivity" />
+        <activity android:name="com.MCProject.minimarket_1.gestor.OrderManagerActivity" />
         <activity android:name="com.MCProject.minimarket_1.rider.RiderActivity" />
-        <activity android:name="com.MCProject.minimarket_1.access.JoinUs" />
+        <activity android:name="com.MCProject.minimarket_1.rider.DeliveryList" />
+        <activity android:name="com.MCProject.minimarket_1.rider.DeliveryManagerActivity" />
         <activity android:name="com.MCProject.minimarket_1.access.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

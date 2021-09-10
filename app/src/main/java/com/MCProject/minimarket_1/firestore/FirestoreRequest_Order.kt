@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
+import com.MCProject.minimarket_1.util.MyLocation
 import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.google.android.gms.tasks.Task
@@ -45,12 +46,13 @@ class FirestoreRequest_Order (
         productList: ArrayList<ProductListActivity.Product>,
         context: Activity,
         client: String?,
-        rider: String?
+        rider: String?,
+        addrGestor: String
     ) {
         val load = Loading(context)
         load.startLoading()
 
-        findCorrectOrderName(productList[0].owner, load, productList, context, client, rider)
+        findCorrectOrderName(productList[0].owner, load, productList, context, client, rider, addrGestor)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -58,8 +60,10 @@ class FirestoreRequest_Order (
         e_mail: String,
         load: Loading,
         productList: ArrayList<ProductListActivity.Product>,
-        context: Activity, client: String?,
-        rider: String?
+        context: Activity,
+        client: String?,
+        rider: String?,
+        addrGestor: String
     ): DocumentReference {
         var orderName = "Order N_" + Random().nextInt(100)
         var doc: DocumentReference =
@@ -71,9 +75,17 @@ class FirestoreRequest_Order (
                 .addOnSuccessListener {
                     if(it.exists()) {
                         Log.i("HEY", "Success: " + it.data)
-                        findCorrectOrderName(e_mail, load, productList, context, client, rider)
+                        findCorrectOrderName(
+                            e_mail,
+                            load,
+                            productList,
+                            context,
+                            client,
+                            rider,
+                            addrGestor
+                        )
                     } else {
-                        doUploadData(productList, context, client, rider, orderName, load, doc)
+                        doUploadData(productList, context, client, rider, orderName, load, doc, addrGestor)
                     }
                 }
         return doc
@@ -88,7 +100,8 @@ class FirestoreRequest_Order (
         rider: String?,
         orderName: String,
         load: Loading,
-        doc: DocumentReference
+        doc: DocumentReference,
+        addrGestor: String
     ) {
         var entry2: HashMap<String, Any?> = hashMapOf()
         entry2["nome"] = orderName
@@ -96,6 +109,8 @@ class FirestoreRequest_Order (
         entry2["rider"] = rider
         entry2["proprietario"] = productList[0].owner
         entry2["riderStatus"] = context.getString(R.string.rider_status_NA)
+        entry2["addr gestore"] = addrGestor
+        entry2["addr cliente"] = MyLocation.address
         var priceTot = 0.0
         var owner = ""
 
@@ -117,11 +132,11 @@ class FirestoreRequest_Order (
                 .addOnCompleteListener {
                     load.stopLoadingDialog()
                     sendNotificationToGestor(
-                            context,
-                            client,
-                            owner,
-                            "Has Been Added: ${productList.size.toString()} Product to the new Order!",
-                            orderName
+                        context,
+                        client,
+                        owner,
+                        "Has Been Added: ${productList.size.toString()} Product to the new Order!",
+                        orderName
                     )
                 }
                 .addOnFailureListener {
@@ -146,6 +161,8 @@ class FirestoreRequest_Order (
         entry["proprietario"] = order.proprietario
         entry["prezzo"] = order.prezzo_tot
         entry["riderStatus"] = riderStatus
+        entry["addr gestore"] = order.addrGestor
+        entry["addr cliente"] = order.addrClient
 
         var i=0
 
@@ -163,7 +180,13 @@ class FirestoreRequest_Order (
                 .addOnCompleteListener {
                     if(it.isSuccessful)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            sendNotificationToRider(context, gestor, rider, "The Gestor: $gestor require your services!", order.nome_ordine)
+                            sendNotificationToRider(
+                                context,
+                                gestor,
+                                rider,
+                                "The Gestor: $gestor require your services!",
+                                order.nome_ordine
+                            )
                         } else {
                             Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()
                         }

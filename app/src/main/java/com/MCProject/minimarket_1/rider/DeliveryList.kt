@@ -1,29 +1,27 @@
-package com.MCProject.minimarket_1.gestor
+package com.MCProject.minimarket_1.rider
 
 import android.annotation.SuppressLint
 import android.app.ListActivity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
-import com.MCProject.minimarket_1.MainActivity.Companion.auth
-import com.MCProject.minimarket_1.MainActivity.Companion.frO
-import com.MCProject.minimarket_1.MainActivity.Companion.mail
-import com.MCProject.minimarket_1.rider.RiderActivity
-import com.MCProject.minimarket_1.util.Order
-import com.MCProject.minimarket_1.user.UserActivity
-import android.widget.ArrayAdapter
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
+import com.MCProject.minimarket_1.gestor.GestorActivity
+import com.MCProject.minimarket_1.gestor.OrderList
+import com.MCProject.minimarket_1.rider.RiderActivity.Companion.orderList
+import com.MCProject.minimarket_1.user.UserActivity
+import com.MCProject.minimarket_1.util.Order
 
+class DeliveryList: ListActivity(){
 
-open class OrderList: ListActivity(){
-
-    var orderList = ArrayList<Order>()
     lateinit var homeBtn: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,37 +35,36 @@ open class OrderList: ListActivity(){
     override fun onStart() {
         super.onStart()
 
-        orderList.clear()
         homeListener()
 
-        frO.getAllOrder(mail, orderList, this)
-                .addOnCompleteListener {
-                    Log.i("HEY", "OrderList: ${orderList.size}")
-                    val itemsAdapter: MyOrdersAdapter =
-                            MyOrdersAdapter(
-                                    this,
-                                    orderList
-                            )
-                    listView.adapter = itemsAdapter
-                    listView.setOnItemClickListener { parent, view, position, id ->
-                        val order = orderList[position] 
-                        Log.i("HEY", "Clicked "+order.rider.toString())
+        MainActivity.frO.getAllOrder(RiderActivity.orderList[0].proprietario, RiderActivity.orderList, this)
+            .addOnCompleteListener {
+                Log.i("HEY", "OrderList: ${orderList.size}")
+                val itemsAdapter: OrderList.MyOrdersAdapter =
+                    OrderList.MyOrdersAdapter(
+                        this,
+                        orderList
+                    )
+                listView.adapter = itemsAdapter
 
-                        val cliente = order.cliente
-                        val gestore = order.proprietario
-                        val orderN = order.nome_ordine
+                listView.setOnItemClickListener { parent, view, position, id ->
+                    val order = orderList[position]
+                    Log.i("HEY", "Clicked " + order)
 
-                        val intent = Intent(this, OrderManagerActivity::class.java)
-                        intent.putExtra("cliente", cliente)
-                        intent.putExtra("gestore", gestore)
-                        intent.putExtra("nome_ordine", orderN)
-                        intent.putExtra("rStatus", order.riderStatus)
-                        this@OrderList.startActivity(intent)
-                    }
+                    val cliente = order.cliente
+                    val gestore = order.proprietario
+                    val orderN = order.nome_ordine
+
+                    val intent = Intent(this, DeliveryManagerActivity::class.java)
+                    intent.putExtra("cliente", cliente)
+                    intent.putExtra("gestore", gestore)
+                    intent.putExtra("nome_ordine", orderN)
+                    this@DeliveryList.startActivity(intent)
                 }
+            }
     }
 
-    class MyOrdersAdapter( context: Context,var orders: ArrayList<Order>) : ArrayAdapter<Order>(context, 0, orders) {
+    class MyOrdersAdapter(context: Context, var orders: ArrayList<Order>) : ArrayAdapter<Order>(context, 0, orders) {
         @SuppressLint("SetTextI18n")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             // Get the data item for this position
@@ -92,22 +89,21 @@ open class OrderList: ListActivity(){
 
     private fun homeListener() {
         homeBtn.setOnClickListener {
-            val username = auth.currentUser.displayName
+            val username = MainActivity.auth.currentUser.displayName
             when {
                 username.equals("utenti") -> {
                     val intent = Intent(this, UserActivity::class.java)
-                    this@OrderList.startActivity(intent)
+                    this@DeliveryList.startActivity(intent)
                 }
                 username.equals("gestori") -> {
                     val intent = Intent(this, GestorActivity::class.java)
-                    this@OrderList.startActivity(intent)
+                    this@DeliveryList.startActivity(intent)
                 }
                 username.equals("riders") -> {
                     val intent = Intent(this, RiderActivity::class.java)
-                    this@OrderList.startActivity(intent)
+                    this@DeliveryList.startActivity(intent)
                 }
             }
         }
     }
-
 }

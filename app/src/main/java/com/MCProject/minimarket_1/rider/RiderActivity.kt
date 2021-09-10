@@ -15,8 +15,10 @@ import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.RiderChatFragment
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.util.FirebaseMessaging
+import com.MCProject.minimarket_1.util.Order
 import com.google.firebase.auth.FirebaseAuth
 
+@SuppressLint("UseSwitchCompatOrMaterialCode")
 class RiderActivity: AppCompatActivity() {
 
 
@@ -29,6 +31,8 @@ class RiderActivity: AppCompatActivity() {
         var riderName = ""
         var riderEmail = ""
         var riderSurname = ""
+        var myOrder: Order? = null
+        var orderList = ArrayList<Order>()
     }
 
     @SuppressLint("SetTextI18n")
@@ -62,8 +66,9 @@ class RiderActivity: AppCompatActivity() {
                 if(switch.isChecked)
                     switch.performClick()
             }
-            switchListener()
         }
+
+        switchListener()
 
         //Check some notification
         Log.i("HEY", "Check Notify")
@@ -91,19 +96,33 @@ class RiderActivity: AppCompatActivity() {
                 commit()
             }
         }
+
+        val order = findViewById<Button>(R.id.delivery_btn)
+        order.setOnClickListener {
+            val intent = Intent(this, DeliveryList::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun switchListener() {
         switch.setOnClickListener {
+            var entry: HashMap<String, Any>
             if (switch.isChecked) {
-                val entry = hashMapOf<String, Any>(
+                entry = hashMapOf<String, Any>(
                     "status" to 1,
                     "nome rider" to riderName,
                     "email" to riderEmail,
                     "cognome rider" to riderSurname
                 )
-                frR.updateRider(this, "/profili/riders/dati", mail, entry)
+            } else {
+                entry = hashMapOf<String, Any>(
+                    "status" to 0,
+                    "nome rider" to riderName,
+                    "email" to riderEmail,
+                    "cognome rider" to riderSurname
+                )
             }
+            frR.updateRider(this, "/profili/riders/dati", mail, entry)
         }
     }
 }
