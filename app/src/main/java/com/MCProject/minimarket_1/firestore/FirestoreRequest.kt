@@ -292,7 +292,7 @@ open class FirestoreRequest(
         orderN: String
     ) {
         Log.i("HEY", "Invio: "+ message)
-        val fm = FirebaseMessaging(MainActivity.mail)
+        val fm = FirebaseMessaging(MainActivity.mail, context)
         fm.sendMessageToGestor(context, sender!!, receiver, message, orderN)
 
         //reload activity
@@ -310,7 +310,7 @@ open class FirestoreRequest(
     ) {
         Log.i("HEY", "Invio: "+ message)
 
-        val fm = FirebaseMessaging(MainActivity.mail)
+        val fm = FirebaseMessaging(MainActivity.mail, context)
         fm.sendMessageToRider(context, sender!!, receiver, message, orderN)
 
         //reload activity

@@ -70,7 +70,11 @@ class Notification constructor(val context: Activity) {
                     .setAutoCancel(true)
                     .build()
                 notificationManager.notify(1, notification)
-                MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
+                MainActivity.frM.deleteFromDB(
+                    context,
+                    context.getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+MainActivity.mail,
+                    context.getString(com.MCProject.minimarket_1.R.string.notification_path)
+                )
 
             } else {
                 Toast.makeText(context,

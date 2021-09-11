@@ -8,5 +8,9 @@
     <string name="SHOWRIDERPOPUP">1010</string>
     <string name="rider_status_NA">not assigned</string>
     <string name="AndroidVersionOld">Error: android version too old</string>
+    <string name="notification_path">/notification</string>
+    <string name="antecedente_notification">message_for_</string>
+    <string name="accepted">accepted</string>
+    <string name="refused">refused</string>
 </resources>
 

@@ -180,13 +180,14 @@ class FirestoreRequest_Order (
                 .addOnCompleteListener {
                     if(it.isSuccessful)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            sendNotificationToRider(
-                                context,
-                                gestor,
-                                rider,
-                                "The Gestor: $gestor require your services!",
-                                order.nome_ordine
-                            )
+                            if( order.rider != "null" )
+                                sendNotificationToRider(
+                                    context,
+                                    gestor,
+                                    rider,
+                                    "The Gestor: $gestor require your services!",
+                                    order.nome_ordine
+                                )
                         } else {
                             Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()
                         }

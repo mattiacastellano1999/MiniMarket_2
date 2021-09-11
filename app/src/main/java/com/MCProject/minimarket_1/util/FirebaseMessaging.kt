@@ -8,7 +8,7 @@ import com.MCProject.minimarket_1.rider.RiderActivity
 import com.google.firebase.firestore.DocumentReference
 import java.util.*
 
-class FirebaseMessaging constructor(val path: String) {
+class FirebaseMessaging(val path: String, context: Activity) {
 
     val NAME_FIELD: String
     val TEXT_FIELD: String
@@ -18,8 +18,8 @@ class FirebaseMessaging constructor(val path: String) {
     init {
         //recupero da firestore la collezione creata
         firestoreChatListener = MainActivity.db
-            .collection("chat")
-            .document("message_for_"+path)
+            .collection( "/notification")
+            .document("message_for_$path")
 
         NAME_FIELD = "Nome"
         TEXT_FIELD = "Testo"
@@ -66,8 +66,8 @@ class FirebaseMessaging constructor(val path: String) {
     ) {
 
         firestoreChatSender = MainActivity.db
-            .collection("chat")
-            .document("message_for_"+receiver)
+            .collection( context.getString(com.MCProject.minimarket_1.R.string.notification_path))
+            .document(context.getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+receiver)
 
         //scrivo su firestore il nuovo messaggio
         firestoreChatSender.set(newMessage)

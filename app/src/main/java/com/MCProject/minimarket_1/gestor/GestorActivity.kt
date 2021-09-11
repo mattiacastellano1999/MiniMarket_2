@@ -88,7 +88,7 @@ class GestorActivity: AppCompatActivity() {
 
         //Check some notification
         Log.i("HEY", "Check Notify")
-        val fm = FirebaseMessaging(MainActivity.mail)
+        val fm = FirebaseMessaging(MainActivity.mail, this)
         fm.addRealtimeUpdate(this, "gestor")
     }
 
