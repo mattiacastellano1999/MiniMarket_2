@@ -75,7 +75,6 @@ class RiderActivity: AppCompatActivity() {
         val fm = FirebaseMessaging(MainActivity.mail, this)
         fm.addRealtimeUpdate(this, "/profili/riders/dati/$mail")
 
-
         btnListener()
     }
 

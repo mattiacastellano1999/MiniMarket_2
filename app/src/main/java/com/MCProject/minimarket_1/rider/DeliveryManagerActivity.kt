@@ -8,26 +8,54 @@ import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.MCProject.minimarket_1.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.google.firebase.firestore.GeoPoint
 import android.R
 import android.content.Intent
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
 import com.MCProject.minimarket_1.util.Order
 
 
-class DeliveryManagerActivity: OrderManagerActivity() {
+class DeliveryManagerActivity: AppCompatActivity() {
+
+    lateinit var logoutImgBtn: ImageButton
+    lateinit var homeImgBtn: ImageButton
+    lateinit var cancleBtn: Button
+    lateinit var confirmBtn: Button
+    lateinit var titleTV: TextView
+    lateinit var statusTV: TextView
+
+    lateinit var cliente : String
+    lateinit var orderN : String
+    lateinit var riderAviable: ArrayList<String>
+    lateinit var riderStatus: String
+    lateinit var spinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.i("HEY", "Delivery Manager Activity")
+        setContentView(com.MCProject.minimarket_1.R.layout.gestor_order_activity)
 
+        cliente = intent.extras!!["testo"].toString()
+        orderN = intent.extras!!["nome_ordine"].toString()
+        riderStatus = intent.extras!!["rStatus"].toString()
+
+
+        Log.i("HEY", "Extra: " + cliente)
+
+        spinner = findViewById(com.MCProject.minimarket_1.R.id.rider_ed)
+        homeImgBtn = findViewById(com.MCProject.minimarket_1.R.id.home_imgBtn)
+        logoutImgBtn = findViewById(com.MCProject.minimarket_1.R.id.exit_imgBtn)
+        cancleBtn = findViewById(com.MCProject.minimarket_1.R.id.cancle_btn)
+        confirmBtn = findViewById(com.MCProject.minimarket_1.R.id.confirm_btn)
+        titleTV = findViewById(com.MCProject.minimarket_1.R.id.title_tv)
+        statusTV = findViewById(com.MCProject.minimarket_1.R.id.status_tv)
     }
 
     @SuppressLint("SetTextI18n")
@@ -120,8 +148,8 @@ class DeliveryManagerActivity: OrderManagerActivity() {
         //elimino la notifica dal db
         MainActivity.frM.deleteFromDB(
             this,
-            this.getString(com.MCProject.minimarket_1.R.string.antecedente_notification) + MainActivity.mail,
-            this.getString(com.MCProject.minimarket_1.R.string.notification_path)
+            getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+MainActivity.mail,
+            getString(com.MCProject.minimarket_1.R.string.notification_path)
         )
 
         if(value == getString(com.MCProject.minimarket_1.R.string.accepted)) {

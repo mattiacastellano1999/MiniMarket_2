@@ -17,7 +17,7 @@ import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.user.UserActivity
 
 
-open class OrderManagerActivity : AppCompatActivity() {
+class OrderManagerActivity : AppCompatActivity() {
 
     lateinit var logoutImgBtn: ImageButton
     lateinit var homeImgBtn: ImageButton
@@ -155,7 +155,7 @@ open class OrderManagerActivity : AppCompatActivity() {
                         Log.d("HEY", "Order List Rider: " + orderList[0].rider)
                         orderList.forEach { neworder ->
                             if (neworder.nome_ordine == orderN) {
-                                if (neworder.riderStatus == "not assigned") {
+                                if (neworder.riderStatus == getString(R.string.rider_status_NA)) {
                                     //rider non ancora assegnato -> mando richiesta al rider
                                     frO.updateOrder(this, neworder, "request sended", rider)
                                 }

@@ -153,6 +153,7 @@ class FirestoreRequest_Order (
     fun updateOrder(context: Activity, order: Order, riderStatus: String, rider: String) {
         val gestor = order.proprietario
         val load = Loading(context)
+        load.startLoading()
 
         var entry: HashMap<String, Any?> = hashMapOf()
         entry["nome"] = order.nome_ordine
@@ -173,14 +174,13 @@ class FirestoreRequest_Order (
         }
 
         Log.i("HEY", "Order Sending to RIder: ${order.nome_ordine}")
-        load.startLoading()
-        db.collection("/profili/gestori/ordini/${order.proprietario}/miei_ordini/")
+        db.collection("/profili/gestori/ordini/${order.proprietario}/miei_ordini")
                 .document(order.nome_ordine)
                 .set(entry)
                 .addOnCompleteListener {
                     if(it.isSuccessful)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            if( order.rider != "null" )
+                            //if( order.rider != "null" )
                                 sendNotificationToRider(
                                     context,
                                     gestor,
@@ -189,8 +189,10 @@ class FirestoreRequest_Order (
                                     order.nome_ordine
                                 )
                         } else {
+                            Log.i("HEY", "Error Order Sending to RIder")
                             Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()
                         }
+                    load.stopLoadingDialog()
                 }
                 .addOnFailureListener {
                     Log.i("HEY", "Failed")

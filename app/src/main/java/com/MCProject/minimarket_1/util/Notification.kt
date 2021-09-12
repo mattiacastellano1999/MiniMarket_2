@@ -16,6 +16,7 @@ import com.MCProject.minimarket_1.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.rider.DeliveryManagerActivity
+import com.MCProject.minimarket_1.rider.RiderActivity
 
 class Notification constructor(val context: Activity) {
 
@@ -113,10 +114,23 @@ class Notification constructor(val context: Activity) {
                     .setAutoCancel(true)
                     .build()
                 Log.i("HEY", "showNotification: " + messaggio)
-                notificationManager.notify(1, notification)
                 //la cancello solo quando il rider accetta o rifiuta la richiesta
-            //MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
+                //MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
+                if (RiderActivity.myOrder != null) {
+                    if (RiderActivity.myOrder!!.riderStatus.equals("accepted")) {
+                        Log.i("HEY", "Deleting Message")
+                        MainActivity.frM.deleteFromDB(
+                            context,
+                            context.getString(com.MCProject.minimarket_1.R.string.antecedente_notification) + MainActivity.mail,
+                            context.getString(com.MCProject.minimarket_1.R.string.notification_path)
+                        )
 
+                    } else {
+                        notificationManager.notify(1, notification)
+                    }
+                } else {
+                    notificationManager.notify(1, notification)
+                }
             } else {
                 Toast.makeText(context,
                     "Unable to Receive Message: VERSION.SDK_INT < O",

@@ -155,13 +155,6 @@ class FirebaseMessaging(val path: String, context: Activity) {
                     channellid.toString(),
                     "Channel_$type$channellid",
                     "Prova Channel1")
-                notify.showRiderNotification(
-                    channellid.toString(),
-                    it.get("numero_ordine").toString(),
-                    it.get("gestore").toString(),
-                    it.get("cliente").toString(),
-                    it.get("Testo").toString()
-                )
                 if( it.exists()) {
                     //funziona solo con la notifica
                     MainActivity.frO.getAllOrder(
@@ -172,20 +165,17 @@ class FirebaseMessaging(val path: String, context: Activity) {
                         Log.i("HEY", "Arivato qui: " + RiderActivity.orderList)
                         for( order in RiderActivity.orderList){
                             if(order.nome_ordine == it["numero_ordine"]){
-                                RiderActivity.myOrder = order/*Order(
-                                    order.nome_ordine,
-                                    order.prezzo_tot,
-                                    order.proprietario,
-                                    order.cliente,
-                                    order.addrClient,
-                                    order.addrGestor,
-                                    order.rider,
-                                    order.riderStatus,
-                                    order.products
-                                )*/
+                                RiderActivity.myOrder = order
                                 Log.i("HEY", "Order: ${order.nome_ordine}")
                             }
                         }
+                        notify.showRiderNotification(
+                            channellid.toString(),
+                            it.get("numero_ordine").toString(),
+                            it.get("gestore").toString(),
+                            it.get("cliente").toString(),
+                            it.get("Testo").toString()
+                        )
                     }
 
                 }

@@ -42,8 +42,8 @@ open class FirestoreRequest(
             context: Activity,
             orderList: ArrayList<Order>
     ): Task<QuerySnapshot> {
-        val load = Loading(context)
-        load.startLoading()
+        /*val load = Loading(context)
+        load.startLoading()*/
         orderList.clear()
 
         Log.i("HEY", "Path: "+from)
@@ -81,7 +81,7 @@ open class FirestoreRequest(
                             }
                         } else {
                             Log.e("HEY", "Error with Path")
-                            load.stopLoadingDialog()
+                            //load.stopLoadingDialog()
                         }
                     } else {
                         Log.e("HEY", "Error Firetore Marker Reading_0")
@@ -91,7 +91,7 @@ open class FirestoreRequest(
                                 Toast.LENGTH_LONG
                         ).show()
                     }
-                    load.stopLoadingDialog()
+                    //load.stopLoadingDialog()
                     return@addOnCompleteListener
                 }
                 .addOnFailureListener {
@@ -101,7 +101,7 @@ open class FirestoreRequest(
                             "Database Reding Error",
                             Toast.LENGTH_LONG
                     ).show()
-                    load.stopLoadingDialog()
+                    //load.stopLoadingDialog()
                     return@addOnFailureListener
                 }
         return ret
@@ -232,6 +232,7 @@ open class FirestoreRequest(
             pathToMyProduct = path
         }
         if(elementToDelete != null) {
+            Log.i("HEY", "Removing : "+pathToMyProduct+"/"+elementToDelete)
             db.collection(pathToMyProduct)
                 .document(elementToDelete)
                 .delete()
