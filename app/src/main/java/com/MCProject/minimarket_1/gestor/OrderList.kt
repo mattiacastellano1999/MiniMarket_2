@@ -23,7 +23,11 @@ import com.MCProject.minimarket_1.R
 
 open class OrderList: ListActivity(){
 
-    var orderList = ArrayList<Order>()
+    companion object{
+        lateinit var orderList: ArrayList<Order>
+        lateinit var orderSelected: Order
+    }
+
     lateinit var homeBtn: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,19 +54,24 @@ open class OrderList: ListActivity(){
                             )
                     listView.adapter = itemsAdapter
                     listView.setOnItemClickListener { parent, view, position, id ->
-                        val order = orderList[position] 
-                        Log.i("HEY", "Clicked "+order.rider.toString())
+                        orderSelected = orderList[position]
+                        Log.i("HEY", "Clicked "+orderSelected.rider.toString())
 
-                        val cliente = order.cliente
-                        val gestore = order.proprietario
-                        val orderN = order.nome_ordine
+                        val cliente = orderSelected.cliente
+                        val gestore = orderSelected.proprietario
+                        val orderN = orderSelected.nome_ordine
 
-                        val intent = Intent(this, OrderManagerActivity::class.java)
-                        intent.putExtra("cliente", cliente)
-                        intent.putExtra("gestore", gestore)
-                        intent.putExtra("nome_ordine", orderN)
-                        intent.putExtra("rStatus", order.riderStatus)
-                        this@OrderList.startActivity(intent)
+                        if(orderSelected.riderStatus == getString(R.string.accepted)){
+                            val intent = Intent(this, ChatGestor::class.java)
+                            startActivity(intent)
+                        } else {
+                            val intent = Intent(this, OrderManagerActivity::class.java)
+                            intent.putExtra("cliente", cliente)
+                            intent.putExtra("gestore", gestore)
+                            intent.putExtra("nome_ordine", orderN)
+                            intent.putExtra("rStatus", orderSelected.riderStatus)
+                            this@OrderList.startActivity(intent)
+                        }
                     }
                 }
     }

@@ -22,6 +22,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Rider
 import com.MCProject.minimarket_1.rider.RiderActivity
+import com.MCProject.minimarket_1.util.Order
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",

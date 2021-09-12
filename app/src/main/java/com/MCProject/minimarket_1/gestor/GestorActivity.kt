@@ -8,11 +8,14 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.frO
+import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
+import com.MCProject.minimarket_1.util.Order
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -26,6 +29,7 @@ class GestorActivity: AppCompatActivity() {
     lateinit var riderVisualBtn: Button
     lateinit var orderManageBtn: Button
     val auth = FirebaseAuth.getInstance()
+
     lateinit var popup : GestorPopup
 
     val gestorRidersFragment = GestorVisualize_ridersFragment()
@@ -39,8 +43,7 @@ class GestorActivity: AppCompatActivity() {
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
         riderVisualBtn = findViewById(R.id.locationRider_btn)
         orderManageBtn = findViewById(R.id.orderManage_btn)
-        popup = GestorPopup(this, ArrayList<ProductListActivity.Product>())
-
+        popup = GestorPopup(this, ArrayList())
     }
 
     override fun onStart() {
@@ -49,6 +52,26 @@ class GestorActivity: AppCompatActivity() {
         orderManageBtn.visibility = View.VISIBLE
         riderVisualBtn.visibility = View.VISIBLE
 
+        btnListener()
+
+        val fr = FirestoreRequest_User(
+            FirebaseFirestore.getInstance(),
+            auth, FirebaseStorage.getInstance(),
+            auth.currentUser.displayName,
+            auth.currentUser.email)
+        fr.getAllCategoryProfile(this, "riders")
+
+        //Check some notification
+        Log.i("HEY", "Check Notify")
+        val fm = FirebaseMessaging(MainActivity.mail, this)
+        fm.addRealtimeUpdate(this, "gestor")
+    }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+    }
+
+    fun btnListener() {
         logoutImgBtn.setOnClickListener {
             auth.signOut()
             if(auth.currentUser == null) {
@@ -79,20 +102,6 @@ class GestorActivity: AppCompatActivity() {
             val intent = Intent(this, MarketProductListActivity::class.java)
             startActivity(intent)
         }
-        val fr = FirestoreRequest_User(
-            FirebaseFirestore.getInstance(),
-            auth, FirebaseStorage.getInstance(),
-            auth.currentUser.displayName,
-            auth.currentUser.email)
-        fr.getAllCategoryProfile(this, "riders")
 
-        //Check some notification
-        Log.i("HEY", "Check Notify")
-        val fm = FirebaseMessaging(MainActivity.mail, this)
-        fm.addRealtimeUpdate(this, "gestor")
-    }
-
-    override fun onBackPressed() {
-        //super.onBackPressed()
     }
 }
