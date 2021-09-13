@@ -9,6 +9,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 
 open class Chat: Activity() {
 
@@ -47,23 +49,27 @@ open class Chat: Activity() {
         button2 = findViewById(R.id.button_2)
     }
 
-    private fun chatRealtimeUpdate(doc: String) {
-        firestoreChatCollection.document(doc)
+    /**
+     * Va in ascolto su /chat/{doc} e quando avviene una modifica assegan i valori letti a message
+     */
+    fun chatRealtimeUpdate(doc: String) {
+        var mydoc = doc
+        firestoreChatCollection.document(mydoc)
             .addSnapshotListener{ documentSnapshot, e ->
                 when {
                 e != null -> {
                     Log.e("ERRORS",""+e.message)
                 }
                 documentSnapshot != null -> {
-                    readFromFirebase(doc)
+                    readFromFirebase(mydoc)
                 }
             }
         }
     }
 
-    private fun readFromFirebase(doc: String) {
+    open fun readFromFirebase(doc: String): Task<DocumentSnapshot> {
         message.clear()
-        firestoreChatCollection.document(doc)
+        return firestoreChatCollection.document(doc)
             .get()
             .addOnSuccessListener {
                 Log.i("HEY", ""+ it.get("Nome").toString())
@@ -72,7 +78,7 @@ open class Chat: Activity() {
             }
     }
 
-    private fun sendMesage(doc: String, editText: EditText){
+    fun sendMesage(doc: String, editText: EditText){
 
         val newMessage = mapOf<String, String>(
             NAME_FIELD to editText.text.toString(),
