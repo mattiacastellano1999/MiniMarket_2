@@ -71,21 +71,23 @@ class RiderActivity: AppCompatActivity() {
             }
         }
 
+        orderName = ""
         frO.getAllOrder(orderList, this)
             .addOnCompleteListener {
                 for (doc in it.result) {
+                    Log.i("HEY", "DOC::: "+doc.data)
                     if( doc["riderStatus"] == getString(R.string.accepted) ) {
                         if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
                             if( doc["rider"] == mail ) {
+                                orderName = doc["ordine"].toString()
                                 myOrder = frO.parseOrder(doc)
+                                btnListener()
                                 break
                             }
                         }
                     }
                 }
-                btnListener()
             }
-
 
         switchListener()
 
