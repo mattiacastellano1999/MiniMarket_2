@@ -40,6 +40,7 @@
         <activity android:name="com.MCProject.minimarket_1.MainActivity" />
         <activity android:name="com.MCProject.minimarket_1.access.JoinUs" />
         <activity android:name="com.MCProject.minimarket_1.util.ProductListActivity" />
+        <activity android:name="com.MCProject.minimarket_1.util.Chat" />
         <activity android:name="com.MCProject.minimarket_1.user.UserActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.MarketAviableActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.CartProductListActivity" />
@@ -47,9 +48,11 @@
         <activity android:name="com.MCProject.minimarket_1.gestor.GestorActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.MarketProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.OrderList" />
+        <activity android:name="com.MCProject.minimarket_1.gestor.ChatGestor" />
         <activity android:name="com.MCProject.minimarket_1.gestor.OrderManagerActivity" />
         <activity android:name="com.MCProject.minimarket_1.rider.RiderActivity" />
         <activity android:name="com.MCProject.minimarket_1.rider.DeliveryList" />
+        <activity android:name="com.MCProject.minimarket_1.rider.ChatRider" />
         <activity android:name="com.MCProject.minimarket_1.rider.DeliveryManagerActivity" />
         <activity android:name="com.MCProject.minimarket_1.access.Login">
             <intent-filter>

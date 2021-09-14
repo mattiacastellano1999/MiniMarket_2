@@ -106,15 +106,15 @@ class MarketAviableActivity: ListActivity(), AdapterView.OnItemClickListener  {
             when {
                 username.equals("utenti") -> {
                     val intent = Intent(this, UserActivity::class.java)
-                    this@MarketAviableActivity.startActivity(intent)
+                    startActivity(intent)
                 }
                 username.equals("gestori") -> {
                     val intent = Intent(this, GestorActivity::class.java)
-                    this@MarketAviableActivity.startActivity(intent)
+                    startActivity(intent)
                 }
                 username.equals("riders") -> {
                     val intent = Intent(this, RiderActivity::class.java)
-                    this@MarketAviableActivity.startActivity(intent)
+                    startActivity(intent)
                 }
             }
         }

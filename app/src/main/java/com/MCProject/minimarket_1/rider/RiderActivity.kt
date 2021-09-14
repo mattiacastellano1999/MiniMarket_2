@@ -4,15 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.frO
 import com.MCProject.minimarket_1.MainActivity.Companion.frR
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.RiderChatFragment
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.Order
@@ -31,6 +32,8 @@ class RiderActivity: AppCompatActivity() {
         var riderName = ""
         var riderEmail = ""
         var riderSurname = ""
+        var orderGestor = ""
+        var orderName = ""
         var myOrder: Order? = null
         var orderList = ArrayList<Order>()
     }
@@ -68,6 +71,26 @@ class RiderActivity: AppCompatActivity() {
             }
         }
 
+        frR.getRiderOrders(this, "/profili/riders/ordini").addOnCompleteListener {
+            Log.i("HEY", "RESULT = ${it.result.documents}")
+            for (doc in it.result) {
+                orderName = doc["ordine"].toString()
+                orderGestor = doc["gestore"].toString()
+                break
+            }
+            frO.getAllOrder(orderGestor, orderList, this)
+                .addOnCompleteListener {
+                    for (doc in it.result) {
+                        if(doc["nome"] == orderName){
+                            myOrder = frO.parseOrder(doc)
+                            break
+                        }
+                    }
+                    btnListener()
+                }
+        }
+
+
         switchListener()
 
         //Check some notification
@@ -88,12 +111,14 @@ class RiderActivity: AppCompatActivity() {
         }
 
         val chat = findViewById<Button>(R.id.chat_btn)
-        chat.setOnClickListener {
-            val chatFragment = RiderChatFragment()
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.main_fragment, chatFragment)
-                commit()
+        if(orderName.isNotEmpty()){
+            chat.visibility = View.VISIBLE
+            chat.setOnClickListener {
+                val intent = Intent(this, ChatRider::class.java)
+                startActivity(intent)
             }
+        } else {
+            chat.visibility = View.GONE
         }
 
         val order = findViewById<Button>(R.id.delivery_btn)

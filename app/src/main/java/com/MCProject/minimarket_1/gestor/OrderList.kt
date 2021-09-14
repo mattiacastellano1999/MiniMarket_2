@@ -24,7 +24,7 @@ import com.MCProject.minimarket_1.R
 open class OrderList: ListActivity(){
 
     companion object{
-        lateinit var orderList: ArrayList<Order>
+        var orderList = ArrayList<Order>()
         lateinit var orderSelected: Order
     }
 

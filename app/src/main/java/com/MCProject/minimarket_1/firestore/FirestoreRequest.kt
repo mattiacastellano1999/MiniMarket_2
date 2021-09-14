@@ -15,10 +15,12 @@ import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.gestor.OrderList
+import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.MCProject.minimarket_1.user.CartProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
@@ -51,13 +53,11 @@ open class FirestoreRequest(
                 .get()
                 .addOnCompleteListener {@Synchronized
                     if ( it.isSuccessful) {
-                        var i = 0
 
-                        Log.i("HEY", "Result: " + it.result)
                         if( !it.result.isEmpty) {
                             for (doc in it.result) {
                                 Log.i("HEY", "Doc: "+doc.data)
-                                var myOrder = Order(
+                                /*var myOrder = Order(
                                         doc.data["nome"].toString(),
                                         doc.data["prezzo"].toString().toDouble(),
                                         doc.data["proprietario"].toString(),
@@ -75,9 +75,8 @@ open class FirestoreRequest(
                                             doc.data["prod_qty_" + i].toString()
                                     )
                                     i++
-                                }
-                                i=0
-                                orderList.add(myOrder)
+                                }*/
+                                orderList.add(parseOrder(doc))
                             }
                         } else {
                             Log.e("HEY", "Error with Path")
@@ -105,6 +104,31 @@ open class FirestoreRequest(
                     return@addOnFailureListener
                 }
         return ret
+    }
+
+    @Synchronized
+    fun parseOrder(doc: QueryDocumentSnapshot): Order {
+        val myOrder = Order(
+            doc.data["nome"].toString(),
+            doc.data["prezzo"].toString().toDouble(),
+            doc.data["proprietario"].toString(),
+            doc.data["cliente"].toString(),
+            doc.data["addr cliente"].toString(),
+            doc.data["addr gestore"].toString(),
+            doc.data["rider"].toString(),
+            doc.data["riderStatus"].toString(),
+            HashMap<String, String>()
+        )
+        var i = 0
+        while(doc.data.containsKey("prod_name_$i")) {
+            Log.i("HEY", "While Doc: "+doc.data["prod_name_"+i])
+            myOrder.products.set(
+                doc.data["prod_name_" + i].toString(),
+                doc.data["prod_qty_" + i].toString()
+            )
+            i++
+        }
+        return myOrder
     }
 
     /**

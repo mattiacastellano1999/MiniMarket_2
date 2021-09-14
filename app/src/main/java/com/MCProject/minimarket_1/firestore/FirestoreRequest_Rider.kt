@@ -51,5 +51,21 @@ class FirestoreRequest_Rider (
         return ret
     }
 
+    fun getRiderOrders(context: Activity, path: String): Task<QuerySnapshot> {
+        val load = Loading(context)
+        load.startLoading()
+
+        val ret = db.collection(path)
+            .get()
+            .addOnCompleteListener {
+                load.stopLoadingDialog()
+                return@addOnCompleteListener
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+            }
+        return ret
+    }
+
 
 }
