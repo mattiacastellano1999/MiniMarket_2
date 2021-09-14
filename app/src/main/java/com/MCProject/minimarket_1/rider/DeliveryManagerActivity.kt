@@ -1,24 +1,20 @@
 package com.MCProject.minimarket_1.rider
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.MCProject.minimarket_1.gestor.OrderManagerActivity
 import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.google.firebase.firestore.GeoPoint
-import android.R
 import android.content.Intent
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
-import com.MCProject.minimarket_1.util.Order
 
 
 class DeliveryManagerActivity: AppCompatActivity() {
@@ -70,7 +66,7 @@ class DeliveryManagerActivity: AppCompatActivity() {
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
         statusTV.layoutParams = layoutParams
 
-        titleTV.text = "Delivery Request \nFor ${myOrder!!.nome_ordine}"
+        titleTV.text = "Delivery Request \nFor ${myOrder!!.ordine}"
 
         val clientGeocode = getCoordinates(myOrder!!.addrClient)
         val gestorGeocode = getCoordinates(myOrder!!.addrGestor)
@@ -85,9 +81,9 @@ class DeliveryManagerActivity: AppCompatActivity() {
 
         if(myOrder != null) {
             statusTV.text =
-                "Order Name: ${myOrder!!.nome_ordine} \n\n" +
+                "Order Name: ${myOrder!!.ordine} \n\n" +
                 "Pay is: ${myOrder!!.prezzo_tot} \n\n" +
-                "Distance Between Market and Client: ${distance[0]/1000} Km\n\n" +
+                "Distance Between Market and Client: ${distance[0]/1000} mt\n\n" +
                 "Delivery Address: ${myOrder!!.addrClient}"
         }
 

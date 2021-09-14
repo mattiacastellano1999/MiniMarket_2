@@ -71,24 +71,20 @@ class RiderActivity: AppCompatActivity() {
             }
         }
 
-        frR.getRiderOrders(this, "/profili/riders/ordini").addOnCompleteListener {
-            Log.i("HEY", "RESULT = ${it.result.documents}")
-            for (doc in it.result) {
-                orderName = doc["ordine"].toString()
-                orderGestor = doc["gestore"].toString()
-                break
-            }
-            frO.getAllOrder(orderGestor, orderList, this)
-                .addOnCompleteListener {
-                    for (doc in it.result) {
-                        if(doc["nome"] == orderName){
-                            myOrder = frO.parseOrder(doc)
-                            break
+        frO.getAllOrder(orderList, this)
+            .addOnCompleteListener {
+                for (doc in it.result) {
+                    if( doc["riderStatus"] == getString(R.string.accepted) ) {
+                        if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
+                            if( doc["rider"] == mail ) {
+                                myOrder = frO.parseOrder(doc)
+                                break
+                            }
                         }
                     }
-                    btnListener()
                 }
-        }
+                btnListener()
+            }
 
 
         switchListener()

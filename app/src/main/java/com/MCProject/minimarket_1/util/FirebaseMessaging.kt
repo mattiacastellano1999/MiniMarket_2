@@ -128,13 +128,12 @@ class FirebaseMessaging(val path: String, context: Activity) {
                 if(type.contains("rider") && it.exists()) {
                     //funziona solo con la notifica
                     MainActivity.frO.getAllOrder(
-                        it.get("gestore").toString(),
                         RiderActivity.orderList,
                         context
                     ).addOnCompleteListener { docs ->
                         Log.i("HEY", "Arivato qui: " + docs.toString())
                         for( order in RiderActivity.orderList){
-                            if(order.nome_ordine == it["nome_ordine"]){
+                            if(order.ordine == it["nome_ordine"]){
                                 RiderActivity.myOrder = order
                             }
                         }
@@ -158,15 +157,14 @@ class FirebaseMessaging(val path: String, context: Activity) {
                 if( it.exists()) {
                     //funziona solo con la notifica
                     MainActivity.frO.getAllOrder(
-                        it.get("cliente").toString(),
                         RiderActivity.orderList,
                         context
                     ).addOnCompleteListener { docs ->
                         Log.i("HEY", "Arivato qui: " + RiderActivity.orderList)
                         for( order in RiderActivity.orderList){
-                            if(order.nome_ordine == it["numero_ordine"]){
+                            if(order.ordine == it["numero_ordine"]){
                                 RiderActivity.myOrder = order
-                                Log.i("HEY", "Order: ${order.nome_ordine}")
+                                Log.i("HEY", "Order: ${order.ordine}")
                             }
                         }
                         notify.showRiderNotification(

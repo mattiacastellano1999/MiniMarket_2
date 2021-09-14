@@ -146,7 +146,7 @@ class OrderManagerActivity : AppCompatActivity() {
     private fun sendDeliveryRequestToRider() {
         val rider = spinner.selectedItem.toString()
         val orderList = ArrayList<Order>()
-        frO.getAllOrder(mail, orderList, this)
+        frO.getAllOrder(orderList, this)
                 .addOnCompleteListener {
                     if (orderList.size < 1) {
                         Log.e("HEY", "Error: Order List Empty")
@@ -154,7 +154,7 @@ class OrderManagerActivity : AppCompatActivity() {
                     } else {
                         Log.d("HEY", "Order List Rider: " + orderList[0].rider)
                         orderList.forEach { neworder ->
-                            if (neworder.nome_ordine == orderN) {
+                            if (neworder.ordine == orderN) {
                                 if (neworder.riderStatus == getString(R.string.rider_status_NA)) {
                                     //rider non ancora assegnato -> mando richiesta al rider
                                     frO.updateOrder(this, neworder, "request sended", rider)

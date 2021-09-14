@@ -37,7 +37,7 @@ class DeliveryList: ListActivity(){
 
         homeListener()
 
-        MainActivity.frO.getAllOrder(RiderActivity.orderList[0].proprietario, RiderActivity.orderList, this)
+        MainActivity.frO.getAllOrder(RiderActivity.orderList, this)
             .addOnCompleteListener {
                 Log.i("HEY", "OrderList: ${orderList.size}")
                 val itemsAdapter: OrderList.MyOrdersAdapter =
@@ -53,7 +53,7 @@ class DeliveryList: ListActivity(){
 
                     val cliente = order.cliente
                     val gestore = order.proprietario
-                    val orderN = order.nome_ordine
+                    val orderN = order.ordine
 
                     val intent = Intent(this, DeliveryManagerActivity::class.java)
                     intent.putExtra("cliente", cliente)
@@ -79,7 +79,7 @@ class DeliveryList: ListActivity(){
             val tvHome = convertView.findViewById<View>(R.id.tvHome) as TextView
             // Populate the data into the template view using the data object
             if (order != null) {
-                tvName.text = order.nome_ordine
+                tvName.text = order.ordine
                 tvHome.text = "Order From: "+ order.cliente + "\nTot: " + order.prezzo_tot
             }
             // Return the completed view to render on screen

@@ -44,7 +44,7 @@ open class OrderList: ListActivity(){
         orderList.clear()
         homeListener()
 
-        frO.getAllOrder(mail, orderList, this)
+        frO.getAllOrder( orderList, this)
                 .addOnCompleteListener {
                     Log.i("HEY", "OrderList: ${orderList.size}")
                     val itemsAdapter: MyOrdersAdapter =
@@ -59,7 +59,7 @@ open class OrderList: ListActivity(){
 
                         val cliente = orderSelected.cliente
                         val gestore = orderSelected.proprietario
-                        val orderN = orderSelected.nome_ordine
+                        val orderN = orderSelected.ordine
 
                         if(orderSelected.riderStatus == getString(R.string.accepted)){
                             val intent = Intent(this, ChatGestor::class.java)
@@ -91,7 +91,7 @@ open class OrderList: ListActivity(){
             val tvHome = convertView.findViewById<View>(R.id.tvHome) as TextView
             // Populate the data into the template view using the data object
             if (order != null) {
-                tvName.text = order.nome_ordine
+                tvName.text = order.ordine
                 tvHome.text = "Order From: "+ order.cliente + "\nTot: " + order.prezzo_tot
             }
             // Return the completed view to render on screen

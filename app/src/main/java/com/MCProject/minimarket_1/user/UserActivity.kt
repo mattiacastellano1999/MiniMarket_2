@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.MyLocation
 import com.google.android.gms.maps.SupportMapFragment
@@ -23,6 +24,7 @@ class UserActivity: AppCompatActivity() {
     lateinit var locationBTN: Button
     lateinit var oldOrderBTN: Button
     lateinit var marketListBTN: Button
+    lateinit var chatUserBTN: Button
     lateinit var logoutIMGBTN: ImageButton
     lateinit var cartIMGBTN: ImageButton
     lateinit var welcomeTV: TextView
@@ -42,6 +44,7 @@ class UserActivity: AppCompatActivity() {
         welcomeTV = findViewById(R.id.welcome_tv)
         oldOrderBTN = findViewById(R.id.oldOrder_btn)
         marketListBTN = findViewById(R.id.marketList_btn)
+        chatUserBTN = findViewById(R.id.chatUser_btn)
 
         welcomeTV.text = "Welcome ${firebaseAuth.currentUser.email}"
     }
@@ -51,6 +54,26 @@ class UserActivity: AppCompatActivity() {
         locationBTN.visibility = View.VISIBLE
         oldOrderBTN.visibility = View.VISIBLE
         marketListBTN.visibility = View.VISIBLE
+        chatUserBTN.visibility = View.GONE
+
+        /*MainActivity.frR.getRiderOrders(this, "/profili/riders/ordini").addOnCompleteListener {
+            Log.i("HEY", "RESULT = ${it.result.documents}")
+            for (doc in it.result) {
+                RiderActivity.orderName = doc["ordine"].toString()
+                RiderActivity.orderGestor = doc["gestore"].toString()
+                break
+            }
+            MainActivity.frO.getAllOrder(RiderActivity.orderGestor, RiderActivity.orderList, this)
+                .addOnCompleteListener {
+                    for (doc in it.result) {
+                        if(doc["nome"] == RiderActivity.orderName){
+                            RiderActivity.myOrder = MainActivity.frO.parseOrder(doc)
+                            break
+                        }
+                    }
+                    buttonListener()
+                }
+        }*/
 
         buttonListener()
 

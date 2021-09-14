@@ -12,11 +12,10 @@ import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -28,12 +27,14 @@ class FirestoreRequest_Order (
         override var mail: String?
 ): FirestoreRequest(db, auth, imgDb, collection, mail) {
 
+    /**
+     * Get di tutti gli ordini
+     */
     fun getAllOrder(
-        market: String,
         orderList: ArrayList<Order>,
         context: Activity
     ): Task<QuerySnapshot> {
-        pathToMyProduct = "/profili/gestori/ordini/$market/miei_ordini"
+        pathToMyProduct = "/ordini"
         val ret = addOrderData(pathToMyProduct, context, orderList)
                 .addOnCompleteListener { va ->
                     Log.i("HEY", "data adding_15:${orderList.size}")
@@ -41,6 +42,9 @@ class FirestoreRequest_Order (
         return ret
     }
 
+    /**
+     * Crea un nuovo ordine
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun uploadOrder(
         productList: ArrayList<ProductListActivity.Product>,
@@ -52,10 +56,12 @@ class FirestoreRequest_Order (
         val load = Loading(context)
         load.startLoading()
 
-        findCorrectOrderName(productList[0].owner, load, productList, context, client, rider, addrGestor)
+        //findCorrectOrderName(productList[0].owner, load, productList, context, client, rider, addrGestor)
+        var doc = db.collection("/ordini")
+        doUploadOrder(productList, context, client, rider, load, doc, addrGestor)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /*@RequiresApi(Build.VERSION_CODES.O)
     fun findCorrectOrderName(
         e_mail: String,
         load: Loading,
@@ -89,31 +95,32 @@ class FirestoreRequest_Order (
                     }
                 }
         return doc
-    }
+    }*/
 
+    /**
+     * Crea un nuovo ordine
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     @Synchronized
-    private fun doUploadData(
+    private fun doUploadOrder(
         productList: ArrayList<ProductListActivity.Product>,
         context: Activity,
         client: String?,
         rider: String?,
-        orderName: String,
         load: Loading,
-        doc: DocumentReference,
+        doc: CollectionReference,
         addrGestor: String
     ) {
         var entry2: HashMap<String, Any?> = hashMapOf()
-        entry2["nome"] = orderName
         entry2["cliente"] = client
         entry2["rider"] = rider
         entry2["proprietario"] = productList[0].owner
         entry2["riderStatus"] = context.getString(R.string.rider_status_NA)
-        entry2["addr gestore"] = addrGestor
-        entry2["addr cliente"] = MyLocation.address
+        entry2["addrGestore"] = addrGestor
+        entry2["addrCliente"] = MyLocation.address
+        entry2["orderStatus"] = context.getString(R.string.order_status_working)
         var priceTot = 0.0
         var owner = ""
-
 
         productList.forEachIndexed { i, prod ->
             entry2["prod_name_$i"] = prod.name
@@ -121,22 +128,25 @@ class FirestoreRequest_Order (
             owner = prod.owner
             priceTot += (prod.price * prod.quantity)
         }
-        entry2["prezzo"] = priceTot
+        entry2["prezzo_tot"] = priceTot
 
-        doc.set(entry2)
+        doc.add(entry2)
                 .addOnSuccessListener {
                     productList.forEach { prod ->
                         removeProductFromCart(prod, context)
                     }
                 }
                 .addOnCompleteListener {
+                    entry2["ordine"] = it.result.id
+                    doc.document(it.result.id).set(entry2)
+
                     load.stopLoadingDialog()
                     sendNotificationToGestor(
                         context,
                         client,
                         owner,
                         "Has Been Added: ${productList.size.toString()} Product to the new Order!",
-                        orderName
+                        it.result.id
                     )
                 }
                 .addOnFailureListener {
@@ -150,20 +160,24 @@ class FirestoreRequest_Order (
                 }
     }
 
+    /**
+     * Aggiorna un ordine esistente
+     */
     fun updateOrder(context: Activity, order: Order, riderStatus: String, rider: String) {
         val gestor = order.proprietario
         val load = Loading(context)
         load.startLoading()
 
         var entry: HashMap<String, Any?> = hashMapOf()
-        entry["nome"] = order.nome_ordine
+        entry["ordine"] = order.ordine
         entry["cliente"] = order.cliente
         entry["rider"] = rider
         entry["proprietario"] = order.proprietario
-        entry["prezzo"] = order.prezzo_tot
+        entry["prezzo_tot"] = order.prezzo_tot
         entry["riderStatus"] = riderStatus
-        entry["addr gestore"] = order.addrGestor
-        entry["addr cliente"] = order.addrClient
+        entry["addrGestore"] = order.addrGestor
+        entry["addrCliente"] = order.addrClient
+        entry["orderStatus"] = context.getString(R.string.order_status_working)
 
         var i=0
 
@@ -173,21 +187,20 @@ class FirestoreRequest_Order (
             i++
         }
 
-        Log.i("HEY", "Order Sending to RIder: ${order.nome_ordine}")
-        db.collection("/profili/gestori/ordini/${order.proprietario}/miei_ordini")
-                .document(order.nome_ordine)
+        Log.i("HEY", "Order Sending to RIder: ${order.ordine}")
+        db.collection("/ordini")
+                .document(order.ordine)
                 .set(entry)
                 .addOnCompleteListener {
                     if(it.isSuccessful)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            //if( order.rider != "null" )
-                                sendNotificationToRider(
-                                    context,
-                                    gestor,
-                                    rider,
-                                    "The Gestor: $gestor require your services!",
-                                    order.nome_ordine
-                                )
+                            sendNotificationToRider(
+                                context,
+                                gestor,
+                                rider,
+                                "The Gestor: $gestor require your services!",
+                                order.ordine
+                            )
                         } else {
                             Log.i("HEY", "Error Order Sending to RIder")
                             Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()

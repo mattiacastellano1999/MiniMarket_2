@@ -44,11 +44,9 @@ open class FirestoreRequest(
             context: Activity,
             orderList: ArrayList<Order>
     ): Task<QuerySnapshot> {
-        /*val load = Loading(context)
-        load.startLoading()*/
         orderList.clear()
 
-        Log.i("HEY", "Path: "+from)
+        Log.i("HEY", "Path: $from")
         val ret = db.collection(from)
                 .get()
                 .addOnCompleteListener {@Synchronized
@@ -57,50 +55,18 @@ open class FirestoreRequest(
                         if( !it.result.isEmpty) {
                             for (doc in it.result) {
                                 Log.i("HEY", "Doc: "+doc.data)
-                                /*var myOrder = Order(
-                                        doc.data["nome"].toString(),
-                                        doc.data["prezzo"].toString().toDouble(),
-                                        doc.data["proprietario"].toString(),
-                                        doc.data["cliente"].toString(),
-                                        doc.data["addr cliente"].toString(),
-                                        doc.data["addr gestore"].toString(),
-                                        doc.data["rider"].toString(),
-                                        doc.data["riderStatus"].toString(),
-                                        HashMap<String, String>()
-                                )
-                                while(doc.data.containsKey("prod_name_$i")) {
-                                    Log.i("HEY", "While Doc: "+doc.data["prod_name_"+i])
-                                    myOrder.products.set(
-                                            doc.data["prod_name_" + i].toString(),
-                                            doc.data["prod_qty_" + i].toString()
-                                    )
-                                    i++
-                                }*/
                                 orderList.add(parseOrder(doc))
                             }
                         } else {
                             Log.e("HEY", "Error with Path")
-                            //load.stopLoadingDialog()
                         }
                     } else {
                         Log.e("HEY", "Error Firetore Marker Reading_0")
-                        Toast.makeText(
-                                context,
-                                "Database Reding Error_0",
-                                Toast.LENGTH_LONG
-                        ).show()
                     }
-                    //load.stopLoadingDialog()
                     return@addOnCompleteListener
                 }
                 .addOnFailureListener {
                     Log.e("HEY", "Error Firetore Marker Reading")
-                    Toast.makeText(
-                            context,
-                            "Database Reding Error",
-                            Toast.LENGTH_LONG
-                    ).show()
-                    //load.stopLoadingDialog()
                     return@addOnFailureListener
                 }
         return ret
@@ -109,14 +75,15 @@ open class FirestoreRequest(
     @Synchronized
     fun parseOrder(doc: QueryDocumentSnapshot): Order {
         val myOrder = Order(
-            doc.data["nome"].toString(),
-            doc.data["prezzo"].toString().toDouble(),
+            doc.data["ordine"].toString(),
+            doc.data["prezzo_tot"].toString().toDouble(),
             doc.data["proprietario"].toString(),
             doc.data["cliente"].toString(),
-            doc.data["addr cliente"].toString(),
-            doc.data["addr gestore"].toString(),
+            doc.data["addrCliente"].toString(),
+            doc.data["addrGestore"].toString(),
             doc.data["rider"].toString(),
             doc.data["riderStatus"].toString(),
+            doc.data["orderStatus"].toString(),
             HashMap<String, String>()
         )
         var i = 0
