@@ -56,46 +56,9 @@ class FirestoreRequest_Order (
         val load = Loading(context)
         load.startLoading()
 
-        //findCorrectOrderName(productList[0].owner, load, productList, context, client, rider, addrGestor)
         var doc = db.collection("/ordini")
         doUploadOrder(productList, context, client, rider, load, doc, addrGestor)
     }
-
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    fun findCorrectOrderName(
-        e_mail: String,
-        load: Loading,
-        productList: ArrayList<ProductListActivity.Product>,
-        context: Activity,
-        client: String?,
-        rider: String?,
-        addrGestor: String
-    ): DocumentReference {
-        var orderName = "Order N_" + Random().nextInt(100)
-        var doc: DocumentReference =
-                db.collection("/profili/gestori/ordini/$e_mail/miei_ordini")
-                        .document(orderName)
-        Log.i("HEY" , "Name: "+ orderName)
-        doc
-                .get()
-                .addOnSuccessListener {
-                    if(it.exists()) {
-                        Log.i("HEY", "Success: " + it.data)
-                        findCorrectOrderName(
-                            e_mail,
-                            load,
-                            productList,
-                            context,
-                            client,
-                            rider,
-                            addrGestor
-                        )
-                    } else {
-                        doUploadData(productList, context, client, rider, orderName, load, doc, addrGestor)
-                    }
-                }
-        return doc
-    }*/
 
     /**
      * Crea un nuovo ordine
@@ -111,6 +74,62 @@ class FirestoreRequest_Order (
         doc: CollectionReference,
         addrGestor: String
     ) {
+        var entry2 = makeFsOrder(productList, context, client, rider, addrGestor)
+        /*var entry2: HashMap<String, Any?> = hashMapOf()
+        entry2["cliente"] = client
+        entry2["rider"] = rider
+        entry2["proprietario"] = productList[0].owner
+        entry2["riderStatus"] = context.getString(R.string.rider_status_NA)
+        entry2["addrGestore"] = addrGestor
+        entry2["addrCliente"] = MyLocation.address
+        entry2["orderStatus"] = context.getString(R.string.order_status_working)
+        var priceTot = 0.0
+
+        productList.forEachIndexed { i, prod ->
+            entry2["prod_name_$i"] = prod.name
+            entry2["prod_qty_$i"] = prod.quantity
+            owner = prod.owner
+            priceTot += (prod.price * prod.quantity)
+        }
+        entry2["prezzo_tot"] = priceTot*/
+
+        doc.add(entry2)
+                .addOnSuccessListener {
+                    productList.forEach { prod ->
+                        removeProductFromCart(prod, context)
+                    }
+                }
+                .addOnCompleteListener {
+                    entry2["ordine"] = it.result.id
+                    doc.document(it.result.id).set(entry2)
+
+                    load.stopLoadingDialog()
+                    sendNotificationToGestor(
+                        context,
+                        client,
+                        entry2["proprietario"].toString(),
+                        "Has Been Added: ${productList.size.toString()} Product to the new Order!",
+                        it.result.id
+                    )
+                }
+                .addOnFailureListener {
+                    Log.i("HEY", "Failed")
+                    load.stopLoadingDialog()
+                    Toast.makeText(
+                            context,
+                            "Error during Product Order",
+                            Toast.LENGTH_LONG
+                    ).show()
+                }
+    }
+
+    private fun makeFsOrder(
+        productList: ArrayList<ProductListActivity.Product>,
+        context: Activity,
+        client: String?,
+        rider: String?,
+        addrGestor: String
+    ): HashMap<String, Any?> {
         var entry2: HashMap<String, Any?> = hashMapOf()
         entry2["cliente"] = client
         entry2["rider"] = rider
@@ -130,40 +149,13 @@ class FirestoreRequest_Order (
         }
         entry2["prezzo_tot"] = priceTot
 
-        doc.add(entry2)
-                .addOnSuccessListener {
-                    productList.forEach { prod ->
-                        removeProductFromCart(prod, context)
-                    }
-                }
-                .addOnCompleteListener {
-                    entry2["ordine"] = it.result.id
-                    doc.document(it.result.id).set(entry2)
-
-                    load.stopLoadingDialog()
-                    sendNotificationToGestor(
-                        context,
-                        client,
-                        owner,
-                        "Has Been Added: ${productList.size.toString()} Product to the new Order!",
-                        it.result.id
-                    )
-                }
-                .addOnFailureListener {
-                    Log.i("HEY", "Failed")
-                    load.stopLoadingDialog()
-                    Toast.makeText(
-                            context,
-                            "Error during Product Order",
-                            Toast.LENGTH_LONG
-                    ).show()
-                }
+        return entry2
     }
 
     /**
      * Aggiorna un ordine esistente
      */
-    fun updateOrder(context: Activity, order: Order, riderStatus: String, rider: String) {
+    fun updateOrder(context: Activity, order: Order) {
         val gestor = order.proprietario
         val load = Loading(context)
         load.startLoading()
@@ -171,13 +163,13 @@ class FirestoreRequest_Order (
         var entry: HashMap<String, Any?> = hashMapOf()
         entry["ordine"] = order.ordine
         entry["cliente"] = order.cliente
-        entry["rider"] = rider
+        entry["rider"] = order.rider
         entry["proprietario"] = order.proprietario
         entry["prezzo_tot"] = order.prezzo_tot
-        entry["riderStatus"] = riderStatus
+        entry["riderStatus"] = order.riderStatus
         entry["addrGestore"] = order.addrGestor
         entry["addrCliente"] = order.addrClient
-        entry["orderStatus"] = context.getString(R.string.order_status_working)
+        entry["orderStatus"] = order.orderStatus
 
         var i=0
 
@@ -197,7 +189,7 @@ class FirestoreRequest_Order (
                             sendNotificationToRider(
                                 context,
                                 gestor,
-                                rider,
+                                order.rider,
                                 "The Gestor: $gestor require your services!",
                                 order.ordine
                             )

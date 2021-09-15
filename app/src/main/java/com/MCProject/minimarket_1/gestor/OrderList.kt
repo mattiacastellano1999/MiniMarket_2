@@ -61,7 +61,7 @@ open class OrderList: ListActivity(){
                         val gestore = orderSelected.proprietario
                         val orderN = orderSelected.ordine
 
-                        if(orderSelected.riderStatus == getString(R.string.accepted)){
+                        if(orderSelected.riderStatus == getString(R.string.rider_status_accepted)){
                             val intent = Intent(this, ChatGestor::class.java)
                             startActivity(intent)
                         } else {

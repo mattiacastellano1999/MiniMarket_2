@@ -157,9 +157,12 @@ class OrderManagerActivity : AppCompatActivity() {
                             if (neworder.ordine == orderN) {
                                 if (neworder.riderStatus == getString(R.string.rider_status_NA)) {
                                     //rider non ancora assegnato -> mando richiesta al rider
-                                    frO.updateOrder(this, neworder, "request sended", rider)
+                                    neworder.orderStatus =  getString(R.string.order_status_working)
+                                    neworder.riderStatus = getString(R.string.requestSended)
+                                    neworder.rider = rider
+                                    frO.updateOrder(this, neworder)
                                 }
-                                if(neworder.riderStatus == "request sended"){
+                                if(neworder.riderStatus == getString(R.string.requestSended)){
                                     //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere
                                     Toast.makeText(this, "Delivery Request already sent!\n" +
                                             "Just Wait the Rider reply", Toast.LENGTH_SHORT).show()

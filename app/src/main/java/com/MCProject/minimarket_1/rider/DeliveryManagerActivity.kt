@@ -13,6 +13,7 @@ import android.content.Intent
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
 
@@ -89,7 +90,14 @@ class DeliveryManagerActivity: AppCompatActivity() {
 
         confirmBtn.setOnClickListener {
             // set the rider status = accepted
-            sendDeliveryResponseToGestor(getString(com.MCProject.minimarket_1.R.string.accepted))
+            sendDeliveryResponseToGestor(getString(R.string.rider_status_accepted))
+            val entry = hashMapOf<String, Any>(
+                "status" to 0,
+                "nome rider" to RiderActivity.riderName,
+                "email" to RiderActivity.riderEmail,
+                "cognome rider" to RiderActivity.riderSurname
+            )
+            MainActivity.frR.updateRider(this, "/profili/riders/dati", MainActivity.mail, entry)
         }
 
         cancleBtn.setOnClickListener {
@@ -139,7 +147,8 @@ class DeliveryManagerActivity: AppCompatActivity() {
     }
 
     private fun sendDeliveryResponseToGestor(value: String) {
-        MainActivity.frO.updateOrder(this, myOrder!!, value, myOrder!!.rider)
+        myOrder!!.riderStatus = value
+        MainActivity.frO.updateOrder(this, myOrder!!)
 
         //elimino la notifica dal db
         MainActivity.frM.deleteFromDB(
@@ -147,11 +156,5 @@ class DeliveryManagerActivity: AppCompatActivity() {
             getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+MainActivity.mail,
             getString(com.MCProject.minimarket_1.R.string.notification_path)
         )
-
-        if(value == getString(com.MCProject.minimarket_1.R.string.accepted)) {
-            //creo i canali di chat tra
-            //rider e gestore
-            //rider e cliente
-        }
     }
 }

@@ -2,6 +2,7 @@ package com.MCProject.minimarket_1.rider
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -28,6 +29,8 @@ class RiderActivity: AppCompatActivity() {
     lateinit var welcomeTV: TextView
     val auth = FirebaseAuth.getInstance()
     lateinit var switch: Switch
+    lateinit var leaveMarketBTN: Button
+    lateinit var endDelivBTN: Button
 
     companion object {
         var riderStatus = 0
@@ -48,6 +51,8 @@ class RiderActivity: AppCompatActivity() {
         
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
         welcomeTV = findViewById(R.id.welcome_tv)
+        leaveMarketBTN = findViewById(R.id.picked_btn)
+        endDelivBTN = findViewById(R.id.delivered_btn)
 
         welcomeTV.text = "Welcome\n$mail"
 
@@ -81,7 +86,7 @@ class RiderActivity: AppCompatActivity() {
             .addOnCompleteListener {
                 for (doc in it.result) {
                     Log.i("HEY", "DOC::: "+doc.data)
-                    if( doc["riderStatus"] == getString(R.string.accepted) ) {
+                    if( doc["riderStatus"] == getString(R.string.rider_status_accepted) ) {
                         if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
                             if( doc["rider"] == mail ) {
                                 orderName = doc["ordine"].toString()
@@ -98,7 +103,7 @@ class RiderActivity: AppCompatActivity() {
 
         //Check some notification
         Log.i("HEY", "Check Notify")
-        val fm = FirebaseMessaging(MainActivity.mail, this)
+        val fm = FirebaseMessaging(mail, this)
         fm.addRealtimeUpdate(this, "/profili/riders/dati/$mail")
 
         btnListener()
@@ -115,13 +120,37 @@ class RiderActivity: AppCompatActivity() {
 
         val chat = findViewById<Button>(R.id.chat_btn)
         if(orderName.isNotEmpty()){
+            endDelivBTN.visibility = View.VISIBLE
+            leaveMarketBTN.visibility = View.VISIBLE
             chat.visibility = View.VISIBLE
+
             chat.setOnClickListener {
                 val intent = Intent(this, ChatRider::class.java)
                 startActivity(intent)
             }
+
+            leaveMarketBTN.setOnClickListener {
+                //abilito la possibilità di chattare con il rider
+                myOrder!!.orderStatus = getString(R.string.order_status_delivering)
+                frO.updateOrder(this, myOrder!!)
+
+                //mando all'utente la notifica
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val fm = FirebaseMessaging(mail, this)
+                    val newMessage = mapOf<String, String>(
+                        "gestore" to myOrder!!.proprietario,
+                        "numero_ordine" to myOrder!!.ordine,
+                        "cliente" to myOrder!!.cliente,
+                        "Testo" to "The Rider $mail Leave the Market"
+                    )
+                    fm.sendMesage(this, myOrder!!.cliente, newMessage)
+                }
+            }
+
         } else {
             chat.visibility = View.GONE
+            endDelivBTN.visibility = View.GONE
+            leaveMarketBTN.visibility = View.GONE
         }
 
         val order = findViewById<Button>(R.id.delivery_btn)

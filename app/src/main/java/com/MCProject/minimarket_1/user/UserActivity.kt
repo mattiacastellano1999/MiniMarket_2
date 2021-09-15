@@ -14,6 +14,7 @@ import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.rider.ChatRider
 import com.MCProject.minimarket_1.rider.RiderActivity
+import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.MCProject.minimarket_1.rider.RiderActivity.Companion.orderName
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.MyLocation
@@ -62,11 +63,11 @@ class UserActivity: AppCompatActivity() {
             .addOnCompleteListener {
                 for (doc in it.result) {
                     Log.i("HEY", "DOC::: "+doc.data)
-                    if( doc["riderStatus"] == getString(R.string.accepted) ) {
+                    if( doc["riderStatus"] == getString(R.string.rider_status_accepted) ) {
                         if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
                             if( doc["cliente"] == MainActivity.mail) {
-                                RiderActivity.orderName = doc["ordine"].toString()
-                                RiderActivity.myOrder = MainActivity.frO.parseOrder(doc)
+                                orderName = doc["ordine"].toString()
+                                myOrder = MainActivity.frO.parseOrder(doc)
                                 buttonListener()
                                 break
                             }
@@ -126,10 +127,14 @@ class UserActivity: AppCompatActivity() {
         }
 
         if ( orderName.isNotEmpty() ) {
-            chatUserBTN.visibility = View.VISIBLE
-            chatUserBTN.setOnClickListener {
-                val intent = Intent(this, ChatUser::class.java)
-                startActivity(intent)
+            if( myOrder!!.riderStatus == getString(R.string.rider_status_accepted) &&
+                myOrder!!.orderStatus == getString(R.string.order_status_delivering)
+            ) {
+                chatUserBTN.visibility = View.VISIBLE
+                chatUserBTN.setOnClickListener {
+                    val intent = Intent(this, ChatUser::class.java)
+                    startActivity(intent)
+                }
             }
         } else {
             chatUserBTN.visibility = View.GONE
