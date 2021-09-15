@@ -231,7 +231,7 @@ open class FirestoreRequest(
                     Log.i("HEY", "Removed")
                     Toast.makeText(
                         context,
-                        "Product Correctly Removed",
+                        "New Message !",
                         Toast.LENGTH_LONG
                     ).show()
                 }

@@ -1,11 +1,13 @@
 package com.MCProject.minimarket_1.gestor
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
@@ -28,12 +30,14 @@ class GestorActivity: AppCompatActivity() {
     lateinit var logoutImgBtn: ImageButton
     lateinit var riderVisualBtn: Button
     lateinit var orderManageBtn: Button
+    lateinit var welcomeTV: TextView
     val auth = FirebaseAuth.getInstance()
 
     lateinit var popup : GestorPopup
 
     val gestorRidersFragment = GestorVisualize_ridersFragment()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,6 +47,7 @@ class GestorActivity: AppCompatActivity() {
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
         riderVisualBtn = findViewById(R.id.locationRider_btn)
         orderManageBtn = findViewById(R.id.orderManage_btn)
+        welcomeTV = findViewById(R.id.welcome_tv)
         popup = GestorPopup(this, ArrayList())
     }
 
@@ -51,6 +56,7 @@ class GestorActivity: AppCompatActivity() {
 
         orderManageBtn.visibility = View.VISIBLE
         riderVisualBtn.visibility = View.VISIBLE
+        welcomeTV.text = "Welcome\n$mail"
 
         btnListener()
 

@@ -45,6 +45,7 @@
         <activity android:name="com.MCProject.minimarket_1.user.MarketAviableActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.CartProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.user.UserProductListActivity"/>
+        <activity android:name="com.MCProject.minimarket_1.user.ChatUser"/>
         <activity android:name="com.MCProject.minimarket_1.gestor.GestorActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.MarketProductListActivity" />
         <activity android:name="com.MCProject.minimarket_1.gestor.OrderList" />

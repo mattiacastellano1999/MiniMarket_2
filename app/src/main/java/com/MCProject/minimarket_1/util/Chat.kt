@@ -3,6 +3,7 @@ package com.MCProject.minimarket_1.util
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.widget.*
 import com.MCProject.minimarket_1.MainActivity
@@ -59,6 +60,9 @@ open class Chat: Activity() {
 
     override fun onStart() {
         super.onStart()
+
+        textBox1.movementMethod = ScrollingMovementMethod()
+        textBox2.movementMethod = ScrollingMovementMethod()
 
         homeBtn.setOnClickListener {
             val username = auth.currentUser.displayName
@@ -147,8 +151,8 @@ open class Chat: Activity() {
             }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
+    override fun onStop() {
+        super.onStop()
         Log.i("HEY", "DETACHED")
         firestoreListener!!.remove()
     }

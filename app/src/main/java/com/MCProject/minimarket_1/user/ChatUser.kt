@@ -13,18 +13,16 @@ import com.google.firebase.firestore.QuerySnapshot
 
 class ChatUser: Chat() {
 
-
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        title2.visibility = View.VISIBLE
-        button2.visibility = View.VISIBLE
-        messageBox2.visibility = View.VISIBLE
-        textBox2.visibility = View.VISIBLE
+        title2.visibility = View.INVISIBLE
+        button2.visibility = View.INVISIBLE
+        messageBox2.visibility = View.INVISIBLE
+        textBox2.visibility = View.INVISIBLE
 
-        title1.text = "Chat With " + RiderActivity.myOrder!!.proprietario
-        title2.text = "Chat With " + RiderActivity.myOrder!!.cliente
+        title1.text = "Chat With " + RiderActivity.myOrder!!.rider
     }
 
     @SuppressLint("SetTextI18n")
@@ -34,14 +32,8 @@ class ChatUser: Chat() {
         chatRealtimeUpdate(MainActivity.mail)
 
         button1.setOnClickListener {
-            sendMesage( mail, RiderActivity.myOrder!!.proprietario , messageBox1)
+            sendMesage( mail, RiderActivity.myOrder!!.rider , messageBox1)
             textBox1.text = textBox1.text.toString() + "\n" + messageBox1.text.toString()
-            messageBox1.text.clear()
-        }
-
-        button2.setOnClickListener {
-            sendMesage(mail, RiderActivity.myOrder!!.cliente , messageBox2)
-            textBox2.text = textBox2.text.toString() + "\n" + messageBox2.text.toString()
             messageBox1.text.clear()
         }
     }
@@ -55,11 +47,8 @@ class ChatUser: Chat() {
                 Log.i("HEY", "RES: "+it.result.documents[0].id)
                 if(message[MITT_FIELD] != null){
                     Log.i("HEY", "MITT: "+message[MITT_FIELD])
-                    if(message[MITT_FIELD] == RiderActivity.myOrder!!.proprietario){
+                    if(message[MITT_FIELD] == RiderActivity.myOrder!!.rider){
                         textBox1.text = textBox1.text.toString() +"\n"+ message[TEXT_FIELD].toString()
-                        MainActivity.frM.deleteFromDB(this, elLetto, "/chat")
-                    } else if(message[MITT_FIELD] == RiderActivity.myOrder!!.cliente) {
-                        textBox1.text = textBox2.text.toString() +"\n"+ message[TEXT_FIELD].toString()
                         MainActivity.frM.deleteFromDB(this, elLetto, "/chat")
                     } else {
                         Log.e("HEY", "mittente sconosciuto")

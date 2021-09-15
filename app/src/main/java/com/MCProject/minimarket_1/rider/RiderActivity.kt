@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Switch
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
@@ -24,6 +25,7 @@ class RiderActivity: AppCompatActivity() {
 
 
     lateinit var logoutImgBtn: ImageButton
+    lateinit var welcomeTV: TextView
     val auth = FirebaseAuth.getInstance()
     lateinit var switch: Switch
 
@@ -45,6 +47,9 @@ class RiderActivity: AppCompatActivity() {
         setContentView(R.layout.rider_activity_main)
         
         logoutImgBtn = findViewById(R.id.exit_imgBtn)
+        welcomeTV = findViewById(R.id.welcome_tv)
+
+        welcomeTV.text = "Welcome\n$mail"
 
     }
 

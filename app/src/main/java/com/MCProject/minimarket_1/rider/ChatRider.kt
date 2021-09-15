@@ -44,7 +44,7 @@ class ChatRider: Chat() {
         button2.setOnClickListener {
             sendMesage(mail, RiderActivity.myOrder!!.cliente , messageBox2)
             textBox2.text = textBox2.text.toString() + "\n" + messageBox2.text.toString()
-            messageBox1.text.clear()
+            messageBox2.text.clear()
         }
     }
 
@@ -61,7 +61,7 @@ class ChatRider: Chat() {
                         textBox1.text = textBox1.text.toString() +"\n"+ message[TEXT_FIELD].toString()
                         MainActivity.frM.deleteFromDB(this, elLetto, "/chat")
                     } else if(message[MITT_FIELD] == RiderActivity.myOrder!!.cliente) {
-                        textBox1.text = textBox2.text.toString() +"\n"+ message[TEXT_FIELD].toString()
+                        textBox2.text = textBox2.text.toString() +"\n"+ message[TEXT_FIELD].toString()
                         MainActivity.frM.deleteFromDB(this, elLetto, "/chat")
                     } else {
                         Log.e("HEY", "mittente sconosciuto")

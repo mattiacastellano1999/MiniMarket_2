@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.rider.ChatRider
 import com.MCProject.minimarket_1.rider.RiderActivity
+import com.MCProject.minimarket_1.rider.RiderActivity.Companion.orderName
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.MyLocation
 import com.google.android.gms.maps.SupportMapFragment
@@ -46,7 +48,7 @@ class UserActivity: AppCompatActivity() {
         marketListBTN = findViewById(R.id.marketList_btn)
         chatUserBTN = findViewById(R.id.chatUser_btn)
 
-        welcomeTV.text = "Welcome ${firebaseAuth.currentUser.email}"
+        welcomeTV.text = "Welcome\n${firebaseAuth.currentUser.email}"
     }
 
     override fun onStart() {
@@ -56,24 +58,22 @@ class UserActivity: AppCompatActivity() {
         marketListBTN.visibility = View.VISIBLE
         chatUserBTN.visibility = View.GONE
 
-        /*MainActivity.frR.getRiderOrders(this, "/profili/riders/ordini").addOnCompleteListener {
-            Log.i("HEY", "RESULT = ${it.result.documents}")
-            for (doc in it.result) {
-                RiderActivity.orderName = doc["ordine"].toString()
-                RiderActivity.orderGestor = doc["gestore"].toString()
-                break
-            }
-            MainActivity.frO.getAllOrder(RiderActivity.orderGestor, RiderActivity.orderList, this)
-                .addOnCompleteListener {
-                    for (doc in it.result) {
-                        if(doc["nome"] == RiderActivity.orderName){
-                            RiderActivity.myOrder = MainActivity.frO.parseOrder(doc)
-                            break
+        MainActivity.frO.getAllOrder(RiderActivity.orderList, this)
+            .addOnCompleteListener {
+                for (doc in it.result) {
+                    Log.i("HEY", "DOC::: "+doc.data)
+                    if( doc["riderStatus"] == getString(R.string.accepted) ) {
+                        if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
+                            if( doc["cliente"] == MainActivity.mail) {
+                                RiderActivity.orderName = doc["ordine"].toString()
+                                RiderActivity.myOrder = MainActivity.frO.parseOrder(doc)
+                                buttonListener()
+                                break
+                            }
                         }
                     }
-                    buttonListener()
                 }
-        }*/
+            }
 
         buttonListener()
 
@@ -123,6 +123,16 @@ class UserActivity: AppCompatActivity() {
             oldOrderBTN.visibility = View.GONE
             val i = Intent(this, MarketAviableActivity::class.java)
             startActivity(i)
+        }
+
+        if ( orderName.isNotEmpty() ) {
+            chatUserBTN.visibility = View.VISIBLE
+            chatUserBTN.setOnClickListener {
+                val intent = Intent(this, ChatUser::class.java)
+                startActivity(intent)
+            }
+        } else {
+            chatUserBTN.visibility = View.GONE
         }
     }
 
