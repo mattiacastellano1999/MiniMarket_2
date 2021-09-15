@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
+import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.util.Chat
 import com.google.android.gms.tasks.Task
@@ -29,7 +30,7 @@ class ChatUser: Chat() {
     override fun onStart() {
         super.onStart()
 
-        chatRealtimeUpdate(MainActivity.mail)
+        chatRealtimeUpdate(getString(R.string.utenti), RiderActivity.myOrder!!)
 
         button1.setOnClickListener {
             sendMesage( mail, RiderActivity.myOrder!!.rider , messageBox1)
@@ -38,7 +39,7 @@ class ChatUser: Chat() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    /*@SuppressLint("SetTextI18n")
     override fun readFromFirebase(doc: String): Task<QuerySnapshot> {
         return super.readFromFirebase(doc).addOnCompleteListener {
             Log.i("HEY", "ReadFromFirebaseOuter")
@@ -58,6 +59,6 @@ class ChatUser: Chat() {
                 }
             }
         }
-    }
+    }*/
 
 }

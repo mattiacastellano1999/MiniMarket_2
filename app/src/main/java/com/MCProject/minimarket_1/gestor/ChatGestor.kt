@@ -7,6 +7,7 @@ import android.view.View
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.db
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
+import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.gestor.OrderList.Companion.orderSelected
 import com.MCProject.minimarket_1.util.Chat
 import com.google.android.gms.tasks.Task
@@ -33,7 +34,7 @@ class ChatGestor: Chat() {
     override fun onStart() {
         super.onStart()
 
-        chatRealtimeUpdate(MainActivity.mail)
+        chatRealtimeUpdate(getString(R.string.gestori), orderSelected)
 
         button1.setOnClickListener {
             sendMesage(mail, orderSelected.rider , messageBox1)
@@ -42,7 +43,7 @@ class ChatGestor: Chat() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    /*@SuppressLint("SetTextI18n")
     override fun readFromFirebase(doc: String): Task<QuerySnapshot> {
         return super.readFromFirebase(doc).addOnCompleteListener {
             Log.i("HEY", "ReadFromFirebaseOuter")
@@ -50,7 +51,7 @@ class ChatGestor: Chat() {
                 val elLetto = it.result.documents[0].id
                 Log.i("HEY", "RES: "+it.result.documents[0].id)
                 if(message[MITT_FIELD] != null){
-                    if(message[MITT_FIELD] == orderSelected.rider){
+                    if(message[MITT_FIELD] == orderSelected.rider ){
                         textBox1.text = textBox1.text.toString() +"\n"+ message[TEXT_FIELD].toString()
                         MainActivity.frM.deleteFromDB(this, elLetto, "/chat")
                     } else {
@@ -61,5 +62,5 @@ class ChatGestor: Chat() {
                 }
             }
         }
-    }
+    }*/
 }

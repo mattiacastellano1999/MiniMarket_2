@@ -13,5 +13,8 @@
     <string name="accepted">accepted</string>
     <string name="refused">refused</string>
     <string name="order_status_working">working</string>
+    <string name="gestori">gestori</string>
+    <string name="rider">rider</string>
+    <string name="utenti">utenti</string>
 </resources>
 
