@@ -2,6 +2,7 @@ package com.MCProject.minimarket_1.gestor
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -10,7 +11,6 @@ import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.MainActivity.Companion.auth
 import com.MCProject.minimarket_1.MainActivity.Companion.frM
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
-import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.util.Order
@@ -160,7 +160,34 @@ class OrderManagerActivity : AppCompatActivity() {
                                     neworder.orderStatus =  getString(R.string.order_status_working)
                                     neworder.riderStatus = getString(R.string.requestSended)
                                     neworder.rider = rider
-                                    frO.updateOrder(this, neworder)
+                                    frO.updateOrder(this, neworder).addOnCompleteListener {
+                                        if(it.isSuccessful) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                val newMessage = mapOf<String, String>(
+                                                    "gestore" to neworder.proprietario,
+                                                    "numero_ordine" to neworder.ordine,
+                                                    "cliente" to neworder.cliente,
+                                                    "Testo" to "The Gestor: ${neworder.proprietario} require your services!"
+                                                )
+                                                frO.sendNotification(
+                                                    this,
+                                                    neworder,
+                                                    newMessage
+                                                ).addOnCompleteListener {
+                                                    //reload activity
+                                                    val intent = Intent(this, OrderList::class.java)
+                                                    startActivity(intent)
+                                                }
+                                            } else {
+                                                Log.i("HEY", "Error Order Sending to RIder")
+                                                Toast.makeText(
+                                                    this,
+                                                    getString(R.string.AndroidVersionOld),
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                    }
                                 }
                                 if(neworder.riderStatus == getString(R.string.requestSended)){
                                     //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere

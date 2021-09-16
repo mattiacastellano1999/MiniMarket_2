@@ -18,8 +18,10 @@
         android:id="@+id/title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Rider Assignment \n For Order: "
+        android:layout_toStartOf="@+id/exit_imgBtn"
+        android:layout_toEndOf="@+id/home_imgBtn"
+        android:text="Rider Assignment\nFor Order: "
+        android:gravity="center"
         android:textSize="20dp" />
 
     <TextView

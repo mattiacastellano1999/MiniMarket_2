@@ -14,8 +14,6 @@ import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.util.ProductListActivity
-import com.MCProject.minimarket_1.gestor.OrderList
-import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.MCProject.minimarket_1.user.CartProductListActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -275,7 +273,7 @@ open class FirestoreRequest(
         Log.i("HEY", "End Delete")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /*@RequiresApi(Build.VERSION_CODES.O)
     fun sendNotificationToGestor(
         context: Activity,
         sender: String?,
@@ -290,24 +288,18 @@ open class FirestoreRequest(
         //reload activity
         val intent = Intent(context, CartProductListActivity::class.java)
         context.startActivity(intent)
-    }
+    }*/
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun sendNotificationToRider(
-            context: Activity,
-            sender: String?,
-            receiver: String,
-            message: String,
-            orderN: String
-    ) {
+    fun sendNotification(
+        context: Activity,
+        order: Order,
+        message: Map<String, String>
+    ): Task<Void> {
         Log.i("HEY", "Invio: "+ message)
 
         val fm = FirebaseMessaging(MainActivity.mail, context)
-        fm.sendMessageToRider(context, sender!!, receiver, message, orderN)
-
-        //reload activity
-        val intent = Intent(context, OrderList::class.java)
-        context.startActivity(intent)
+        return fm.sendMesage(context, order, message)
     }
 
     fun getAllElement(context: Activity, elements: ArrayList<String>): Task<QuerySnapshot> {

@@ -5,19 +5,21 @@ import android.util.Log
 import android.widget.Toast
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.rider.RiderActivity
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import java.util.*
 
 class FirebaseMessaging(val path: String, context: Activity) {
 
     val NAME_FIELD: String
     val TEXT_FIELD: String
-    var firestoreChatListener: DocumentReference
+    var firestoreNotificationListener: DocumentReference
     lateinit var firestoreChatSender: DocumentReference
 
     init {
         //recupero da firestore la collezione creata
-        firestoreChatListener = MainActivity.db
+        firestoreNotificationListener = MainActivity.db
             .collection( "/notification")
             .document("message_for_$path")
 
@@ -25,52 +27,19 @@ class FirebaseMessaging(val path: String, context: Activity) {
         TEXT_FIELD = "Testo"
     }
 
-    fun sendMessageToGestor(
-        context: Activity,
-        sender: String,
-        receiver: String,
-        message: String,
-        orderN: String
-    ) {
-        val newMessage = mapOf<String, String>(
-            "gestore" to receiver,
-            "numero_ordine" to orderN,
-            "cliente" to sender,
-            TEXT_FIELD to message
-        )
-
-        sendMesage(context, receiver, newMessage)
-    }
-
-    fun sendMessageToRider(
-        context: Activity,
-        sender: String,
-        receiver: String,
-        message: String,
-        orderN: String
-    ) {
-        val newMessage = mapOf<String, String>(
-            "gestore" to receiver,
-            "numero_ordine" to orderN,
-            "cliente" to sender,
-            TEXT_FIELD to message
-        )
-
-        sendMesage(context, receiver, newMessage)
-    }
 
     fun sendMesage(
         context: Activity,
-        receiver: String,
+        order: Order,
         newMessage: Map<String, String>
-    ) {
+    ): Task<Void> {
 
         firestoreChatSender = MainActivity.db
             .collection( context.getString(com.MCProject.minimarket_1.R.string.notification_path))
-            .document(context.getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+receiver)
+            .document(order.ordine)
 
         //scrivo su firestore il nuovo messaggio
-        firestoreChatSender.set(newMessage)
+        return firestoreChatSender.set(newMessage)
             .addOnSuccessListener {
                 Toast.makeText(
                     context,
@@ -91,70 +60,102 @@ class FirebaseMessaging(val path: String, context: Activity) {
     *   quando rileva delle modifiche su Firebase
     *   le scrive sul textDisplay
     */
-    fun addRealtimeUpdate(context: Activity, s: String) {
-        firestoreChatListener.addSnapshotListener { documentSnapshot, e ->
+    fun addRealtimeUpdate(context: Activity, userType: String) {
+        firestoreNotificationListener.addSnapshotListener { documentSnapshot, e ->
             when {
                 e != null -> {
                     Log.e("HEY", "Errors: " + e.message)
                 }
                 documentSnapshot != null -> {
-                    if(s.contains("rider")){
-                        riderReadFromFirebase(context, s)
+                if(userType == "rider"){
+                        riderReadFromFirebase(context, userType)
+                    } else if(userType == "user") {
+                        userReadFromFirebase(context, userType)
                     } else {
-                        gestorReadFromFirebase(context, s)
+                        gestorReadFromFirebase(context, userType)
                     }
                 }
             }
         }
     }
 
-    private fun gestorReadFromFirebase(context: Activity, type: String) {
-        firestoreChatListener
-            .get()
-            .addOnSuccessListener {
-                Log.i("HEY", "Mesaggio Da:" + it.data)
-                val notify = Notification(context)
-                val channellid = Random().nextInt(100)
-                notify.createNotificationChannel(
-                    channellid.toString(),
-                    "Channel_$type$channellid",
-                    "Prova Channel1")
-                notify.showGestorNotification(
-                    channellid.toString(),
-                    it.get("numero_ordine").toString(),
-                    it.get("gestore").toString(),
-                    it.get("cliente").toString(),
-                    it.get("Testo").toString())
-                if(type.contains("rider") && it.exists()) {
+    private fun userReadFromFirebase(context: Activity, userType: String) {
+            var notify = Notification(context)
+            val channellid = Random().nextInt(100)
+
+            initNotification(channellid, userType, notify).addOnCompleteListener {
+                if( it.result.exists()) {
                     //funziona solo con la notifica
                     MainActivity.frO.getAllOrder(
                         RiderActivity.orderList,
                         context
                     ).addOnCompleteListener { docs ->
-                        Log.i("HEY", "Arivato qui: " + docs.toString())
                         for( order in RiderActivity.orderList){
-                            if(order.ordine == it["nome_ordine"]){
+                            if(order.ordine == it.result["numero_ordine"]){
                                 RiderActivity.myOrder = order
                             }
                         }
+                        notify.showUserNotification(
+                            channellid.toString(),
+                            it.result.get("numero_ordine").toString(),
+                            it.result.get("gestore").toString(),
+                            it.result.get("cliente").toString(),
+                            it.result.get("Testo").toString()
+                        )
                     }
 
                 }
             }
     }
 
-    private fun riderReadFromFirebase(context: Activity, type: String) {
-        firestoreChatListener
+    private fun initNotification(channellid: Int, userType: String, notify: Notification): Task<DocumentSnapshot> {
+        return firestoreNotificationListener
             .get()
             .addOnSuccessListener {
                 Log.i("HEY", "Mesaggio Da:" + it.data)
-                val notify = Notification(context)
-                val channellid = Random().nextInt(100)
                 notify.createNotificationChannel(
                     channellid.toString(),
-                    "Channel_$type$channellid",
-                    "Prova Channel1")
-                if( it.exists()) {
+                    "Channel_$userType$channellid",
+                    "Prova Channel1"
+                )
+            }
+    }
+
+    private fun gestorReadFromFirebase(context: Activity, type: String) {
+        var notify = Notification(context)
+        val channellid = Random().nextInt(100)
+
+        initNotification(channellid, type, notify).addOnCompleteListener {
+            notify.showGestorNotification(
+                channellid.toString(),
+                it.result.get("numero_ordine").toString(),
+                it.result.get("gestore").toString(),
+                it.result.get("cliente").toString(),
+                it.result.get("Testo").toString()
+            )
+            /*if (type.contains("rider") && it.result.exists()) {
+                //funziona solo con la notifica
+                MainActivity.frO.getAllOrder(
+                    RiderActivity.orderList,
+                    context
+                ).addOnCompleteListener { docs ->
+                    Log.i("HEY", "Arivato qui: " + docs.toString())
+                    for (order in RiderActivity.orderList) {
+                        if (order.ordine == it.result["nome_ordine"]) {
+                            RiderActivity.myOrder = order
+                        }
+                    }
+                }
+            }*/
+        }
+    }
+
+    private fun riderReadFromFirebase(context: Activity, type: String) {
+        var notify = Notification(context)
+        val channellid = Random().nextInt(100)
+
+        initNotification(channellid, type, notify).addOnCompleteListener {
+                if( it.result.exists()) {
                     //funziona solo con la notifica
                     MainActivity.frO.getAllOrder(
                         RiderActivity.orderList,
@@ -162,17 +163,17 @@ class FirebaseMessaging(val path: String, context: Activity) {
                     ).addOnCompleteListener { docs ->
                         Log.i("HEY", "Arivato qui: " + RiderActivity.orderList)
                         for( order in RiderActivity.orderList){
-                            if(order.ordine == it["numero_ordine"]){
+                            if(order.ordine == it.result["numero_ordine"]){
                                 RiderActivity.myOrder = order
                                 Log.i("HEY", "Order: ${order.ordine}")
                             }
                         }
                         notify.showRiderNotification(
                             channellid.toString(),
-                            it.get("numero_ordine").toString(),
-                            it.get("gestore").toString(),
-                            it.get("cliente").toString(),
-                            it.get("Testo").toString()
+                            it.result.get("numero_ordine").toString(),
+                            it.result.get("gestore").toString(),
+                            it.result.get("cliente").toString(),
+                            it.result.get("Testo").toString()
                         )
                     }
 

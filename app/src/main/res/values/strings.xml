@@ -18,5 +18,6 @@
     <string name="utenti">utenti</string>
     <string name="requestSended">request sended</string>
     <string name="order_status_delivering">delivering</string>
+    <string name="order_status_complete">complete</string>
 </resources>
 

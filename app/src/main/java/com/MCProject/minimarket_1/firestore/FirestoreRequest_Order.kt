@@ -1,12 +1,15 @@
 package com.MCProject.minimarket_1.firestore
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Loading
+import com.MCProject.minimarket_1.rider.RiderActivity
+import com.MCProject.minimarket_1.user.CartProductListActivity
 import com.MCProject.minimarket_1.util.MyLocation
 import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.util.ProductListActivity
@@ -75,23 +78,6 @@ class FirestoreRequest_Order (
         addrGestor: String
     ) {
         var entry2 = makeFsOrder(productList, context, client, rider, addrGestor)
-        /*var entry2: HashMap<String, Any?> = hashMapOf()
-        entry2["cliente"] = client
-        entry2["rider"] = rider
-        entry2["proprietario"] = productList[0].owner
-        entry2["riderStatus"] = context.getString(R.string.rider_status_NA)
-        entry2["addrGestore"] = addrGestor
-        entry2["addrCliente"] = MyLocation.address
-        entry2["orderStatus"] = context.getString(R.string.order_status_working)
-        var priceTot = 0.0
-
-        productList.forEachIndexed { i, prod ->
-            entry2["prod_name_$i"] = prod.name
-            entry2["prod_qty_$i"] = prod.quantity
-            owner = prod.owner
-            priceTot += (prod.price * prod.quantity)
-        }
-        entry2["prezzo_tot"] = priceTot*/
 
         doc.add(entry2)
                 .addOnSuccessListener {
@@ -104,13 +90,20 @@ class FirestoreRequest_Order (
                     doc.document(it.result.id).set(entry2)
 
                     load.stopLoadingDialog()
-                    sendNotificationToGestor(
-                        context,
-                        client,
-                        entry2["proprietario"].toString(),
-                        "Has Been Added: ${productList.size.toString()} Product to the new Order!",
-                        it.result.id
+                    val newMessage = mapOf<String, String>(
+                        "gestore" to entry2["proprietario"].toString(),
+                        "numero_ordine" to it.result.id,
+                        "cliente" to client!!,
+                        "Testo" to "Has Been Added: ${productList.size.toString()} Product to the new Order!"
                     )
+                    sendNotification(
+                        context,
+                        entry2["proprietario"].toString(),
+                        newMessage
+                    ).addOnCompleteListener {
+                        val intent = Intent(context, CartProductListActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
                 .addOnFailureListener {
                     Log.i("HEY", "Failed")
@@ -155,8 +148,7 @@ class FirestoreRequest_Order (
     /**
      * Aggiorna un ordine esistente
      */
-    fun updateOrder(context: Activity, order: Order) {
-        val gestor = order.proprietario
+    fun updateOrder(context: Activity, order: Order): Task<Void> {
         val load = Loading(context)
         load.startLoading()
 
@@ -180,23 +172,10 @@ class FirestoreRequest_Order (
         }
 
         Log.i("HEY", "Order Sending to RIder: ${order.ordine}")
-        db.collection("/ordini")
+        return db.collection("/ordini")
                 .document(order.ordine)
                 .set(entry)
                 .addOnCompleteListener {
-                    if(it.isSuccessful)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            sendNotificationToRider(
-                                context,
-                                gestor,
-                                order.rider,
-                                "The Gestor: $gestor require your services!",
-                                order.ordine
-                            )
-                        } else {
-                            Log.i("HEY", "Error Order Sending to RIder")
-                            Toast.makeText(context, context.getString(R.string.AndroidVersionOld), Toast.LENGTH_SHORT).show()
-                        }
                     load.stopLoadingDialog()
                 }
                 .addOnFailureListener {

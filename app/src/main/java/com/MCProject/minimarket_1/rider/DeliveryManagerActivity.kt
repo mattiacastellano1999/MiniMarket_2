@@ -10,11 +10,16 @@ import android.view.View
 import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.google.firebase.firestore.GeoPoint
 import android.content.Intent
+import android.os.Build
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.frM
+import com.MCProject.minimarket_1.MainActivity.Companion.frO
+import com.MCProject.minimarket_1.MainActivity.Companion.frR
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.gestor.GestorActivity
+import com.MCProject.minimarket_1.gestor.OrderList
 import com.MCProject.minimarket_1.user.UserActivity
 
 
@@ -83,46 +88,45 @@ class DeliveryManagerActivity: AppCompatActivity() {
         if(myOrder != null) {
             statusTV.text =
                 "Order Name: ${myOrder!!.ordine} \n\n" +
-                "Pay is: ${myOrder!!.prezzo_tot} \n\n" +
-                "Distance Between Market and Client: ${distance[0]/1000} mt\n\n" +
-                "Delivery Address: ${myOrder!!.addrClient}"
-        }
+                        "Pay is: ${myOrder!!.prezzo_tot} \n\n" +
+                        "Distance Between Market and Client: ${distance[0] / 1000} mt\n\n" +
+                        "Delivery Address: ${myOrder!!.addrClient}"
 
-        confirmBtn.setOnClickListener {
-            // set the rider status = accepted
-            sendDeliveryResponseToGestor(getString(R.string.rider_status_accepted))
-            val entry = hashMapOf<String, Any>(
-                "status" to 0,
-                "nome rider" to RiderActivity.riderName,
-                "email" to RiderActivity.riderEmail,
-                "cognome rider" to RiderActivity.riderSurname
-            )
-            MainActivity.frR.updateRider(this, "/profili/riders/dati", MainActivity.mail, entry)
-        }
 
-        cancleBtn.setOnClickListener {
-            // set the rider status = refused
-            myOrder!!.rider = "null"
-            sendDeliveryResponseToGestor(getString(com.MCProject.minimarket_1.R.string.rider_status_NA))
-            val username = MainActivity.auth.currentUser.displayName
-            when {
-                username.equals("utenti") -> {
-                    val intent = Intent(this, UserActivity::class.java)
-                    this@DeliveryManagerActivity.startActivity(intent)
-                }
-                username.equals("gestori") -> {
-                    val intent = Intent(this, GestorActivity::class.java)
-                    this@DeliveryManagerActivity.startActivity(intent)
-                }
-                username.equals("riders") -> {
-                    val intent = Intent(this, RiderActivity::class.java)
-                    this@DeliveryManagerActivity.startActivity(intent)
+            confirmBtn.setOnClickListener {
+                // set the rider status = accepted
+                updateOrder(getString(R.string.rider_status_accepted))
+                val entry = hashMapOf<String, Any>(
+                    "status" to 0,
+                    "nome rider" to RiderActivity.riderName,
+                    "email" to RiderActivity.riderEmail,
+                    "cognome rider" to RiderActivity.riderSurname
+                )
+                frR.updateRider(this, "/profili/riders/dati", MainActivity.mail, entry)
+            }
+
+            cancleBtn.setOnClickListener {
+                // set the rider status = refused
+                myOrder!!.rider = "null"
+                updateOrder(getString(R.string.rider_status_NA))
+                val username = MainActivity.auth.currentUser.displayName
+                when {
+                    username.equals("utenti") -> {
+                        val intent = Intent(this, UserActivity::class.java)
+                        this@DeliveryManagerActivity.startActivity(intent)
+                    }
+                    username.equals("gestori") -> {
+                        val intent = Intent(this, GestorActivity::class.java)
+                        this@DeliveryManagerActivity.startActivity(intent)
+                    }
+                    username.equals("riders") -> {
+                        val intent = Intent(this, RiderActivity::class.java)
+                        this@DeliveryManagerActivity.startActivity(intent)
+                    }
                 }
             }
         }
     }
-
-
 
     private fun getCoordinates(addr: String): GeoPoint? {
 
@@ -146,9 +150,26 @@ class DeliveryManagerActivity: AppCompatActivity() {
         return p1
     }
 
-    private fun sendDeliveryResponseToGestor(value: String) {
+    private fun updateOrder(value: String) {
         myOrder!!.riderStatus = value
-        MainActivity.frO.updateOrder(this, myOrder!!)
+        frO.updateOrder(this, myOrder!!).addOnCompleteListener {
+            if(it.isSuccessful) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    frM.deleteFromDB(
+                        this,
+                        getString(R.string.antecedente_notification) + MainActivity.mail,
+                        getString(R.string.notification_path)
+                    )
+                } else {
+                    Log.i("HEY", "Error Order Sending to RIder")
+                    Toast.makeText(
+                        this,
+                        getString(R.string.AndroidVersionOld),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
 
         //elimino la notifica dal db
         MainActivity.frM.deleteFromDB(

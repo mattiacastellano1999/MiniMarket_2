@@ -17,6 +17,7 @@ import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.rider.DeliveryManagerActivity
 import com.MCProject.minimarket_1.rider.RiderActivity
+import com.MCProject.minimarket_1.user.ChatUser
 
 class Notification constructor(val context: Activity) {
 
@@ -85,6 +86,44 @@ class Notification constructor(val context: Activity) {
         }
     }
 
+    fun showUserNotification(channelID: String, orderN : String, gestore: String, cliente: String, messaggio: String) {
+        if(cliente == mail && gestore != null) {
+            val intent = Intent(context, ChatUser::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK/*
+                this.putExtra("cliente", cliente)
+                this.putExtra("gestore", gestore)
+                this.putExtra("nome_ordine", orderN)
+                this.putExtra("rStatus", "not assigned")*/
+            }
+
+            val pendingIntent: PendingIntent =
+                PendingIntent
+                    .getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notification = Notification.Builder(context, channelID)
+                    .setContentTitle("$cliente: ")
+                    .setContentText(messaggio)
+                    .setSmallIcon(R.drawable.star_big_on)
+                    .setShowWhen(false)
+                    .setChannelId(channelID)
+                    .setContentIntent(pendingIntent)/*cosa fare quando si preme sulla notifica*/
+                    .setAutoCancel(true)
+                    .build()
+                notificationManager.notify(1, notification)
+                MainActivity.frM.deleteFromDB(
+                    context,
+                    context.getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+MainActivity.mail,
+                    context.getString(com.MCProject.minimarket_1.R.string.notification_path)
+                )
+
+            } else {
+                Toast.makeText(context,
+                    "Unable to Receive Message: VERSION.SDK_INT < O",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     /*
      * Creazione nuova notifica per i rider
      * Quando cliccata mostra un form di dettaglio dell'ordine
@@ -92,7 +131,7 @@ class Notification constructor(val context: Activity) {
      */
     fun showRiderNotification(channelID: String, orderN : String, gestore: String, cliente: String, messaggio: String) {
         Log.i("HEY", "HERE showNotification: " + cliente + "__0" + messaggio)
-        if(cliente != "null" && gestore == mail) {
+        if(cliente != "null" && RiderActivity.myOrder!!.rider == mail) {
             val intent = Intent(context, DeliveryManagerActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 this.putExtra("gestore", cliente)
@@ -114,7 +153,7 @@ class Notification constructor(val context: Activity) {
                     .setAutoCancel(true)
                     .build()
                 Log.i("HEY", "showNotification: " + messaggio)
-                //la cancello solo quando il rider accetta o rifiuta la richiesta
+                /*//la cancello solo quando il rider accetta o rifiuta la richiesta
                 //MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
                 if (RiderActivity.myOrder != null) {
                     if (RiderActivity.myOrder!!.riderStatus.equals("accepted")) {
@@ -130,7 +169,7 @@ class Notification constructor(val context: Activity) {
                     }
                 } else {
                     notificationManager.notify(1, notification)
-                }
+                }*/
             } else {
                 Toast.makeText(context,
                     "Unable to Receive Message: VERSION.SDK_INT < O",

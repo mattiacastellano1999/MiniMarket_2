@@ -64,7 +64,7 @@ class UserActivity: AppCompatActivity() {
                 for (doc in it.result) {
                     Log.i("HEY", "DOC::: "+doc.data)
                     if( doc["riderStatus"] == getString(R.string.rider_status_accepted) ) {
-                        if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
+                        if( doc["orderStatus"] == getString(R.string.order_status_delivering) ) {
                             if( doc["cliente"] == MainActivity.mail) {
                                 orderName = doc["ordine"].toString()
                                 myOrder = MainActivity.frO.parseOrder(doc)

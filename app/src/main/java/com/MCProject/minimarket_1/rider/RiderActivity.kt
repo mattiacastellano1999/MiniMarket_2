@@ -87,7 +87,7 @@ class RiderActivity: AppCompatActivity() {
                 for (doc in it.result) {
                     Log.i("HEY", "DOC::: "+doc.data)
                     if( doc["riderStatus"] == getString(R.string.rider_status_accepted) ) {
-                        if( doc["orderStatus"] == getString(R.string.order_status_working) ) {
+                        if( doc["orderStatus"] != getString(R.string.order_status_complete) ) {
                             if( doc["rider"] == mail ) {
                                 orderName = doc["ordine"].toString()
                                 myOrder = frO.parseOrder(doc)
@@ -104,7 +104,7 @@ class RiderActivity: AppCompatActivity() {
         //Check some notification
         Log.i("HEY", "Check Notify")
         val fm = FirebaseMessaging(mail, this)
-        fm.addRealtimeUpdate(this, "/profili/riders/dati/$mail")
+        fm.addRealtimeUpdate(this, "rider")
 
         btnListener()
     }
@@ -132,18 +132,20 @@ class RiderActivity: AppCompatActivity() {
             leaveMarketBTN.setOnClickListener {
                 //abilito la possibilità di chattare con il rider
                 myOrder!!.orderStatus = getString(R.string.order_status_delivering)
-                frO.updateOrder(this, myOrder!!)
-
-                //mando all'utente la notifica
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val fm = FirebaseMessaging(mail, this)
-                    val newMessage = mapOf<String, String>(
-                        "gestore" to myOrder!!.proprietario,
-                        "numero_ordine" to myOrder!!.ordine,
-                        "cliente" to myOrder!!.cliente,
-                        "Testo" to "The Rider $mail Leave the Market"
-                    )
-                    fm.sendMesage(this, myOrder!!.cliente, newMessage)
+                frO.updateOrder(this, myOrder!!).addOnCompleteListener {
+                    if(it.isSuccessful) {
+                        //mando all'utente la notifica
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            val fm = FirebaseMessaging(mail, this)
+                            val newMessage = mapOf<String, String>(
+                                "gestore" to myOrder!!.proprietario,
+                                "numero_ordine" to myOrder!!.ordine,
+                                "cliente" to myOrder!!.cliente,
+                                "Testo" to "The Rider $mail Leave the Market"
+                            )
+                            fm.sendMesage(this, myOrder!!.cliente, newMessage)
+                        }
+                    }
                 }
             }
 
