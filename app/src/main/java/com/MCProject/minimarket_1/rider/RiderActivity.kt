@@ -17,6 +17,7 @@ import com.MCProject.minimarket_1.MainActivity.Companion.frR
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
+import com.MCProject.minimarket_1.user.UserPopup
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.Order
 import com.google.firebase.auth.FirebaseAuth
@@ -110,17 +111,11 @@ class RiderActivity: AppCompatActivity() {
     }
 
     private fun btnListener() {
-        logoutImgBtn.setOnClickListener {
-            auth.signOut()
-            if(auth.currentUser == null) {
-                val intentLogout = Intent(this, Login::class.java)
-                startActivity(intentLogout)
-            }
-        }
+
+        MainActivity.logoutListener(this, logoutImgBtn)
 
         val chat = findViewById<Button>(R.id.chat_btn)
         if(orderName.isNotEmpty()){
-            endDelivBTN.visibility = View.VISIBLE
             leaveMarketBTN.visibility = View.VISIBLE
             chat.visibility = View.VISIBLE
 
@@ -145,6 +140,18 @@ class RiderActivity: AppCompatActivity() {
                             )
                             fm.sendMesage(this, myOrder!!.cliente, newMessage)
                         }
+                    }
+                }
+            }
+
+            endDelivBTN.visibility = View.GONE
+            if(myOrder!!.orderStatus == getString(R.string.order_status_delivering)) {
+                endDelivBTN.visibility = View.VISIBLE
+                endDelivBTN.setOnClickListener {
+                    val pop = RiderPopup(this, myOrder!!)
+                    pop.listenerInit()
+                    pop.popupConfirmBTN.setOnClickListener {
+
                     }
                 }
             }

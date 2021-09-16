@@ -17,9 +17,9 @@ import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.frM
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
 import com.MCProject.minimarket_1.MainActivity.Companion.frR
+import com.MCProject.minimarket_1.MainActivity.Companion.homeListener
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.gestor.GestorActivity
-import com.MCProject.minimarket_1.gestor.OrderList
 import com.MCProject.minimarket_1.user.UserActivity
 
 
@@ -103,6 +103,7 @@ class DeliveryManagerActivity: AppCompatActivity() {
                     "cognome rider" to RiderActivity.riderSurname
                 )
                 frR.updateRider(this, "/profili/riders/dati", MainActivity.mail, entry)
+
             }
 
             cancleBtn.setOnClickListener {
@@ -126,6 +127,10 @@ class DeliveryManagerActivity: AppCompatActivity() {
                 }
             }
         }
+
+        homeListener(this, homeImgBtn)
+
+
     }
 
     private fun getCoordinates(addr: String): GeoPoint? {

@@ -78,13 +78,7 @@ class GestorActivity: AppCompatActivity() {
     }
 
     fun btnListener() {
-        logoutImgBtn.setOnClickListener {
-            auth.signOut()
-            if(auth.currentUser == null) {
-                val intentLogout = Intent(this, Login::class.java)
-                startActivity(intentLogout)
-            }
-        }
+        MainActivity.logoutListener(this, logoutImgBtn)
 
         orderManageBtn.setOnClickListener {
             riderVisualBtn.visibility = View.GONE

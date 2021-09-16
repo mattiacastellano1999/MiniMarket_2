@@ -1,6 +1,7 @@
 package com.MCProject.minimarket_1
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.widget.ImageButton
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_Rider
 import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.util.Order
@@ -45,6 +47,36 @@ class MainActivity : AppCompatActivity() {
         lateinit var frM: FirestoreRequest_Marketplace
         lateinit var collection: String
         lateinit var mail: String
+
+        fun homeListener(context: Activity, homeBtn: ImageButton) {
+            homeBtn.setOnClickListener {
+                val username = Companion.auth.currentUser.displayName
+                when {
+                    username.equals("utenti") -> {
+                        val intent = Intent(context, UserActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                    username.equals("gestori") -> {
+                        val intent = Intent(context, GestorActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                    username.equals("riders") -> {
+                        val intent = Intent(context, RiderActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                }
+            }
+        }
+
+        fun logoutListener (context: Activity, logoutIMGBTN: ImageButton) {
+            logoutIMGBTN.setOnClickListener {
+                auth.signOut()
+                if (auth.currentUser == null) {
+                    val intentLogout = Intent(context, Login::class.java)
+                    context.startActivity(intentLogout)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

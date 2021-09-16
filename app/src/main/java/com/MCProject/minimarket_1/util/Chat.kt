@@ -67,30 +67,8 @@ open class Chat: Activity() {
         textBox1.movementMethod = ScrollingMovementMethod()
         textBox2.movementMethod = ScrollingMovementMethod()
 
-        homeBtn.setOnClickListener {
-            val username = auth.currentUser.displayName
-            when {
-                username.equals("utenti") -> {
-                    val intent = Intent(this, UserActivity::class.java)
-                    startActivity(intent)
-                }
-                username.equals("gestori") -> {
-                    val intent = Intent(this, GestorActivity::class.java)
-                    startActivity(intent)
-                }
-                username.equals("riders") -> {
-                    val intent = Intent(this, RiderActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-        }
-        logouBtn.setOnClickListener {
-            auth.signOut()
-            if (auth.currentUser == null) {
-                val intentLogout = Intent(this, Login::class.java)
-                startActivity(intentLogout)
-            }
-        }
+        MainActivity.logoutListener(this, logouBtn)
+        MainActivity.homeListener(this, homeBtn)
     }
 
     /**

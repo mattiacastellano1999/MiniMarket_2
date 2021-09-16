@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.MainActivity.Companion.auth
 import com.MCProject.minimarket_1.MainActivity.Companion.frM
@@ -94,31 +95,9 @@ class OrderManagerActivity : AppCompatActivity() {
     }
 
     private fun buttonListener(){
-        logoutImgBtn.setOnClickListener {
-            auth.signOut()
-            if(auth.currentUser == null) {
-                val intentLogout = Intent(this, Login::class.java)
-                startActivity(intentLogout)
-            }
-        }
+        MainActivity.logoutListener(this, logoutImgBtn)
 
-        homeImgBtn.setOnClickListener {
-            val username = auth.currentUser.displayName
-            when {
-                username.equals("utenti") -> {
-                    val intent = Intent(this, UserActivity::class.java)
-                    this@OrderManagerActivity.startActivity(intent)
-                }
-                username.equals("gestori") -> {
-                    val intent = Intent(this, GestorActivity::class.java)
-                    this@OrderManagerActivity.startActivity(intent)
-                }
-                username.equals("riders") -> {
-                    val intent = Intent(this, RiderActivity::class.java)
-                    this@OrderManagerActivity.startActivity(intent)
-                }
-            }
-        }
+        MainActivity.homeListener(this, homeImgBtn)
 
         confirmBtn.setOnClickListener {
             sendDeliveryRequestToRider()

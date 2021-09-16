@@ -10,6 +10,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
+import com.MCProject.minimarket_1.MainActivity.Companion.auth
+import com.MCProject.minimarket_1.MainActivity.Companion.logoutListener
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.rider.ChatRider
@@ -105,13 +107,7 @@ class UserActivity: AppCompatActivity() {
             }
         }
 
-        logoutIMGBTN.setOnClickListener {
-            firebaseAuth.signOut()
-            if (firebaseAuth.currentUser == null) {
-                val intentLogout = Intent(this, Login::class.java)
-                startActivity(intentLogout)
-            }
-        }
+        logoutListener(this, logoutIMGBTN)
 
         cartIMGBTN.setOnClickListener {
             val intent = Intent(this, CartProductListActivity::class.java)

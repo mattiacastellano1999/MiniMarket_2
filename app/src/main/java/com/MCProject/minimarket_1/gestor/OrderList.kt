@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.MCProject.minimarket_1.MainActivity.Companion.homeListener
 import com.MCProject.minimarket_1.R
 
 
@@ -42,7 +43,7 @@ open class OrderList: ListActivity(){
         super.onStart()
 
         orderList.clear()
-        homeListener()
+        homeListener(this, homeBtn)
 
         frO.getAllOrder( orderList, this)
                 .addOnCompleteListener {
@@ -98,25 +99,4 @@ open class OrderList: ListActivity(){
             return convertView
         }
     }
-
-    private fun homeListener() {
-        homeBtn.setOnClickListener {
-            val username = auth.currentUser.displayName
-            when {
-                username.equals("utenti") -> {
-                    val intent = Intent(this, UserActivity::class.java)
-                    this@OrderList.startActivity(intent)
-                }
-                username.equals("gestori") -> {
-                    val intent = Intent(this, GestorActivity::class.java)
-                    this@OrderList.startActivity(intent)
-                }
-                username.equals("riders") -> {
-                    val intent = Intent(this, RiderActivity::class.java)
-                    this@OrderList.startActivity(intent)
-                }
-            }
-        }
-    }
-
 }
