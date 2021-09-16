@@ -293,13 +293,13 @@ open class FirestoreRequest(
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendNotification(
         context: Activity,
-        order: Order,
+        dest: String,
         message: Map<String, String>
     ): Task<Void> {
         Log.i("HEY", "Invio: "+ message)
 
         val fm = FirebaseMessaging(MainActivity.mail, context)
-        return fm.sendMesage(context, order, message)
+        return fm.sendMesage(context, dest, message)
     }
 
     fun getAllElement(context: Activity, elements: ArrayList<String>): Task<QuerySnapshot> {

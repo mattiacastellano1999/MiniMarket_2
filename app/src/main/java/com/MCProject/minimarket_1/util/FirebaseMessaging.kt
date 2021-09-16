@@ -15,7 +15,7 @@ class FirebaseMessaging(val path: String, context: Activity) {
     val NAME_FIELD: String
     val TEXT_FIELD: String
     var firestoreNotificationListener: DocumentReference
-    lateinit var firestoreChatSender: DocumentReference
+    lateinit var firestoreNotificationSender: DocumentReference
 
     init {
         //recupero da firestore la collezione creata
@@ -30,16 +30,16 @@ class FirebaseMessaging(val path: String, context: Activity) {
 
     fun sendMesage(
         context: Activity,
-        order: Order,
+        dest: String,
         newMessage: Map<String, String>
     ): Task<Void> {
 
-        firestoreChatSender = MainActivity.db
+        firestoreNotificationSender = MainActivity.db
             .collection( context.getString(com.MCProject.minimarket_1.R.string.notification_path))
-            .document(order.ordine)
+            .document("message_for_$dest")
 
         //scrivo su firestore il nuovo messaggio
-        return firestoreChatSender.set(newMessage)
+        return firestoreNotificationSender.set(newMessage)
             .addOnSuccessListener {
                 Toast.makeText(
                     context,

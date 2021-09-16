@@ -172,10 +172,10 @@ class DeliveryManagerActivity: AppCompatActivity() {
         }
 
         //elimino la notifica dal db
-        MainActivity.frM.deleteFromDB(
+        frM.deleteFromDB(
             this,
-            getString(com.MCProject.minimarket_1.R.string.antecedente_notification)+MainActivity.mail,
-            getString(com.MCProject.minimarket_1.R.string.notification_path)
+            getString(R.string.antecedente_notification)+MainActivity.mail,
+            getString(R.string.notification_path)
         )
     }
 }

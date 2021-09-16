@@ -171,7 +171,7 @@ class OrderManagerActivity : AppCompatActivity() {
                                                 )
                                                 frO.sendNotification(
                                                     this,
-                                                    neworder,
+                                                    neworder.rider,
                                                     newMessage
                                                 ).addOnCompleteListener {
                                                     //reload activity
