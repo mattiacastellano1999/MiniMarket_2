@@ -52,13 +52,29 @@ open class OrderList: ListActivity(){
 
     open fun populateWithOrder() {
         frO.getAllOrder( orderList, this)
-            .addOnCompleteListener {
-                Log.i("HEY", "OrderList: ${orderList.size}")
+            .addOnCompleteListener {@Synchronized
+                if ( it.isSuccessful) {
+                    if( !it.result.isEmpty) {
+                    var order: Order
+                        for (doc in it.result) {
+                            order = frO.parseOrder(doc)
+                            if(order.deliveryStatus == null) {
+                                orderList.add(order)
+                            }
+                        }
+                    } else {
+                        Log.e("HEY", "Error with Path")
+                    }
+                } else {
+                    Log.e("HEY", "Error Firetore Marker Reading_0")
+                }
+
+                /*Log.i("HEY", "OrderList: ${orderList.size}")
                 for (order in orderList) {
                     if(order.deliveryStatus != null) {
                         orderList.remove(order)
                     }
-                }
+                }*/
                 val itemsAdapter: MyOrdersAdapter =
                     MyOrdersAdapter(
                         this,

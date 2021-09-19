@@ -126,60 +126,74 @@ open class OrderManagerActivity : AppCompatActivity() {
         val rider = spinner.selectedItem.toString()
         val orderList = ArrayList<Order>()
         frO.getAllOrder(orderList, this)
-                .addOnCompleteListener {
-                    if (orderList.size < 1) {
-                        Log.e("HEY", "Error: Order List Empty")
-                        Toast.makeText(this, "Error: Order List Empty", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Log.d("HEY", "Order List Rider: " + orderList[0].rider)
-                        orderList.forEach { neworder ->
-                            if (neworder.ordine == orderN) {
-                                if (neworder.riderStatus == getString(R.string.rider_status_NA)) {
-                                    //rider non ancora assegnato -> mando richiesta al rider
-                                    neworder.orderStatus =  getString(R.string.order_status_working)
-                                    neworder.riderStatus = getString(R.string.requestSended)
-                                    neworder.rider = rider
-                                    frO.updateOrder(this, neworder).addOnCompleteListener {
-                                        if(it.isSuccessful) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                                val newMessage = mapOf<String, String>(
-                                                    "gestore" to neworder.proprietario,
-                                                    "numero_ordine" to neworder.ordine,
-                                                    "cliente" to neworder.cliente,
-                                                    "Testo" to "The Gestor: ${neworder.proprietario} require your services!"
-                                                )
-                                                frO.sendNotification(
-                                                    this,
-                                                    neworder.rider,
-                                                    newMessage
-                                                ).addOnCompleteListener {
-                                                    //reload activity
-                                                    val intent = Intent(this, OrderList::class.java)
-                                                    startActivity(intent)
+                .addOnCompleteListener {@Synchronized
+
+                if ( it.isSuccessful) {
+                    if( !it.result.isEmpty) {@Synchronized
+                        for (doc in it.result) {
+                            Log.i("HEY", "Doc: "+doc.data)
+                            orderList.add(frO.parseOrder(doc))
+                        }
+
+                        if (orderList.size < 1) {
+                            Log.e("HEY", "Error: Order List Empty")
+                            Toast.makeText(this, "Error: Order List Empty", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Log.d("HEY", "Order List Rider: " + orderList[0].rider)
+                            orderList.forEach { neworder ->
+                                if (neworder.ordine == orderN) {
+                                    if (neworder.riderStatus == getString(R.string.rider_status_NA)) {
+                                        //rider non ancora assegnato -> mando richiesta al rider
+                                        neworder.orderStatus =  getString(R.string.order_status_working)
+                                        neworder.riderStatus = getString(R.string.requestSended)
+                                        neworder.rider = rider
+                                        frO.updateOrder(this, neworder).addOnCompleteListener {
+                                            if(it.isSuccessful) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    val newMessage = mapOf<String, String>(
+                                                        "gestore" to neworder.proprietario,
+                                                        "numero_ordine" to neworder.ordine,
+                                                        "cliente" to neworder.cliente,
+                                                        "Testo" to "The Gestor: ${neworder.proprietario} require your services!"
+                                                    )
+                                                    frO.sendNotification(
+                                                        this,
+                                                        neworder.rider,
+                                                        newMessage
+                                                    ).addOnCompleteListener {
+                                                        //reload activity
+                                                        val intent = Intent(this, OrderList::class.java)
+                                                        startActivity(intent)
+                                                    }
+                                                } else {
+                                                    Log.i("HEY", "Error Order Sending to RIder")
+                                                    Toast.makeText(
+                                                        this,
+                                                        getString(R.string.AndroidVersionOld),
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                 }
-                                            } else {
-                                                Log.i("HEY", "Error Order Sending to RIder")
-                                                Toast.makeText(
-                                                    this,
-                                                    getString(R.string.AndroidVersionOld),
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
                                             }
                                         }
                                     }
-                                }
-                                if(neworder.riderStatus == getString(R.string.requestSended)){
-                                    //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere
-                                    Toast.makeText(this, "Delivery Request already sent!\n" +
-                                            "Just Wait the Rider reply", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    //richiesta mandata e accettata dal rider. Il pacco è in consegna
-                                    Toast.makeText(this, "Delivery Request Accepted!\n" +
-                                            "Just Wait the Rider Delivery", Toast.LENGTH_SHORT).show()
+                                    if(neworder.riderStatus == getString(R.string.requestSended)){
+                                        //la richiesta di delivery è stata mandata ad un rider, il quale deve rispondere
+                                        Toast.makeText(this, "Delivery Request already sent!\n" +
+                                                "Just Wait the Rider reply", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        //richiesta mandata e accettata dal rider. Il pacco è in consegna
+                                        Toast.makeText(this, "Delivery Request Accepted!\n" +
+                                                "Just Wait the Rider Delivery", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        Log.e("HEY", "Error with Path")
                     }
+                } else {
+                    Log.e("HEY", "Error Firetore Marker Reading_0")
                 }
+        }
     }
 }

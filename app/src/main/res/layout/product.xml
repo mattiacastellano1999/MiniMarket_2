@@ -96,8 +96,7 @@
             android:text="Buy"
             android:scaleType="centerInside"
             android:layout_marginStart="5dp"
-            android:contentDescription="Add Product"
-            android:layout_weight="1"/>
+            android:contentDescription="Add Product"/>
 
     </TableRow>
 

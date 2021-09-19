@@ -47,20 +47,7 @@ open class FirestoreRequest(
         Log.i("HEY", "Path: $from")
         val ret = db.collection(from)
                 .get()
-                .addOnCompleteListener {@Synchronized
-                    if ( it.isSuccessful) {
-
-                        if( !it.result.isEmpty) {
-                            for (doc in it.result) {
-                                Log.i("HEY", "Doc: "+doc.data)
-                                orderList.add(parseOrder(doc))
-                            }
-                        } else {
-                            Log.e("HEY", "Error with Path")
-                        }
-                    } else {
-                        Log.e("HEY", "Error Firetore Marker Reading_0")
-                    }
+                .addOnCompleteListener {
                     return@addOnCompleteListener
                 }
                 .addOnFailureListener {
