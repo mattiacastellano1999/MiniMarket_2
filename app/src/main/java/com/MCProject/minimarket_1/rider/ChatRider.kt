@@ -9,6 +9,7 @@ import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.gestor.OrderList
+import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.MCProject.minimarket_1.util.Chat
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
@@ -21,13 +22,20 @@ class ChatRider: Chat() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        title2.visibility = View.VISIBLE
-        button2.visibility = View.VISIBLE
-        messageBox2.visibility = View.VISIBLE
-        textBox2.visibility = View.VISIBLE
+        if(myOrder!!.orderStatus == getString(R.string.order_status_delivering)) {
+            title2.visibility = View.VISIBLE
+            button2.visibility = View.VISIBLE
+            messageBox2.visibility = View.VISIBLE
+            textBox2.visibility = View.VISIBLE
+            title2.text = "Chat With " + RiderActivity.myOrder!!.cliente
+        } else {
+            title2.visibility = View.GONE
+            button2.visibility = View.GONE
+            messageBox2.visibility = View.GONE
+            textBox2.visibility = View.GONE
+        }
 
         title1.text = "Chat With " + RiderActivity.myOrder!!.proprietario
-        title2.text = "Chat With " + RiderActivity.myOrder!!.cliente
     }
 
     @SuppressLint("SetTextI18n")

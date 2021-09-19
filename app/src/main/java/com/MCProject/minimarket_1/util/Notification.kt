@@ -154,23 +154,6 @@ class Notification constructor(val context: Activity) {
                     .build()
                 Log.i("HEY", "showNotification: " + messaggio)
                 notificationManager.notify(1, notification)
-            /*//la cancello solo quando il rider accetta o rifiuta la richiesta
-                //MainActivity.frM.deleteFromDB(context, "message_for_"+MainActivity.mail, "/chat")
-                if (RiderActivity.myOrder != null) {
-                    if (RiderActivity.myOrder!!.riderStatus.equals("accepted")) {
-                        Log.i("HEY", "Deleting Message")
-                        MainActivity.frM.deleteFromDB(
-                            context,
-                            context.getString(com.MCProject.minimarket_1.R.string.antecedente_notification) + MainActivity.mail,
-                            context.getString(com.MCProject.minimarket_1.R.string.notification_path)
-                        )
-
-                    } else {
-                        notificationManager.notify(1, notification)
-                    }
-                } else {
-                    notificationManager.notify(1, notification)
-                }*/
             } else {
                 Toast.makeText(context,
                     "Unable to Receive Message: VERSION.SDK_INT < O",

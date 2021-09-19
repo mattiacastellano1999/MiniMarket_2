@@ -19,6 +19,7 @@ import com.MCProject.minimarket_1.MainActivity.Companion.frO
 import com.MCProject.minimarket_1.MainActivity.Companion.frR
 import com.MCProject.minimarket_1.MainActivity.Companion.homeListener
 import com.MCProject.minimarket_1.R
+import com.MCProject.minimarket_1.access.Loading
 import com.MCProject.minimarket_1.gestor.GestorActivity
 import com.MCProject.minimarket_1.user.UserActivity
 
@@ -77,7 +78,6 @@ class DeliveryManagerActivity: AppCompatActivity() {
         val clientGeocode = getCoordinates(myOrder!!.addrClient)
         val gestorGeocode = getCoordinates(myOrder!!.addrGestor)
 
-
         var distance = FloatArray(1)
 
         Log.i("HEY", "QUI1: "+ myOrder!!.addrClient )
@@ -103,37 +103,40 @@ class DeliveryManagerActivity: AppCompatActivity() {
                     "cognome rider" to RiderActivity.riderSurname
                 )
                 frR.updateRider(this, "/profili/riders/dati", MainActivity.mail, entry)
-
+                goHome()
             }
 
             cancleBtn.setOnClickListener {
                 // set the rider status = refused
                 myOrder!!.rider = "null"
                 updateOrder(getString(R.string.rider_status_NA))
-                val username = MainActivity.auth.currentUser.displayName
-                when {
-                    username.equals("utenti") -> {
-                        val intent = Intent(this, UserActivity::class.java)
-                        this@DeliveryManagerActivity.startActivity(intent)
-                    }
-                    username.equals("gestori") -> {
-                        val intent = Intent(this, GestorActivity::class.java)
-                        this@DeliveryManagerActivity.startActivity(intent)
-                    }
-                    username.equals("riders") -> {
-                        val intent = Intent(this, RiderActivity::class.java)
-                        this@DeliveryManagerActivity.startActivity(intent)
-                    }
-                }
+                goHome()
             }
         }
-
         homeListener(this, homeImgBtn)
+    }
 
-
+    fun goHome(){
+        val username = MainActivity.auth.currentUser.displayName
+        when {
+            username.equals("utenti") -> {
+                val intent = Intent(this, UserActivity::class.java)
+                this@DeliveryManagerActivity.startActivity(intent)
+            }
+            username.equals("gestori") -> {
+                val intent = Intent(this, GestorActivity::class.java)
+                this@DeliveryManagerActivity.startActivity(intent)
+            }
+            username.equals("riders") -> {
+                val intent = Intent(this, RiderActivity::class.java)
+                this@DeliveryManagerActivity.startActivity(intent)
+            }
+        }
     }
 
     private fun getCoordinates(addr: String): GeoPoint? {
+        val loading = Loading(this)
+        loading.startLoading()
 
         val coder = Geocoder(this)
 
@@ -150,8 +153,9 @@ class DeliveryManagerActivity: AppCompatActivity() {
                 )
             }
         } catch (e: Exception) {
-
+            Log.e("HEY", "Exception: ${e.message}")
         }
+        loading.stopLoadingDialog()
         return p1
     }
 
@@ -182,5 +186,9 @@ class DeliveryManagerActivity: AppCompatActivity() {
             getString(R.string.antecedente_notification)+MainActivity.mail,
             getString(R.string.notification_path)
         )
+    }
+
+    override fun onBackPressed() {
+        goHome()
     }
 }
