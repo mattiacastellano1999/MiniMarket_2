@@ -18,7 +18,7 @@ import com.MCProject.minimarket_1.util.Order
 import com.MCProject.minimarket_1.user.UserActivity
 
 
-class OrderManagerActivity : AppCompatActivity() {
+open class OrderManagerActivity : AppCompatActivity() {
 
     lateinit var logoutImgBtn: ImageButton
     lateinit var homeImgBtn: ImageButton

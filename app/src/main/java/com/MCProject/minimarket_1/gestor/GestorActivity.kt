@@ -17,6 +17,7 @@ import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.firestore.FirestoreRequest_User
+import com.MCProject.minimarket_1.rider.DeliveryHistory
 import com.MCProject.minimarket_1.util.Order
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,6 +31,7 @@ class GestorActivity: AppCompatActivity() {
     lateinit var logoutImgBtn: ImageButton
     lateinit var riderVisualBtn: Button
     lateinit var orderManageBtn: Button
+    lateinit var oldOrderManageBtn: Button
     lateinit var welcomeTV: TextView
     val auth = FirebaseAuth.getInstance()
 
@@ -48,6 +50,7 @@ class GestorActivity: AppCompatActivity() {
         riderVisualBtn = findViewById(R.id.locationRider_btn)
         orderManageBtn = findViewById(R.id.orderManage_btn)
         welcomeTV = findViewById(R.id.welcome_tv)
+        oldOrderManageBtn = findViewById(R.id.oldOrderManage_btn)
         popup = GestorPopup(this, ArrayList())
     }
 
@@ -100,6 +103,11 @@ class GestorActivity: AppCompatActivity() {
         prodListImgBtn.setOnClickListener {
             Log.i("HEY", "enter ListProd-- $auth")
             val intent = Intent(this, MarketProductListActivity::class.java)
+            startActivity(intent)
+        }
+
+        oldOrderManageBtn.setOnClickListener {
+            val intent = Intent(this, DeliveryHistory::class.java)
             startActivity(intent)
         }
 

@@ -25,6 +25,7 @@
         android:text="Delivery Status:"/>
 
     <RadioGroup
+        android:id="@+id/group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
@@ -74,7 +75,6 @@
 
         <RatingBar
             android:id="@+id/raiting_cortesia"
-            style="@android:style/Widget.Holo.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/testo_cortesia"
@@ -91,7 +91,6 @@
 
         <RatingBar
             android:id="@+id/raiting_casa"
-            style="@android:style/Widget.Holo.RatingBar.Indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/testo_casa"

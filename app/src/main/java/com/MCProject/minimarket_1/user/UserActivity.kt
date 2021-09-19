@@ -15,6 +15,7 @@ import com.MCProject.minimarket_1.MainActivity.Companion.logoutListener
 import com.MCProject.minimarket_1.R
 import com.MCProject.minimarket_1.access.Login
 import com.MCProject.minimarket_1.rider.ChatRider
+import com.MCProject.minimarket_1.rider.DeliveryHistory
 import com.MCProject.minimarket_1.rider.RiderActivity
 import com.MCProject.minimarket_1.rider.RiderActivity.Companion.myOrder
 import com.MCProject.minimarket_1.rider.RiderActivity.Companion.orderName
@@ -134,6 +135,11 @@ class UserActivity: AppCompatActivity() {
             }
         } else {
             chatUserBTN.visibility = View.GONE
+        }
+
+        oldOrderBTN.setOnClickListener {
+            val intent = Intent(this, DeliveryHistory::class.java)
+            startActivity(intent)
         }
     }
 

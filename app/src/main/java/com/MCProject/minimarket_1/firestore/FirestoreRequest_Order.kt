@@ -163,6 +163,12 @@ class FirestoreRequest_Order (
         entry["addrCliente"] = order.addrClient
         entry["orderStatus"] = order.orderStatus
 
+        if(order.deliveryStatus != null) {
+            entry["deliveryStatus"] = order.deliveryStatus
+            entry["clientRatingCourtesy"] = order.clientRatingCourtesy
+            entry["clientRatingPresence"] = order.clientRatingPresence
+        }
+
         var i=0
 
         order.products.forEach { (key, value) ->

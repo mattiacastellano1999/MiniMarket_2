@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="List Order"
-        android:textSize="30dp"
-        />
+        android:textSize="30dp" />
 
     <ListView
         android:id="@android:id/list"

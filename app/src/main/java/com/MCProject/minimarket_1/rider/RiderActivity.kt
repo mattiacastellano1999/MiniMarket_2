@@ -6,18 +6,13 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.Switch
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.MCProject.minimarket_1.MainActivity
 import com.MCProject.minimarket_1.MainActivity.Companion.frO
 import com.MCProject.minimarket_1.MainActivity.Companion.frR
 import com.MCProject.minimarket_1.MainActivity.Companion.mail
 import com.MCProject.minimarket_1.R
-import com.MCProject.minimarket_1.access.Login
-import com.MCProject.minimarket_1.user.UserPopup
 import com.MCProject.minimarket_1.util.FirebaseMessaging
 import com.MCProject.minimarket_1.util.Order
 import com.google.firebase.auth.FirebaseAuth
@@ -115,7 +110,7 @@ class RiderActivity: AppCompatActivity() {
         MainActivity.logoutListener(this, logoutImgBtn)
 
         val chat = findViewById<Button>(R.id.chat_btn)
-        if(orderName.isNotEmpty()){
+        if(orderName.isNotEmpty() && myOrder!!.orderStatus != getString(R.string.order_status_complete)) {
             leaveMarketBTN.visibility = View.VISIBLE
             chat.visibility = View.VISIBLE
 
@@ -139,6 +134,7 @@ class RiderActivity: AppCompatActivity() {
                                 "Testo" to "The Rider $mail Leave the Market"
                             )
                             fm.sendMesage(this, myOrder!!.cliente, newMessage)
+                            this.recreate()
                         }
                     }
                 }
@@ -152,6 +148,16 @@ class RiderActivity: AppCompatActivity() {
                     pop.listenerInit()
                     pop.popupConfirmBTN.setOnClickListener {
 
+                        val radioSelected =
+                            pop.radioGroup.findViewById<RadioButton>(
+                                pop.radioGroup.checkedRadioButtonId
+                            )
+                        myOrder!!.orderStatus = getString(R.string.order_status_complete)
+                        myOrder!!.deliveryStatus = radioSelected.text.toString()
+                        myOrder!!.clientRatingCourtesy = pop.raiting_cortesia.numStars
+                        myOrder!!.clientRatingPresence = pop.raiting_casa.numStars
+                        frO.updateOrder(this, myOrder!!)
+                        this.recreate()
                     }
                 }
             }
@@ -162,9 +168,9 @@ class RiderActivity: AppCompatActivity() {
             leaveMarketBTN.visibility = View.GONE
         }
 
-        val order = findViewById<Button>(R.id.delivery_btn)
-        order.setOnClickListener {
-            val intent = Intent(this, DeliveryList::class.java)
+        val oldOrder = findViewById<Button>(R.id.delivery_btn)
+        oldOrder.setOnClickListener {
+            val intent = Intent(this, DeliveryHistory::class.java)
             startActivity(intent)
         }
     }

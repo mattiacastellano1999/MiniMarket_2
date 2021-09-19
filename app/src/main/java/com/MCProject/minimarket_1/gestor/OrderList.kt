@@ -20,6 +20,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.MCProject.minimarket_1.MainActivity.Companion.homeListener
 import com.MCProject.minimarket_1.R
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 
 
 open class OrderList: ListActivity(){
@@ -45,36 +47,45 @@ open class OrderList: ListActivity(){
         orderList.clear()
         homeListener(this, homeBtn)
 
+        populateWithOrder()
+    }
+
+    open fun populateWithOrder() {
         frO.getAllOrder( orderList, this)
-                .addOnCompleteListener {
-                    Log.i("HEY", "OrderList: ${orderList.size}")
-                    val itemsAdapter: MyOrdersAdapter =
-                            MyOrdersAdapter(
-                                    this,
-                                    orderList
-                            )
-                    listView.adapter = itemsAdapter
-                    listView.setOnItemClickListener { parent, view, position, id ->
-                        orderSelected = orderList[position]
-                        Log.i("HEY", "Clicked "+orderSelected.rider.toString())
-
-                        val cliente = orderSelected.cliente
-                        val gestore = orderSelected.proprietario
-                        val orderN = orderSelected.ordine
-
-                        if(orderSelected.riderStatus == getString(R.string.rider_status_accepted)){
-                            val intent = Intent(this, ChatGestor::class.java)
-                            startActivity(intent)
-                        } else {
-                            val intent = Intent(this, OrderManagerActivity::class.java)
-                            intent.putExtra("cliente", cliente)
-                            intent.putExtra("gestore", gestore)
-                            intent.putExtra("nome_ordine", orderN)
-                            intent.putExtra("rStatus", orderSelected.riderStatus)
-                            this@OrderList.startActivity(intent)
-                        }
+            .addOnCompleteListener {
+                Log.i("HEY", "OrderList: ${orderList.size}")
+                for (order in orderList) {
+                    if(order.deliveryStatus != null) {
+                        orderList.remove(order)
                     }
                 }
+                val itemsAdapter: MyOrdersAdapter =
+                    MyOrdersAdapter(
+                        this,
+                        orderList
+                    )
+                listView.adapter = itemsAdapter
+                listView.setOnItemClickListener { parent, view, position, id ->
+                    orderSelected = orderList[position]
+                    Log.i("HEY", "Clicked "+orderSelected.rider.toString())
+
+                    val cliente = orderSelected.cliente
+                    val gestore = orderSelected.proprietario
+                    val orderN = orderSelected.ordine
+
+                    if(orderSelected.riderStatus == getString(R.string.rider_status_accepted)){
+                        val intent = Intent(this, ChatGestor::class.java)
+                        startActivity(intent)
+                    } else {
+                        val intent = Intent(this, OrderManagerActivity::class.java)
+                        intent.putExtra("cliente", cliente)
+                        intent.putExtra("gestore", gestore)
+                        intent.putExtra("nome_ordine", orderN)
+                        intent.putExtra("rStatus", orderSelected.riderStatus)
+                        this@OrderList.startActivity(intent)
+                    }
+                }
+            }
     }
 
     class MyOrdersAdapter( context: Context,var orders: ArrayList<Order>) : ArrayAdapter<Order>(context, 0, orders) {

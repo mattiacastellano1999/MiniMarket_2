@@ -19,7 +19,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/fooddelivery"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -52,8 +52,9 @@
         <activity android:name="com.MCProject.minimarket_1.gestor.ChatGestor" />
         <activity android:name="com.MCProject.minimarket_1.gestor.OrderManagerActivity" />
         <activity android:name="com.MCProject.minimarket_1.rider.RiderActivity" />
-        <activity android:name="com.MCProject.minimarket_1.rider.DeliveryList" />
         <activity android:name="com.MCProject.minimarket_1.rider.ChatRider" />
+        <activity android:name="com.MCProject.minimarket_1.rider.DeliveryHistory" />
+        <activity android:name="com.MCProject.minimarket_1.rider.DeliveryHistoryManager" />
         <activity android:name="com.MCProject.minimarket_1.rider.DeliveryManagerActivity" />
         <activity android:name="com.MCProject.minimarket_1.access.Login">
             <intent-filter>

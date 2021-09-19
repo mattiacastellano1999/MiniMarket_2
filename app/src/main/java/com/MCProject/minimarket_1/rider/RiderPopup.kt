@@ -17,6 +17,7 @@ class RiderPopup (
     var rb_delivered: RadioButton
     var rb_notdelivered: RadioButton
     var rb_refused: RadioButton
+    var radioGroup: RadioGroup
 
     var raiting_cortesia: RatingBar
     var raiting_casa: RatingBar
@@ -35,6 +36,7 @@ class RiderPopup (
 
         popupView = context.layoutInflater.inflate(R.layout.form_rider_delivend, null)
 
+        radioGroup = popupView.findViewById(R.id.group)
         rb_delivered = popupView.findViewById(R.id.rb_delivered)
         rb_notdelivered = popupView.findViewById(R.id.rb_notdelivered)
         rb_refused = popupView.findViewById(R.id.rb_refused)

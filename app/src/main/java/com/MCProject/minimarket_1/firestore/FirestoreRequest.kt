@@ -93,6 +93,13 @@ open class FirestoreRequest(
             )
             i++
         }
+
+        if(doc.data.containsKey("deliveryStatus")){
+            myOrder.deliveryStatus = doc.data["deliveryStatus"].toString()
+            myOrder.clientRatingCourtesy = doc.data["clientRatingCourtesy"].toString().toInt()
+            myOrder.clientRatingPresence = doc.data["clientRatingPresence"].toString().toInt()
+        }
+
         return myOrder
     }
 

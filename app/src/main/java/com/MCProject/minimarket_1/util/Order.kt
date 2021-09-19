@@ -16,4 +16,7 @@ class Order(
         var products: HashMap<String, String>
         ){
 
+        var clientRatingPresence: Int = 0
+        var clientRatingCourtesy: Int = 0
+        var deliveryStatus: String? = null
 }

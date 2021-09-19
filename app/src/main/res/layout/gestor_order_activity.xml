@@ -28,8 +28,10 @@
         android:id="@+id/status_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/rider_tv"
+        android:layout_below="@+id/title_tv"
+        android:gravity="center"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="198dp"
         android:layout_marginBottom="50dp"
         android:text="Rider Status: "
         android:textSize="20dp" />
@@ -47,9 +49,9 @@
         android:id="@+id/rider_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rider Selected: "
         android:layout_centerInParent="true"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="30dp"
+        android:text="Rider Selected: " />
 
     <Spinner
         android:id="@+id/rider_ed"
