@@ -181,8 +181,6 @@ open class FirestoreRequest(
                 Log.i("HEY", "data adding_1 end")
 
                 return@addOnSuccessListener
-                //Creazione Lista
-                //listAdapter = ProductAdapter()
             }
             .addOnFailureListener {
                 Log.i("HEY", "error:$it")

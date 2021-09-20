@@ -40,8 +40,9 @@ open class ProductListActivity: ListActivity() {
         var quantity: Int,
         var owner: String
         )
-    var productList = ArrayList<Product>()
-
+    companion object {
+        var productList = ArrayList<Product>()
+    }
     lateinit var imgDb: FirebaseStorage
     val load = Loading(this)
     lateinit var addBtn: ImageButton

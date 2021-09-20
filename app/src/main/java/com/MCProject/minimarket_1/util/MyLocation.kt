@@ -68,12 +68,11 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             Log.i("HEY", "Mid3 UDP")
-                            Toast.makeText(
+                            /*Toast.makeText(
                                 context,
                                 "Lat: " + location.latitude + " and Lon: " + location.longitude,
                                 Toast.LENGTH_LONG
-                            ).show()
-                            // do something, save it perhaps?
+                            ).show()*/
                             myLat = location.latitude
                             myLon = location.longitude
                         }

@@ -15,17 +15,16 @@ import com.MCProject.minimarket_1.R.drawable.my_back_arrow
 import com.MCProject.minimarket_1.util.ProductListActivity
 import com.MCProject.minimarket_1.gestor.GestorPopup.Companion.dialog
 
-
+/**
+ * Activity che permette di gestire i Prodotti al Gestore
+ * E di visualizzare il carrello agli Utenti
+ */
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
         "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
 )
 open class MarketProductListActivity : ProductListActivity() {
-    /**
-     * Activity che permette di gestire i Prodotti al Gestore
-     * E di visualizzare il carrello agli Utenti
-     */
 
-    lateinit var adapter: ArrayAdapter<Product>
+    lateinit var adapter: MarketProductAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +39,7 @@ open class MarketProductListActivity : ProductListActivity() {
         super.onStart()
         //Adding Data
         load.startLoading()
-        adapter = ArrayAdapter(
-            this@MarketProductListActivity,
-            R.layout.product,
-            R.id.prod_text,
-            productList)
+        adapter = MarketProductAdapter()
 
         var path = ""
         if(type.equals("cart")) {
@@ -65,7 +60,7 @@ open class MarketProductListActivity : ProductListActivity() {
                             productList
                         )
                         .addOnCompleteListener {
-                            listAdapter = MarketProductAdapter()
+                            listAdapter = adapter
                             load.stopLoadingDialog()
                         }
                     i++
@@ -85,12 +80,12 @@ open class MarketProductListActivity : ProductListActivity() {
             popup.makePopup(this)
             dialog.setOnDismissListener {
                 Log.e("HEY", "VAL: exited")
-                listAdapter = MarketProductAdapter()
+                listAdapter = adapter
             }
         }
     }
 
-    internal inner class MarketProductAdapter :
+    inner class MarketProductAdapter :
         ArrayAdapter<Product>(
             this@MarketProductListActivity,
             R.layout.product,
@@ -112,6 +107,7 @@ open class MarketProductListActivity : ProductListActivity() {
             }
             Log.i("HEY", "populating form_0")
             wrapper.populateFrom(getItem(position)!!)
+            //this.notifyDataSetChanged()
 
             return convertView
         }
@@ -179,29 +175,39 @@ open class MarketProductListActivity : ProductListActivity() {
             getQuantity().text = prod.quantity.toString()
             getDelete().setOnClickListener {
                 fr.deleteFromDB(this@MarketProductListActivity, prod.name)
+                productList.remove(prod)
                 popup.oldProd = prod.name
                 popup.deleteImageFromFS()
                     .addOnCompleteListener {
-                        if (it.isSuccessful) {
+                        if (it.isSuccessful)
+                            adapter.notifyDataSetChanged()
+                    /*if (it.isSuccessful) {
                             runOnUiThread {
                                 Log.e("HEY", "Eliminazione Pouulate Form")
                                 val int = Intent(element_gestor_product.context, MarketProductListActivity::class.java)
                                 element_gestor_product.context.startActivity(int)
                             }
-                        }
+                        }*/
                     }
             }
-            if(type == "market") {
-                getEdit().setOnClickListener {
+            if(type == "market") {getEdit().setOnClickListener {
                     oldProd = prod.name
-                    runOnUiThread {
-                        popup.editProduct(prod)
-                        dialog.setOnDismissListener {
-                            adapter.notifyDataSetChanged()
-                            val int = Intent(element_gestor_product.context, MarketProductListActivity::class.java)
-                            element_gestor_product.context.startActivity(int)
+                    //runOnUiThread {
+                        if(!isFinishing) {
+                            popup.editProduct(prod)
+                            dialog.setOnDismissListener {
+                                adapter.notifyDataSetChanged()
+                                /*val int = Intent(
+                                    element_gestor_product.context,
+                                    MarketProductListActivity::class.java
+                                )
+                                element_gestor_product.context.startActivity(int)
+                                */Log.i("HEY", "QUI")
+                            }
+                        } else {
+                            Log.e("HEY", "ERROR: window closed")
                         }
-                    }
+                    //}
                 }
             } else {
                 getDelete().visibility = View.GONE

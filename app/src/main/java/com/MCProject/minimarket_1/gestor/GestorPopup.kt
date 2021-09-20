@@ -36,7 +36,7 @@ import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
 
 /**
- * classe dedicata lla creazione e gestione del popup che permette
+ * classe dedicata alla creazione e gestione del popup che permette
  * ai gestori gestire i propri prodotti
  */
 @Suppress("DEPRECATION")
@@ -56,6 +56,7 @@ class GestorPopup(
     var popupCancelBTN: Button
     var popupConfirmBTN: Button
     var popupDescriptionED: EditText
+    var myOldProd: ProductListActivity.Product? = null
 
     var imageUri: Uri? = null
     var oldProd: String? = null
@@ -125,8 +126,9 @@ class GestorPopup(
                     popupQuantityED.text.toString().toInt(),
                     mail
                 )
-                Log.i("HEY", "__" + newprod)
+                Log.i("HEY", "1__" + newprod)
                 prodList.add(newprod)
+                ProductListActivity.productList.remove(myOldProd!!)
                 val fr = FirestoreRequest_Marketplace(
                     db,
                     FirebaseAuth.getInstance(),
@@ -145,14 +147,15 @@ class GestorPopup(
                         }
                     }
                 if(!oldProd.equals(newprod.name)) {
-                    runOnUiThread {
+                    /*runOnUiThread {
                         val intent = Intent(context, MarketProductListActivity()::class.java)
                         start(context, intent, REQUEST)
-                    }
-                    fr.deleteFromDB(context, oldProd)
+                    }*/
+                        if(myOldProd != null)
+                        fr.deleteFromDB(context, oldProd)
                 }
             } else {
-                Log.i("HEY", "__" +
+                Log.i("HEY", "2__" +
                         popupNameED.text + "__" +
                         popupPriceED.text + "__" +
                         popupDescriptionED.text + "__" +
@@ -252,10 +255,7 @@ class GestorPopup(
         pd.setTitle("Uploading Image ...")
         pd.show()
 
-        //val randomKey = UUID.randomUUID().toString()
-        // Create a reference to the folder images""
-
-        Log.i("HEY", "__" + imageUri)
+        Log.i("HEY", "3__" + imageUri)
         val imageRef: StorageReference = storageReference.child("images/${popupNameED.text.toString()}.jpg")
 
         return imageRef.putFile(imageUri!!)
@@ -313,6 +313,7 @@ class GestorPopup(
 
     fun editProduct(prod: ProductListActivity.Product) {
         Log.i("HEY", "Start Edit Prod: " + prod.name)
+        myOldProd = prod
         oldProd = prod.name
         popupImgIB.setImageURI(prod.img)
         imageUri = prod.img
