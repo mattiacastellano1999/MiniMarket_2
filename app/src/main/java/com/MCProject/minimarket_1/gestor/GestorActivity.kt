@@ -71,7 +71,6 @@ class GestorActivity: AppCompatActivity() {
         fr.getAllCategoryProfile(this, "riders")
 
         //Check some notification
-        Log.i("HEY", "Check Notify")
         val fm = FirebaseMessaging(mail, this)
         fm.addRealtimeUpdate(this, "gestor")
     }
@@ -101,7 +100,6 @@ class GestorActivity: AppCompatActivity() {
         }
 
         prodListImgBtn.setOnClickListener {
-            Log.i("HEY", "enter ListProd-- $auth")
             val intent = Intent(this, MarketProductListActivity::class.java)
             startActivity(intent)
         }

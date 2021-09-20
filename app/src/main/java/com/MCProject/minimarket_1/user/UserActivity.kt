@@ -42,8 +42,6 @@ class UserActivity: AppCompatActivity() {
 
         setContentView(R.layout.user_activity_main)
 
-
-        Log.i("HEY", "MA QUI")
         locationBTN = findViewById(R.id.location_btn)
         logoutIMGBTN = findViewById(R.id.exit_imgBtn)
         cartIMGBTN = findViewById(R.id.cart_imgBtn)
@@ -65,7 +63,6 @@ class UserActivity: AppCompatActivity() {
         MainActivity.frO.getAllOrder(RiderActivity.orderList, this)
             .addOnCompleteListener {
                 for (doc in it.result) {
-                    Log.i("HEY", "DOC::: "+doc.data)
                     if( doc["riderStatus"] == getString(R.string.rider_status_accepted) ) {
                         if( doc["orderStatus"] == getString(R.string.order_status_delivering) ) {
                             if( doc["cliente"] == MainActivity.mail) {
@@ -89,7 +86,6 @@ class UserActivity: AppCompatActivity() {
 
 
         //Check some notification
-        Log.i("HEY", "Check Notify")
         val fm = FirebaseMessaging(MainActivity.mail, this)
         fm.addRealtimeUpdate(this, "user")
 

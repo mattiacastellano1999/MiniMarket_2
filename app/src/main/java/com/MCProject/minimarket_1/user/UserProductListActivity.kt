@@ -43,7 +43,6 @@ class UserProductListActivity: ProductListActivity() {
             .addOnCompleteListener{
                 var i = 0
                 for (doc in it.result) {
-                    Log.i("HEY", "PrductsCycle: " + it.result.size())
                     if (productList[i].quantity <= 0) {
                         //inserisco nella lista di prodotti acquistabili solo quelli con quantità > 0
                         productList.removeAt(i)
@@ -72,7 +71,6 @@ class UserProductListActivity: ProductListActivity() {
             finish()
         }
 
-        Log.i("HEY", "Before UserProductAdapter")
     }
 
     internal inner class UserProductAdapter :
@@ -84,7 +82,6 @@ class UserProductListActivity: ProductListActivity() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-            Log.i("HEY", "Getting View")
             var convertView = convertView
             var wrapper: TaskWrapper? = null
 
@@ -97,7 +94,6 @@ class UserProductListActivity: ProductListActivity() {
             }
 
             wrapper.removeTooMany()
-            Log.i("HEY", "populating form_0")
 
 
             wrapper.populateFrom(getItem(position)!!)
@@ -159,7 +155,6 @@ class UserProductListActivity: ProductListActivity() {
 
         fun populateFrom(prod: Product) {
             getName().text = prod.name
-            Log.i("HEY", "Image URI: ${prod.img}")
             getImg().setImageURI(prod.img)
             getPrice().text = prod.price.toString()
             getQuantity().text = prod.quantity.toString()
@@ -194,7 +189,6 @@ class UserProductListActivity: ProductListActivity() {
                     }
                 }
             }
-            Log.i("HEY", "form populated")
         }
 
         /**

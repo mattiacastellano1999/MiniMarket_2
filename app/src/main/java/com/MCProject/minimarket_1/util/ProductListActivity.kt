@@ -60,7 +60,6 @@ open class ProductListActivity: ListActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_list)
-        Log.i("HEY", "Product List Activity")
 
         imgDb = FirebaseStorage.getInstance()
         addBtn = findViewById(R.id.add_product_btn)
@@ -100,10 +99,8 @@ open class ProductListActivity: ListActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if ( requestCode == popup.IMAGE_CAPTURE_CODE || requestCode == popup.IMAGE_LOCAL_CODE ) {
-            Log.i("HEY", "REQUEST_FOR_IMAGE")
             if ( resultCode == Activity.RESULT_OK && data!=null) {
                 //set image captured to image view
-                Log.i("HEY", "Immagine: " + data)
                 popup.start(this, data, requestCode)
             }
         }

@@ -46,7 +46,6 @@ open class Chat: Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("HEY", "RDIER Activity")
         setContentView(R.layout.chat_activity)
 
         title1 = findViewById(R.id.chat_title_1)
@@ -165,7 +164,6 @@ open class Chat: Activity() {
 
     override fun onStop() {
         super.onStop()
-        Log.i("HEY", "DETACHED")
         firestoreListener!!.remove()
     }
 }

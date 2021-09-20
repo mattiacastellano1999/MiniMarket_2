@@ -60,7 +60,7 @@ open class OrderManagerActivity : AppCompatActivity() {
         super.onStart()
 
         buttonListener()
-        //orderList = ArrayList<Order>()
+
         titleTV.text = "Rider Assignment \nFor Order: $orderN"
 
         statusTV.text = "Rider Status: $riderStatus"
@@ -77,8 +77,6 @@ open class OrderManagerActivity : AppCompatActivity() {
                             populateSpinner()
                         }
                     }
-        } else{
-            //
         }
     }
 
@@ -131,15 +129,12 @@ open class OrderManagerActivity : AppCompatActivity() {
                 if ( it.isSuccessful) {
                     if( !it.result.isEmpty) {@Synchronized
                         for (doc in it.result) {
-                            Log.i("HEY", "Doc: "+doc.data)
                             orderList.add(frO.parseOrder(doc))
                         }
 
                         if (orderList.size < 1) {
-                            Log.e("HEY", "Error: Order List Empty")
                             Toast.makeText(this, "Error: Order List Empty", Toast.LENGTH_SHORT).show()
                         } else {
-                            Log.d("HEY", "Order List Rider: " + orderList[0].rider)
                             orderList.forEach { neworder ->
                                 if (neworder.ordine == orderN) {
                                     if (neworder.riderStatus == getString(R.string.rider_status_NA)) {

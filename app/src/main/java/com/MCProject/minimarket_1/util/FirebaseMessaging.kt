@@ -96,7 +96,6 @@ class FirebaseMessaging(val path: String, context: Activity) {
                             if( !it.result.isEmpty) {
                             for (doc in it.result) {
                                 var order = frO.parseOrder(doc)
-                                Log.i("HEY", "Doc: "+doc.data)
                                 orderList.add(order)
                                 if(order.ordine == res.result["numero_ordine"]){
                                     RiderActivity.myOrder = order
@@ -125,7 +124,6 @@ class FirebaseMessaging(val path: String, context: Activity) {
         return firestoreNotificationListener
             .get()
             .addOnSuccessListener {
-                Log.i("HEY", "Mesaggio Da:" + it.data)
                 notify.createNotificationChannel(
                     channellid.toString(),
                     "Channel_$userType$channellid",
@@ -162,11 +160,9 @@ class FirebaseMessaging(val path: String, context: Activity) {
                     ).addOnCompleteListener {docs -> @Synchronized
                         for (doc in docs.result) {
                             val order = frO.parseOrder(doc)
-                            Log.i("HEY", "Doc: "+doc.data)
                             orderList.add(order)
                             if(order.ordine == it.result["numero_ordine"]){
                                 RiderActivity.myOrder = order
-                                Log.i("HEY", "Order: ${order.ordine}")
                             }
                         }
                         notify.showRiderNotification(

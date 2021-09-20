@@ -125,14 +125,6 @@ class MarketAviableActivity: ListActivity(), AdapterView.OnItemClickListener  {
         searchViewED.text.clear()
     }
 
-    /*
-    *   ["nome azienda"]
-        ["email"]
-        ["via"]
-        ["citta"]
-        ["lat"]
-        ["lon"]
-    */
     override fun onItemClick(clicked: AdapterView<*>?, view: View?, position: Int, id: Long) {
         //visualizzazione dei prodotti venduti da quel market
 

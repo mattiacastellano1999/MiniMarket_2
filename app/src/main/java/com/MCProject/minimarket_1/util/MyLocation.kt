@@ -34,9 +34,7 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
     override fun onMapReady(googleMap: GoogleMap?) {
         gMap = googleMap
 
-        Log.i("HEY", "UDP")
         myCheckPermission(gMap)
-        Log.i("HEY", "Post UDP")
 
         //Aggiunta marker
         val myLocation = LatLng(myLat, myLon)
@@ -52,13 +50,11 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
     @RequiresApi(Build.VERSION_CODES.M)
     private fun myCheckPermission(googleMap: GoogleMap?) {
         if(googleMap != null) {
-            Log.i("HEY", "Mid1 UDP")
             val permission = ContextCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION
             )
 
             if (permission == PackageManager.PERMISSION_GRANTED) {
-                Log.i("HEY", "Mid2 UDP")
                 googleMap.isMyLocationEnabled = true
                 //per ottenere latitudine e longitudine dal gps
                 val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -67,7 +63,6 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
                     .addOnSuccessListener { location: Location? ->
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            Log.i("HEY", "Mid3 UDP")
                             /*Toast.makeText(
                                 context,
                                 "Lat: " + location.latitude + " and Lon: " + location.longitude,
@@ -78,7 +73,6 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
                         }
                     }
             } else {
-                Log.i("HEY", "MidNot2 UDP")
                 myrequestPermission(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     LOCATION_REQUEST_CODE
@@ -87,7 +81,6 @@ class MyLocation(val context: Context, val activity: Activity): OnMapReadyCallba
             }
         }
         else {
-            Log.i("HEY", "gMap == null")
             Toast.makeText(context, "Please, Enable GPS", Toast.LENGTH_LONG).show()
         }
     }

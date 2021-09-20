@@ -24,7 +24,6 @@ class FirestoreRequest_Marketplace(
 ): FirestoreRequest(db, auth, imgDb, collection, mail) {
 
     fun uploadProduct(context: Activity, prod: ProductListActivity.Product): Task<Void> {
-        Log.i("HEY", "Start Upload Data")
         if(collection.equals("utenti")) {
             pathToMyProduct =  "/profili/$collection/cart/$mail/prodotti"
         } else {
@@ -44,7 +43,6 @@ class FirestoreRequest_Marketplace(
                 .set(entry)
                 .addOnSuccessListener {
                     pd.dismiss()
-                    Log.i("HEY", "Added")
                     Toast.makeText(
                             context,
                             "Document Added Correctly",
@@ -54,7 +52,6 @@ class FirestoreRequest_Marketplace(
                 }
                 .addOnFailureListener {
                     pd.dismiss()
-                    Log.i("HEY", "Failed")
                     Toast.makeText(
                             context,
                             "Error during Document data upload",
@@ -88,10 +85,8 @@ class FirestoreRequest_Marketplace(
         val added = fs.get()
                 .addOnSuccessListener {
                     if( it.data.isNullOrEmpty()){
-                        Log.i("HEY", "PreAdded")
                         fs.set(entry1)
                                 .addOnSuccessListener {
-                                    Log.i("HEY", "Added: "+it)
                                     Toast.makeText(
                                             context,
                                             "Document Added Correctly",
@@ -100,7 +95,6 @@ class FirestoreRequest_Marketplace(
                                     load.stopLoadingDialog()
                                 }
                                 .addOnFailureListener {
-                                    Log.i("HEY", "Failed"+ it)
                                     Toast.makeText(
                                             context,
                                             "Error during Document data upload",
@@ -109,13 +103,11 @@ class FirestoreRequest_Marketplace(
                                     load.stopLoadingDialog()
                                 }
                     } else {
-                        Log.i("HEY", "prodotto in cart   " + it)
                         fs.update("quantita", FieldValue.increment(1))
                         load.stopLoadingDialog()
                     }
                 }
                 .addOnFailureListener {
-                    Log.i("HEY", "prodotto in cart   " +it)
                     load.stopLoadingDialog()
                 }
 
@@ -137,7 +129,6 @@ class FirestoreRequest_Marketplace(
                     .set(entry2)
                     .addOnSuccessListener {
                         load.stopLoadingDialog()
-                        Log.i("HEY", "Added")
                         Toast.makeText(
                                 context,
                                 "Document Added Correctly",
@@ -146,7 +137,6 @@ class FirestoreRequest_Marketplace(
                     }
                     .addOnFailureListener {
                         load.stopLoadingDialog()
-                        Log.i("HEY", "Failed")
                         Toast.makeText(
                                 context,
                                 "Error during Document data upload",

@@ -40,7 +40,6 @@ class FirestoreRequest_Order (
         pathToMyProduct = "/ordini"
         val ret = addOrderData(pathToMyProduct, context, orderList)
                 .addOnCompleteListener { va ->
-                    Log.i("HEY", "data adding_15:${orderList.size}")
                 }
         return ret
     }
@@ -106,7 +105,6 @@ class FirestoreRequest_Order (
                     }
                 }
                 .addOnFailureListener {
-                    Log.i("HEY", "Failed")
                     load.stopLoadingDialog()
                     Toast.makeText(
                             context,
@@ -177,7 +175,6 @@ class FirestoreRequest_Order (
             i++
         }
 
-        Log.i("HEY", "Order Sending to RIder: ${order.ordine}")
         return db.collection("/ordini")
                 .document(order.ordine)
                 .set(entry)
@@ -185,7 +182,6 @@ class FirestoreRequest_Order (
                     load.stopLoadingDialog()
                 }
                 .addOnFailureListener {
-                    Log.i("HEY", "Failed")
                     load.stopLoadingDialog()
                     Toast.makeText(
                             context,

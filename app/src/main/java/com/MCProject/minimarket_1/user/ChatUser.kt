@@ -39,26 +39,4 @@ class ChatUser: Chat() {
         }
     }
 
-    /*@SuppressLint("SetTextI18n")
-    override fun readFromFirebase(doc: String): Task<QuerySnapshot> {
-        return super.readFromFirebase(doc).addOnCompleteListener {
-            Log.i("HEY", "ReadFromFirebaseOuter")
-            if(it.isSuccessful && !it.result.isEmpty) {
-                val elLetto = it.result.documents[0].id
-                Log.i("HEY", "RES: "+it.result.documents[0].id)
-                if(message[MITT_FIELD] != null){
-                    Log.i("HEY", "MITT: "+message[MITT_FIELD])
-                    if(message[MITT_FIELD] == RiderActivity.myOrder!!.rider){
-                        textBox1.text = textBox1.text.toString() +"\n"+ message[TEXT_FIELD].toString()
-                        MainActivity.frM.deleteFromDB(this, elLetto, "/chat")
-                    } else {
-                        Log.e("HEY", "mittente sconosciuto")
-                    }
-                } else {
-                    Log.e("HEY", "message empty")
-                }
-            }
-        }
-    }*/
-
 }

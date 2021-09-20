@@ -44,14 +44,12 @@ open class FirestoreRequest(
     ): Task<QuerySnapshot> {
         orderList.clear()
 
-        Log.i("HEY", "Path: $from")
         val ret = db.collection(from)
                 .get()
                 .addOnCompleteListener {
                     return@addOnCompleteListener
                 }
                 .addOnFailureListener {
-                    Log.e("HEY", "Error Firetore Marker Reading")
                     return@addOnFailureListener
                 }
         return ret
@@ -73,7 +71,6 @@ open class FirestoreRequest(
         )
         var i = 0
         while(doc.data.containsKey("prod_name_$i")) {
-            Log.i("HEY", "While Doc: "+doc.data["prod_name_"+i])
             myOrder.products.set(
                 doc.data["prod_name_" + i].toString(),
                 doc.data["prod_qty_" + i].toString()
@@ -107,12 +104,10 @@ open class FirestoreRequest(
             .get()
             .addOnCompleteListener {
 
-                Log.i("HEY", "data adding_13 path:$pathToMyProduct")
                 if ( it.isSuccessful) {
                     var i = 0
                     if( !it.result.isEmpty) {
                         for (doc in it.result) {
-                            Log.i("HEY", "data adding_12:${doc.data["nome"]}")
                             productList.add(
                                     ProductListActivity.Product(
                                             i,
@@ -126,13 +121,10 @@ open class FirestoreRequest(
                             )
                             i++
                         }
-                        Log.i("HEY", "data adding_14:${productList.size}")
                     } else {
-                        Log.e("HEY", "Error with Path")
                         load.stopLoadingDialog()
                     }
                 } else {
-                    Log.e("HEY", "Error Firetore Marker Reading_0")
                     Toast.makeText(
                         context,
                         "Database Reding Error_0",
@@ -143,7 +135,6 @@ open class FirestoreRequest(
                 return@addOnCompleteListener
             }
             .addOnFailureListener {
-                Log.e("HEY", "Error Firetore Marker Reading")
                 Toast.makeText(
                     context,
                     "Database Reding Error",
@@ -162,14 +153,11 @@ open class FirestoreRequest(
         productList: ArrayList<ProductListActivity.Product>
     ): Task<ByteArray> {
 
-        Log.i("HEY", "download")
         val pathReference = imgDb!!.reference.child("images/$prod.jpg")
-        Log.i("HEY", "path: images/$prod")
 
         return pathReference
             .getBytes(9024 * 9024)
             .addOnSuccessListener{
-                Log.i("HEY", "ok")
                 val bytes = ByteArrayOutputStream()
                 val bpm = BitmapFactory.decodeByteArray(it, 0, it.size)
                 //bpm.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
@@ -177,13 +165,10 @@ open class FirestoreRequest(
                 if(productList.isNotEmpty())
                     productList[i].img = Uri.parse(path)
                 else
-                    Log.e("HEY", "Error: List Empty")
-                Log.i("HEY", "data adding_1 end")
 
                 return@addOnSuccessListener
             }
             .addOnFailureListener {
-                Log.i("HEY", "error:$it")
                 Toast.makeText(
                     context,
                     "Filed to Download",
@@ -192,7 +177,6 @@ open class FirestoreRequest(
                 return@addOnFailureListener
             }
             .addOnCanceledListener {
-                Log.i("HEY", "error2")
                 Toast.makeText(
                     context,
                     "Filed to Download",
@@ -213,12 +197,10 @@ open class FirestoreRequest(
             pathToMyProduct = path
         }
         if(elementToDelete != null) {
-            Log.i("HEY", "Removing : "+pathToMyProduct+"/"+elementToDelete)
             db.collection(pathToMyProduct)
                 .document(elementToDelete)
                 .delete()
                 .addOnSuccessListener {
-                    Log.i("HEY", "Removed")
                     Toast.makeText(
                         context,
                         "New Message !",
@@ -226,14 +208,12 @@ open class FirestoreRequest(
                     ).show()
                 }
                 .addOnFailureListener {
-                    Log.i("HEY", "Failed")
                     Toast.makeText(
                         context,
                         "Error during Document deleting",
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            Log.i("HEY", "End Delete")
         }
     }
 
@@ -247,7 +227,6 @@ open class FirestoreRequest(
             .document(prod.name)
             .delete()
             .addOnSuccessListener {
-                Log.i("HEY", "Removed")
                 Toast.makeText(
                     context,
                     "Product Correctly Removed",
@@ -255,32 +234,13 @@ open class FirestoreRequest(
                 ).show()
             }
             .addOnFailureListener {
-                Log.i("HEY", "Failed")
                 Toast.makeText(
                     context,
                     "Error during Document deleting",
                     Toast.LENGTH_LONG
                 ).show()
             }
-        Log.i("HEY", "End Delete")
     }
-
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    fun sendNotificationToGestor(
-        context: Activity,
-        sender: String?,
-        receiver: String,
-        message: String,
-        orderN: String
-    ) {
-        Log.i("HEY", "Invio: "+ message)
-        val fm = FirebaseMessaging(MainActivity.mail, context)
-        fm.sendMessageToGestor(context, sender!!, receiver, message, orderN)
-
-        //reload activity
-        val intent = Intent(context, CartProductListActivity::class.java)
-        context.startActivity(intent)
-    }*/
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendNotification(
@@ -288,14 +248,12 @@ open class FirestoreRequest(
         dest: String,
         message: Map<String, String>
     ): Task<Void> {
-        Log.i("HEY", "Invio: "+ message)
 
         val fm = FirebaseMessaging(MainActivity.mail, context)
         return fm.sendMesage(context, dest, message)
     }
 
     fun getAllElement(context: Activity, elements: ArrayList<String>): Task<QuerySnapshot> {
-        Log.i("HEY", "Start Getting Riders")
         val load = Loading(context)
         load.startLoading()
         elements.clear()
@@ -306,7 +264,6 @@ open class FirestoreRequest(
                     if ( it.isSuccessful) {
                         if( !it.result.isEmpty) {
                             for (doc in it.result) {
-                                Log.i("HEY", "data adding_12:${doc.data}")
                                 if (doc.data["status"].toString() == "1") {
                                     elements.add(
                                         doc.data["email"].toString()
@@ -314,11 +271,9 @@ open class FirestoreRequest(
                                 }
                             }
                         } else {
-                            Log.e("HEY", "Error with Path")
                             load.stopLoadingDialog()
                         }
                     } else {
-                        Log.e("HEY", "Error Firetore Marker Reading_0")
                         Toast.makeText(
                                 context,
                                 "Database Reding Error_0",
@@ -329,7 +284,6 @@ open class FirestoreRequest(
                     return@addOnCompleteListener
                 }
                 .addOnFailureListener {
-                    Log.e("HEY", "Error Firetore Marker Reading")
                     Toast.makeText(
                             context,
                             "Database Reding Error",

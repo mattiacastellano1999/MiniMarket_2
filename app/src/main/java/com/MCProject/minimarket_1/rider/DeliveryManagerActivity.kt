@@ -81,9 +81,6 @@ class DeliveryManagerActivity: AppCompatActivity() {
 
         var distance = FloatArray(3)
 
-        Log.i("HEY", "QUI1: "+ myOrder!!.addrClient )
-        Log.i("HEY", "QUI:2 "+ myOrder!!.addrGestor )
-        Log.i("HEY", "QUI: 3"+ distance )
         Location.distanceBetween(
                 clientGeocode!!.latitude,
                 clientGeocode.longitude,

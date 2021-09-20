@@ -111,15 +111,12 @@ class MarketList {
             val via = locationArray.value[2]
             val citta = locationArray.value[3]
 
-            Log.i("HEY", "geocoding 1")
-
             try {
                 geocodeMatches = Geocoder(context).getFromLocationName("$citta, $via", 1)
             } catch (e: IOException) {
                 e.printStackTrace()
                 Log.e("HEY", ""+e)
             }
-            Log.i("HEY", "geocoding 1 : $geocodeMatches")
 
             if (geocodeMatches != null) {
                 val lat = geocodeMatches[0].latitude.toString()

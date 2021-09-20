@@ -69,13 +69,8 @@ open class OrderList: ListActivity(){
                     Log.e("HEY", "Error Firetore Marker Reading_0")
                 }
 
-                /*Log.i("HEY", "OrderList: ${orderList.size}")
-                for (order in orderList) {
-                    if(order.deliveryStatus != null) {
-                        orderList.remove(order)
-                    }
-                }*/
-                val itemsAdapter: MyOrdersAdapter =
+
+                val itemsAdapter =
                     MyOrdersAdapter(
                         this,
                         orderList
@@ -83,7 +78,6 @@ open class OrderList: ListActivity(){
                 listView.adapter = itemsAdapter
                 listView.setOnItemClickListener { parent, view, position, id ->
                     orderSelected = orderList[position]
-                    Log.i("HEY", "Clicked "+orderSelected.rider.toString())
 
                     val cliente = orderSelected.cliente
                     val gestore = orderSelected.proprietario

@@ -18,7 +18,6 @@ class FirestoreRequest_User(
         override var mail: String?
 ): FirestoreRequest(db, auth, imgDb, collection, mail) {
 
-
     /**
      * Funzione che ritorna tutti gli utenti che sono o gestori, o riders, o utenti
      * @param activity (this, context)
@@ -32,19 +31,16 @@ class FirestoreRequest_User(
         load.startLoading()
 
         //read data firestore
-        Log.i("HEY","BEfore Collection Group ... "+ profile)
         db.collection("/profili/$profile/dati")
                 .get()
                 .addOnCompleteListener {
 
                     for (doc in it.result) {
-                        Log.i("HEY",""+doc.id)
                         arrayProfile.add(doc.id)
                     }
                     load.stopLoadingDialog()
                 }
                 .addOnFailureListener {
-                    Log.e("HEY", "Error Firestore Marker Reading")
                     Toast.makeText(
                             activity,
                             "Database Reding Error",
@@ -69,7 +65,6 @@ class FirestoreRequest_User(
                 .document(entry["email"].toString())
                 .set(entry)
                 .addOnSuccessListener {
-                    Log.i("HEY", "Added")
                     Toast.makeText(
                             activity,
                             "Document Added Correctly",
@@ -78,7 +73,6 @@ class FirestoreRequest_User(
                     return@addOnSuccessListener
                 }
                 .addOnFailureListener {
-                    Log.i("HEY", "Failed")
                     Toast.makeText(
                             activity,
                             "Error during Document data upload",

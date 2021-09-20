@@ -29,7 +29,6 @@ open class MarketProductListActivity : ProductListActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.i("HEY", "Market Product List Activity")
         type = "market"
         user = auth.currentUser.email
     }
@@ -45,14 +44,12 @@ open class MarketProductListActivity : ProductListActivity() {
         if(type.equals("cart")) {
             path =  "/profili/$collection/$type/$mail/prodotti"
         } else {
-            Log.i("HEY", "Email: :$mail")
             path =  "/profili/$collection/$type/$mail/miei_prodotti"
         }
 
         frM.addData(path, this, productList)
             .addOnCompleteListener{
                 var i = 0
-                Log.i("HEY", "Adding All Data")
                 for (doc in it.result) {
                     frM.addDataImg(this,
                             doc.data["nome"].toString(),
@@ -79,7 +76,6 @@ open class MarketProductListActivity : ProductListActivity() {
             popup.clearData()
             popup.makePopup(this)
             dialog.setOnDismissListener {
-                Log.e("HEY", "VAL: exited")
                 listAdapter = adapter
             }
         }
@@ -94,7 +90,6 @@ open class MarketProductListActivity : ProductListActivity() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-            Log.i("HEY", "Getting View")
             var convertView = convertView
             var wrapper: TaskWrapper? = null
 
@@ -105,9 +100,7 @@ open class MarketProductListActivity : ProductListActivity() {
             } else {
                 wrapper = convertView.tag as TaskWrapper
             }
-            Log.i("HEY", "populating form_0")
             wrapper.populateFrom(getItem(position)!!)
-            //this.notifyDataSetChanged()
 
             return convertView
         }
@@ -169,7 +162,6 @@ open class MarketProductListActivity : ProductListActivity() {
 
         fun populateFrom(prod: Product) {
             getName().text = prod.name
-            Log.i("HEY", "Image URI: ${prod.img}")
             getImg().setImageURI(prod.img)
             getPrice().text = prod.price.toString()
             getQuantity().text = prod.quantity.toString()
@@ -181,39 +173,25 @@ open class MarketProductListActivity : ProductListActivity() {
                     .addOnCompleteListener {
                         if (it.isSuccessful)
                             adapter.notifyDataSetChanged()
-                    /*if (it.isSuccessful) {
-                            runOnUiThread {
-                                Log.e("HEY", "Eliminazione Pouulate Form")
-                                val int = Intent(element_gestor_product.context, MarketProductListActivity::class.java)
-                                element_gestor_product.context.startActivity(int)
-                            }
-                        }*/
                     }
             }
             if(type == "market") {getEdit().setOnClickListener {
                     oldProd = prod.name
-                    //runOnUiThread {
-                        if(!isFinishing) {
-                            popup.editProduct(prod)
-                            dialog.setOnDismissListener {
-                                adapter.notifyDataSetChanged()
-                                /*val int = Intent(
-                                    element_gestor_product.context,
-                                    MarketProductListActivity::class.java
-                                )
-                                element_gestor_product.context.startActivity(int)
-                                */Log.i("HEY", "QUI")
-                            }
-                        } else {
-                            Log.e("HEY", "ERROR: window closed")
+                    if(!isFinishing) {
+                        popup.editProduct(prod)
+                        dialog.setOnDismissListener {
+                            adapter.notifyDataSetChanged()
+
                         }
-                    //}
+                    } else {
+
+                    }
                 }
             } else {
                 getDelete().visibility = View.GONE
                 getEdit().visibility = View.GONE
             }
-            Log.i("HEY", "form populated")
+
         }
     }
 

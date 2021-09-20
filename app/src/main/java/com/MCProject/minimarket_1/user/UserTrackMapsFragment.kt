@@ -49,9 +49,7 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         gMap = googleMap
 
-        Log.i("HEY", "UDP")
         myCheckPermission(gMap)
-        Log.i("HEY", "Post UDP")
 
         //Aggiunta marker
         val myLocation = LatLng(myLat, myLon)
@@ -70,27 +68,6 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
             trackRiderBTN.setOnClickListener {
                 //insert marker corresponding Rider Position
             }
-        /*confirmBTN.setOnClickListener {
-                val load = Loading(this.requireActivity())
-                load.startLoading()
-
-                val db = FirebaseFirestore.getInstance()
-                val auth = FirebaseAuth.getInstance()
-                val imgDb = FirebaseStorage.getInstance()
-                val collection = auth.currentUser.displayName
-                val mail = auth.currentUser.email
-                MarketList
-                    .getAllMarket(this.requireActivity(), myLat, myLon, FirestoreRequest(db, auth, imgDb, collection, mail))
-                    .addOnCompleteListener {
-                        load.stopLoadingDialog()
-                        val i = Intent(context, MarketAviableActivity::class.java)
-                        startActivity(i)
-                    }
-                    .addOnFailureListener {
-                        load.stopLoadingDialog()
-                        Toast.makeText(this.context, "Error during Markets ordering", Toast.LENGTH_SHORT).show()
-                    }
-            }*/
         }
 
     }
@@ -100,13 +77,11 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
      */
     private fun myCheckPermission(googleMap: GoogleMap?) {
         if(googleMap != null) {
-            Log.i("HEY", "Mid1 UDP")
             val permission = ContextCompat.checkSelfPermission(
                     view!!.context, Manifest.permission.ACCESS_FINE_LOCATION
             )
 
             if (permission == PackageManager.PERMISSION_GRANTED) {
-                Log.i("HEY", "Mid2 UDP")
                 googleMap.isMyLocationEnabled = true
                 //per ottenere latitudine e longitudine dal gps
                 val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -115,7 +90,6 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
                         .addOnSuccessListener { location: Location? ->
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                Log.i("HEY", "Mid3 UDP")
                                 Toast.makeText(
                                         view!!.context,
                                         "Lat: " + location.latitude + " and Lon: " + location.longitude,
@@ -129,7 +103,6 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
                             }
                         }
             } else {
-                Log.i("HEY", "MidNot2 UDP")
                 requestPermission(
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         LOCATION_REQUEST_CODE
@@ -138,7 +111,6 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
         else {
-            Log.i("HEY", "gMap == null")
             Toast.makeText(view!!.context, "Please, Enable GPS", Toast.LENGTH_LONG).show()
         }
     }
@@ -161,26 +133,13 @@ class UserTrackMapsFragment : Fragment(), OnMapReadyCallback {
     /**
      * funzione che dalle coordinate risale alla località
      */
-    var Address1: String? = null
     private fun reverseGeocoding() {
         var geocodeMatches: List<Address>? = null
-
-
-        Log.i("HEY", "geocoding")
 
         try {
             geocodeMatches = Geocoder(context).getFromLocation(myLat, myLon, 1)
         } catch (e: IOException) {
             e.printStackTrace()
-            Log.e("HEY", ""+e)
-        }
-        Log.i("HEY", "geocoding : $geocodeMatches")
-
-        if (geocodeMatches != null /*&& addrED != null*/) {/*
-            addrED!!.text.clear()
-            Address1 = geocodeMatches[0].getAddressLine(0)
-            Log.i("HEY", "Addr1: $Address1")
-            addrED!!.append(Address1)*/
         }
     }
 }

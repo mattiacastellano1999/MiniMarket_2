@@ -47,7 +47,6 @@ class Login: AppCompatActivity() {
         updateUI(currentUser)
         //new acount
         joinUs.setOnClickListener {
-            Log.i("HEY", "JOINUS")
             val intent = Intent(this, JoinUs::class.java)
             startActivity(intent)
         }
@@ -57,14 +56,12 @@ class Login: AppCompatActivity() {
     private fun updateUI(currentUser: FirebaseUser?) {
         //Funzione che aggiorna la UI per un utente che si è già registrato
 
-        Log.i("HEY", "" + currentUser)
 
         if (currentUser == null) {
             //Utente non loggato
             //LOGIN:
             login.setOnClickListener {
                 load.startLoading()
-                Log.i("HEY", "LOGIN")
                 login(mailED, passwordED)
             }
 
@@ -83,14 +80,12 @@ class Login: AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d("TAG", "signInWithEmail:success")
 
                         val user = auth.currentUser
                         updateUI(user)
                     } else {
                         load.stopLoadingDialog()
                         // If sign in fails, display a message to the user.
-                        Log.w("TAG", "signInWithEmail:failure", task.exception)
                         Toast.makeText(
                             this, "Authentication failed.",
                             Toast.LENGTH_SHORT
@@ -100,7 +95,6 @@ class Login: AppCompatActivity() {
                 }
                 .addOnCanceledListener {
                     load.stopLoadingDialog()
-                    Log.i("HEY", "Login Error")
                     Toast.makeText(
                         this, "Something Get Wrong",
                         Toast.LENGTH_SHORT

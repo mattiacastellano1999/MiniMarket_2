@@ -55,7 +55,6 @@ class JoinUs : AppCompatActivity() {
 
         //back to login
         backBTN.setOnClickListener {
-            Log.i("HEY", "JOINUS")
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
         }
@@ -98,18 +97,14 @@ class JoinUs : AppCompatActivity() {
     fun updateUI(currentUser: FirebaseUser?) {
         //Funzione che aggiorna la UI per un utente che si è già registrato
 
-        Log.i("HEY", "" + currentUser)
-
         if (currentUser == null) {
             //Utente non loggato
             //LOGIN:
             joinInBTN.setOnClickListener {
-                Log.i("HEY", "LOGIN")
                 joinUs(auth, mailED, passwordED)
             }
 
         } else {
-            Log.i("HEY", "" + currentUser)
             //Utente autenticato
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
@@ -123,18 +118,15 @@ class JoinUs : AppCompatActivity() {
                 { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d("HEY", "createUserWithEmail:success")
                         val user = auth.currentUser
 
                         /**
                          * salvo i dati dell'utente/rider/gestore su firebase
                          */
-                        Log.i("HEY", "joinUs pre Firestore")
                         saveDataOnFirestore(user)
 
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w("HEY", "createUserWithEmail:failure" + task.exception)
                         Toast.makeText(
                                 this, "Authentication failed: ${task.exception?.message}",
                                 Toast.LENGTH_SHORT
@@ -150,7 +142,6 @@ class JoinUs : AppCompatActivity() {
     }
 
     private fun saveDataOnFirestore(user: FirebaseUser?) {
-        Log.i("HEY", "saveDataOnFirestore")
 
         var entry: HashMap<String, Any?> = hashMapOf<String, Any?>(
                 "nome" to "",
@@ -195,12 +186,10 @@ class JoinUs : AppCompatActivity() {
                     "citta" to city.text.toString()
             )
         }
-        Log.i("HEY","prePrfileUpdates"+ collection)
         val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(collection)
                 .build()
         user!!.updateProfile(profileUpdates)
-        Log.e("HEY","postPrfileUpdates: "+ user.displayName)
 
         val fr = FirestoreRequest_User(db, auth, null, collection, null)
             fr.newUser(this, entry, collection)
@@ -210,6 +199,5 @@ class JoinUs : AppCompatActivity() {
             .addOnFailureListener {
                 updateUI(null)
             }
-        Log.i("HEY", "End Upload")
     }
 }

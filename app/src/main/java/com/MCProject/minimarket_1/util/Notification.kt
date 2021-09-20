@@ -89,11 +89,7 @@ class Notification constructor(val context: Activity) {
     fun showUserNotification(channelID: String, orderN : String, gestore: String, cliente: String, messaggio: String) {
         if(cliente == mail && gestore != null) {
             val intent = Intent(context, ChatUser::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK/*
-                this.putExtra("cliente", cliente)
-                this.putExtra("gestore", gestore)
-                this.putExtra("nome_ordine", orderN)
-                this.putExtra("rStatus", "not assigned")*/
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
             val pendingIntent: PendingIntent =
@@ -130,7 +126,6 @@ class Notification constructor(val context: Activity) {
      * e da la possibilità di accettare o rifuitare l'incarico
      */
     fun showRiderNotification(channelID: String, orderN : String, gestore: String, cliente: String, messaggio: String) {
-        Log.i("HEY", "HERE showNotification: " + cliente + "__0" + messaggio)
         if(cliente != "null" && RiderActivity.myOrder!!.rider == mail) {
             val intent = Intent(context, DeliveryManagerActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -152,7 +147,6 @@ class Notification constructor(val context: Activity) {
                     .setContentIntent(pendingIntent)/*cosa fare quando si preme sulla notifica*/
                     .setAutoCancel(true)
                     .build()
-                Log.i("HEY", "showNotification: " + messaggio)
                 notificationManager.notify(1, notification)
             } else {
                 Toast.makeText(context,

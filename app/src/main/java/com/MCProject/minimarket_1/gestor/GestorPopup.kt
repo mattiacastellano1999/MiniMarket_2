@@ -96,7 +96,6 @@ class GestorPopup(
 
     @SuppressLint("InflateParams")
     fun makePopup(context: Activity) {
-        Log.i("HEY", "MakePopup")
         REQUEST = REQUEST_FOR_CREATING
         listenerInit(context)
     }
@@ -105,7 +104,6 @@ class GestorPopup(
         dialog.show()
 
         popupImgIB.setOnClickListener {
-            Log.i("HEY", "Image Btn Pressed")
             choosePicture(context)
         }
 
@@ -126,7 +124,6 @@ class GestorPopup(
                     popupQuantityED.text.toString().toInt(),
                     mail
                 )
-                Log.i("HEY", "1__" + newprod)
                 prodList.add(newprod)
                 if(myOldProd != null) {
                     ProductListActivity.productList.remove(myOldProd!!)
@@ -141,28 +138,13 @@ class GestorPopup(
                     .addOnCompleteListener {
                         uploadProductPic(newprod).addOnCompleteListener {
                             dialog.dismiss()
-                            /*runOnUiThread {
-                                val intent =
-                                    Intent(context, MarketProductListActivity()::class.java)
-                                start(context, intent, REQUEST)
-                            }*/
                         }
                     }
                 if(!oldProd.equals(newprod.name)) {
-                    /*runOnUiThread {
-                        val intent = Intent(context, MarketProductListActivity()::class.java)
-                        start(context, intent, REQUEST)
-                    }*/
                         if(myOldProd != null)
                         fr.deleteFromDB(context, oldProd)
                 }
             } else {
-                Log.i("HEY", "2__" +
-                        popupNameED.text + "__" +
-                        popupPriceED.text + "__" +
-                        popupDescriptionED.text + "__" +
-                        popupQuantityED.text + "__" +
-                        imageUri + "")
                 Toast.makeText(
                     this.context,
                     "Please Fill the form",
@@ -209,7 +191,6 @@ class GestorPopup(
                 intent.type = "image/*"
                 intent.action = Intent.ACTION_GET_CONTENT
                 this.context.startActivityForResult(intent, IMAGE_LOCAL_CODE)
-                Log.i("HEY", "AC RES")
                 dialog.dismiss()
             }
             .show()
@@ -233,10 +214,8 @@ class GestorPopup(
         }
         if(requestCode == IMAGE_LOCAL_CODE ) {
             if ( data!!.data != null ) {
-                Log.i("HEY", "inside start")
                 imageUri = data.data
                 popupImgIB.setImageURI(imageUri)
-                Log.i("HEY", "Image in thread: $imageUri")
                 listenerInit(context)
             } else {
                 //error
@@ -252,12 +231,10 @@ class GestorPopup(
     }
 
     private fun uploadProductPic(newprod: ProductListActivity.Product): StorageTask<UploadTask.TaskSnapshot> {
-        Log.i("HEY", "Start Upload Pic")
         val pd = ProgressDialog(context)
         pd.setTitle("Uploading Image ...")
         pd.show()
 
-        Log.i("HEY", "3__" + imageUri)
         val imageRef: StorageReference = storageReference.child("images/${popupNameED.text.toString()}.jpg")
 
         return imageRef.putFile(imageUri!!)
@@ -287,18 +264,11 @@ class GestorPopup(
                     if (REQUEST == REQUEST_FOR_EDITING)
                         if (oldProd != newprod.name)
                             deleteImageFromFS()
-
-                    /*val intent = Intent(context, ProductListActivity("market")::class.java)
-                    intent.putExtra("type", "market")
-                    context.startActivity(intent)*/
-
-                    //this.ProductAdapter().notifyDataSetChanged()
                 }
             }
     }
 
     fun deleteImageFromFS(): Task<Void> {
-        Log.i("HEY", "Start Deleating old Pic")
         val imageRef: StorageReference = storageReference.child("images/${oldProd.toString()}.jpg")
 
         return imageRef.delete()
@@ -309,23 +279,19 @@ class GestorPopup(
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
     }
 
 
     fun editProduct(prod: ProductListActivity.Product) {
-        Log.i("HEY", "Start Edit Prod: " + prod.name)
         myOldProd = prod
         oldProd = prod.name
         popupImgIB.setImageURI(prod.img)
         imageUri = prod.img
         popupNameED.setText(prod.name)
         popupDescriptionED.setText(prod.description)
-        Log.i("HEY", "Mide Edit Prod")
         popupPriceED.setText(prod.price.toString())
         popupQuantityED.setText(prod.quantity.toString())
 
-        Log.i("HEY", "Start Mid2 Prod")
 
         REQUEST = REQUEST_FOR_EDITING
 
