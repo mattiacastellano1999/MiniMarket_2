@@ -57,7 +57,7 @@ class UserActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        locationBTN.visibility = View.VISIBLE
+        locationBTN.visibility = View.INVISIBLE
         oldOrderBTN.visibility = View.VISIBLE
         marketListBTN.visibility = View.VISIBLE
         chatUserBTN.visibility = View.GONE

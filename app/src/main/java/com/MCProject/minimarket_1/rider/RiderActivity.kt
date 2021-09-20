@@ -22,6 +22,7 @@ class RiderActivity: AppCompatActivity() {
 
 
     lateinit var logoutImgBtn: ImageButton
+    lateinit var mapBTN: Button
     lateinit var welcomeTV: TextView
     val auth = FirebaseAuth.getInstance()
     lateinit var switch: Switch
@@ -49,6 +50,7 @@ class RiderActivity: AppCompatActivity() {
         welcomeTV = findViewById(R.id.welcome_tv)
         leaveMarketBTN = findViewById(R.id.picked_btn)
         endDelivBTN = findViewById(R.id.delivered_btn)
+        mapBTN = findViewById(R.id.map_btn)
 
         welcomeTV.text = "Welcome\n$mail"
 
@@ -58,6 +60,7 @@ class RiderActivity: AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        mapBTN.visibility = View.INVISIBLE
         switch = findViewById<Switch>(R.id.switch1)
 
         frR.getRider(this, "/profili/riders/dati", mail).addOnCompleteListener {

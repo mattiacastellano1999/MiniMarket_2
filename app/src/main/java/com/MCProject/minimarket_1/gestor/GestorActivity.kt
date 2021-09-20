@@ -58,7 +58,7 @@ class GestorActivity: AppCompatActivity() {
         super.onStart()
 
         orderManageBtn.visibility = View.VISIBLE
-        riderVisualBtn.visibility = View.VISIBLE
+        riderVisualBtn.visibility = View.INVISIBLE
         welcomeTV.text = "Welcome\n$mail"
 
         btnListener()

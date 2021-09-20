@@ -62,6 +62,7 @@ class DeliveryManagerActivity: AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
+    @Synchronized
     override fun onStart() {
         super.onStart()
 
@@ -78,18 +79,24 @@ class DeliveryManagerActivity: AppCompatActivity() {
         val clientGeocode = getCoordinates(myOrder!!.addrClient)
         val gestorGeocode = getCoordinates(myOrder!!.addrGestor)
 
-        var distance = FloatArray(1)
+        var distance = FloatArray(3)
 
         Log.i("HEY", "QUI1: "+ myOrder!!.addrClient )
         Log.i("HEY", "QUI:2 "+ myOrder!!.addrGestor )
         Log.i("HEY", "QUI: 3"+ distance )
-        Location.distanceBetween(clientGeocode!!.latitude, clientGeocode.longitude, gestorGeocode!!.latitude, gestorGeocode.longitude, distance)
+        Location.distanceBetween(
+                clientGeocode!!.latitude,
+                clientGeocode.longitude,
+                gestorGeocode!!.latitude,
+                gestorGeocode.longitude,
+                distance
+        )
 
         if(myOrder != null) {
             statusTV.text =
                 "Order Name: ${myOrder!!.ordine} \n\n" +
                         "Pay is: ${myOrder!!.prezzo_tot} \n\n" +
-                        "Distance Between Market and Client: ${distance[0] / 1000} mt\n\n" +
+                        "Distance Between Market and Client: ${distance[0] / 1000} km\n\n" +
                         "Delivery Address: ${myOrder!!.addrClient}"
 
 
