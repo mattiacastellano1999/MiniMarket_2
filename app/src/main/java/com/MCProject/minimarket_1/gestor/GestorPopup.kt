@@ -128,7 +128,9 @@ class GestorPopup(
                 )
                 Log.i("HEY", "1__" + newprod)
                 prodList.add(newprod)
-                ProductListActivity.productList.remove(myOldProd!!)
+                if(myOldProd != null) {
+                    ProductListActivity.productList.remove(myOldProd!!)
+                }
                 val fr = FirestoreRequest_Marketplace(
                     db,
                     FirebaseAuth.getInstance(),
